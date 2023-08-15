@@ -1,0 +1,6 @@
+build/
+dist/
+out/
+__pycache__/
+config.properties
+*.spec
