@@ -5,7 +5,8 @@ import configparser
 import os
 from PIL import Image
 from datetime import datetime
-from apiImageGen import generate_images, generate_alternatives, upscale_image
+from apiImageGen import generate_alternatives
+from imageGen import generate_images, upscale_image
 
 def setup_config():
     if not os.path.exists('config.properties'):
@@ -16,7 +17,7 @@ def setup_config():
 
     config = configparser.ConfigParser()
     config.read('config.properties')
-    return config['DISCORD']['TOKEN']
+    return config['BOT']['TOKEN']
 
 def generate_default_config():
     config = configparser.ConfigParser()
@@ -68,7 +69,7 @@ class Buttons(discord.ui.View):
     async def generate_alternatives_and_send(self, interaction, index):
         await interaction.response.send_message("Creating some alternatives, this shouldn't take too long...")
         images = await generate_alternatives(self.images[index], self.prompt)
-        collage_path = self.create_collage(images)
+        collage_path = create_collage(images)
         final_message = f"{interaction.user.mention} here are your alternative images"
         await interaction.followup.send(content=final_message, file=discord.File(fp=collage_path, filename='collage.png'), view=Buttons(self.prompt, images))
 
@@ -83,35 +84,35 @@ class Buttons(discord.ui.View):
 
     @discord.ui.button(label="V1", style=discord.ButtonStyle.grey, emoji="♻️", row=0)
     async def alternatives_imageOne(self, interaction, btn):
-        await self.generate_alternatives_and_send(self,interaction,0)
+        await self.generate_alternatives_and_send(interaction,0)
 
     @discord.ui.button(label="V2", style=discord.ButtonStyle.grey, emoji="♻️", row=0)
     async def alternatives_imageTwo(self, interaction, btn):
-        await self.generate_alternatives_and_send(self,interaction,1)
+        await self.generate_alternatives_and_send(interaction,1)
 
     @discord.ui.button(label="V3", style=discord.ButtonStyle.grey, emoji="♻️", row=0)
     async def alternatives_imageThree(self, interaction, btn):
-        await self.generate_alternatives_and_send(self,interaction,2)
+        await self.generate_alternatives_and_send(interaction,2)
 
     @discord.ui.button(label="V4", style=discord.ButtonStyle.grey, emoji="♻️", row=0)
     async def alternatives_imageFour(self, interaction, btn):
-        await self.generate_alternatives_and_send(self,interaction,3)
+        await self.generate_alternatives_and_send(interaction,3)
 
     @discord.ui.button(label="U1", style=discord.ButtonStyle.grey, emoji="⬆️", row=1)
     async def upscale_imageOne(self, interaction, btn):
-        await self.upscale_and_send(self,interaction,0)
+        await self.upscale_and_send(interaction,0)
 
     @discord.ui.button(label="U2", style=discord.ButtonStyle.grey, emoji="⬆️", row=1)
     async def upscale_imageTwo(self, interaction, btn):
-        await self.upscale_and_send(self,interaction,1)
+        await self.upscale_and_send(interaction,1)
 
     @discord.ui.button(label="U3", style=discord.ButtonStyle.grey, emoji="⬆️", row=1)
     async def upscale_imageThree(self, interaction, btn):
-        await self.upscale_and_send(self,interaction,2)
+        await self.upscale_and_send(interaction,2)
 
     @discord.ui.button(label="U4", style=discord.ButtonStyle.grey, emoji="⬆️", row=1)
-    async def upscale_imageThree(self, interaction, btn):
-        await self.upscale_and_send(self,interaction,3)
+    async def upscale_imageFour(self, interaction, btn):
+        await self.upscale_and_send(interaction,3)
 
     @discord.ui.button(label="Re-roll", style=discord.ButtonStyle.green, emoji="🎲", row=0)
     async def reroll_image(self, interaction, btn):

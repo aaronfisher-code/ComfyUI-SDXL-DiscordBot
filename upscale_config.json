@@ -1,0 +1,38 @@
+{
+    "1": {
+      "inputs": {
+        "image": "example.png",
+        "choose file to upload": "image"
+      },
+      "class_type": "LoadImage"
+    },
+    "2": {
+      "inputs": {
+        "upscale_model": [
+          "3",
+          0
+        ],
+        "image": [
+          "1",
+          0
+        ]
+      },
+      "class_type": "ImageUpscaleWithModel"
+    },
+    "3": {
+      "inputs": {
+        "model_name": "RealESRGAN_x2plus.pth"
+      },
+      "class_type": "UpscaleModelLoader"
+    },
+    "4": {
+      "inputs": {
+        "filename_prefix": "ComfyUI",
+        "images": [
+          "2",
+          0
+        ]
+      },
+      "class_type": "SaveImage"
+    }
+  }
