@@ -1,9 +1,6 @@
 import base64
 import aiohttp
 from aiohttp import FormData
-import random
-import urllib.request
-import urllib.parse
 from PIL import Image
 import io
 import configparser
@@ -11,9 +8,9 @@ import configparser
 # Read the configuration
 config = configparser.ConfigParser()
 config.read('config.properties')
-api_key = config['DEFAULT']['API_KEY']
-engine_id = "stable-diffusion-xl-1024-v1-0"
-api_host = "https://api.stability.ai"
+api_key = config['API']['API_KEY']
+engine_id = config['API']['API_IMAGE_ENGINE']
+api_host = config['API']['API_HOST']
 
 async def generate_images(text: str, interaction):
     if api_key is None:
