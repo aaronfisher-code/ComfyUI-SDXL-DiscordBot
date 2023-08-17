@@ -53,6 +53,7 @@
   - [SDXL 1.0 Base model](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors) → `checkpoints` folder
   - [SDXL 1.0 Refiner model](https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/resolve/main/sd_xl_refiner_1.0.safetensors) → `checkpoints` folder
   - [ESRGAN 2x Upscaler model](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth) → `upscale_models` folder
+- Ensure that ComfyUI is running while the bot is running
 
 ### 4. **Run the App**
 - Double-click on `SDXL-Bot.exe` to launch.
