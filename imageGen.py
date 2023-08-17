@@ -109,8 +109,9 @@ async def generate_images(prompt: str,negative_prompt: str,interaction):
     if(negative_prompt != None and neg_prompt_nodes[0] != ''):
       for node in neg_prompt_nodes:
           workflow[node]["inputs"]["text"] = negative_prompt
-    for node in rand_seed_nodes:
-        workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
+    if(rand_seed_nodes[0] != ''):
+      for node in rand_seed_nodes:
+          workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
 
     images = await generator.get_images(workflow)
     await generator.close()
@@ -142,10 +143,12 @@ async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt
     if(negative_prompt != None and neg_prompt_nodes[0] != ''):
       for node in neg_prompt_nodes:
           workflow[node]["inputs"]["text"] = negative_prompt
-    for node in rand_seed_nodes:
-        workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
-    for node in file_input_nodes:
-        workflow[node]["inputs"]["image"] = filename
+    if(rand_seed_nodes[0] != ''):
+      for node in rand_seed_nodes:
+          workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
+    if(file_input_nodes[0] != ''):
+      for node in file_input_nodes:
+          workflow[node]["inputs"]["image"] = filename
 
     images = await generator.get_images(workflow)
     await generator.close()
@@ -178,10 +181,12 @@ async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str):
     if(negative_prompt != None and neg_prompt_nodes[0] != ''):
       for node in neg_prompt_nodes:
           workflow[node]["inputs"]["text"] = negative_prompt
-    for node in rand_seed_nodes:
-        workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
-    for node in file_input_nodes:
-        workflow[node]["inputs"]["image"] = filename
+    if(rand_seed_nodes[0] != ''):
+      for node in rand_seed_nodes:
+          workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
+    if(file_input_nodes[0] != ''):
+      for node in file_input_nodes:
+          workflow[node]["inputs"]["image"] = filename
 
     images = await generator.get_images(workflow)
     await generator.close()

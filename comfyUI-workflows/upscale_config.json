@@ -1,7 +1,7 @@
 {
     "1": {
       "inputs": {
-        "image": "example.png",
+        "image": "",
         "choose file to upload": "image"
       },
       "class_type": "LoadImage"
