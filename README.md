@@ -1,7 +1,3 @@
-Certainly! Here's a more detailed description for your GitHub README:
-
----
-
 # SDXL-DiscordBot
 
 <p float="center">
