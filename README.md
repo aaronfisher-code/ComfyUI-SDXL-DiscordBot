@@ -33,7 +33,7 @@
 ## Quick Start
 
 ### 1. **Download & Extract**
-- [Download the latest executable](https://github.com/s3840619/ComfyUI-SDXL-DiscordBot/releases) suitable for your OS.
+- [Download the latest executable](https://github.com/dab-bot/ComfyUI-SDXL-DiscordBot/releases) suitable for your OS.
 - Extract the zip file to your desired location.
 
 ### 2. **Configuration**
@@ -59,4 +59,4 @@
 - **Note for Windows users:** If Windows Defender warns about an "unknown publisher", you can safely ignore it. You might also need to whitelist this app in your antivirus software.
 
 ## Advanced setup
-For more advanced configuration and custom workflows visit the [wiki](https://github.com/s3840619/ComfyUI-SDXL-DiscordBot/wiki/Advanced-config)
+For more advanced configuration and custom workflows visit the [wiki](https://github.com/dab-bot/ComfyUI-SDXL-DiscordBot/wiki/Advanced-config)
