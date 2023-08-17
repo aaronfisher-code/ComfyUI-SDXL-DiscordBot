@@ -2,9 +2,9 @@
 
 
 <p float="left" align="center">
-  <img src="https://github.com/dab-bot/ComfyUI-SDXL-DiscordBot/assets/79825913/4d9f60f5-6937-4c73-b5a2-0ff665ac2360" height="300px" align="top" />
-  <img src="https://github.com/dab-bot/ComfyUI-SDXL-DiscordBot/assets/79825913/d4c4f26e-b6de-4874-87f9-49d5f5a5ab2a" height="300px" align="top" /> 
-  <img src="https://github.com/dab-bot/ComfyUI-SDXL-DiscordBot/assets/79825913/8e0134df-77b2-4e0e-8018-7015090f3a20" height="300px" align="top" />
+  <img src="https://github.com/dab-bot/ComfyUI-SDXL-DiscordBot/assets/79825913/b206c020-d56f-4a09-b990-21ffc8b94296" height="300px" align="top" />
+  <img src="https://github.com/dab-bot/ComfyUI-SDXL-DiscordBot/assets/79825913/a1581e4c-9dbf-44d8-9891-3499c4f8cb6b" height="300px" align="top" /> 
+  <img src="https://github.com/dab-bot/ComfyUI-SDXL-DiscordBot/assets/79825913/3a046c12-be79-4323-a081-b22c0bfdc5f2" height="300px" align="top" />
 </p>
 
 **SDXL-DiscordBot** is a Discord bot designed specifically for image generation using the renowned SDXL 1.0 model. It's inspired by the features of the Midjourney Discord bot, offering capabilities like text-to-image generation, variations in outputs, and the ability to upscale these outputs for enhanced clarity.
