@@ -1,4 +1,24 @@
+Certainly! Here's a more detailed description for your GitHub README:
+
+---
+
 # SDXL-DiscordBot
+
+**SDXL-DiscordBot** is a powerful and versatile Discord bot designed specifically for image generation using the renowned SDXL model. It's inspired by the features of the Midjourney Discord bot, offering capabilities like text-to-image generation, variations in outputs, and the ability to upscale these outputs for enhanced clarity.
+
+## Key Features:
+
+1. **Text-to-Image Generation**: Convert your ideas into visuals. Just type in a positive+negative prompt, and the bot will generate an image that matches your text.
+
+2. **Variations on Outputs**: Not satisfied with the first image? The bot can produce multiple variations, giving you the freedom to choose the one that fits best.
+
+3. **Upscale Outputs**: Enhance the clarity of generated images by upscaling them. Perfect for when you need higher resolution visuals.
+
+4. **Integration Flexibility**: 
+   - **Public Stability AI API**: For those who prefer a hassle-free setup, the bot can integrate seamlessly with the public Stability AI API. All you need is your API key.
+   - **Local ComfyUI System**: For users who prioritize data privacy or want to work offline, the bot can run locally using the ComfyUI system.
+
+5. **Custom Workflows with ComfyUI**: The bot comes with default configurations that cater to most users. However, if you have specific needs, it supports custom ComfyUI workflows, allowing you to tailor the bot's operations to your exact requirements.
 
 ## Quick Start
 
@@ -27,3 +47,6 @@
 ### 4. **Run the App**
 - Double-click on `SDXL-Bot.exe` to launch.
 - **Note for Windows users:** If Windows Defender warns about an "unknown publisher", you can safely ignore it. You might also need to whitelist this app in your antivirus software.
+
+## Advanced setup
+For more advanced configuration and custom workflows visit the [wiki](https://github.com/s3840619/ComfyUI-SDXL-DiscordBot/wiki/Advanced-config)
