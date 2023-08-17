@@ -1,0 +1,108 @@
+{
+    "1": {
+      "inputs": {
+        "ckpt_name": "sd_xl_refiner_1.0.safetensors"
+      },
+      "class_type": "CheckpointLoaderSimple"
+    },
+    "2": {
+      "inputs": {
+        "text": "",
+        "clip": [
+          "1",
+          1
+        ]
+      },
+      "class_type": "CLIPTextEncode"
+    },
+    "3": {
+      "inputs": {
+        "text": "",
+        "clip": [
+          "1",
+          1
+        ]
+      },
+      "class_type": "CLIPTextEncode"
+    },
+    "4": {
+      "inputs": {
+        "seed": 1007246773846082,
+        "steps": 35,
+        "cfg": 8,
+        "sampler_name": "dpmpp_2s_ancestral",
+        "scheduler": "karras",
+        "denoise": 0.5,
+        "model": [
+          "1",
+          0
+        ],
+        "positive": [
+          "2",
+          0
+        ],
+        "negative": [
+          "3",
+          0
+        ],
+        "latent_image": [
+          "10",
+          0
+        ]
+      },
+      "class_type": "KSampler"
+    },
+    "5": {
+      "inputs": {
+        "image": "",
+        "choose file to upload": "image"
+      },
+      "class_type": "LoadImage"
+    },
+    "6": {
+      "inputs": {
+        "pixels": [
+          "5",
+          0
+        ],
+        "vae": [
+          "1",
+          2
+        ]
+      },
+      "class_type": "VAEEncode"
+    },
+    "7": {
+      "inputs": {
+        "samples": [
+          "4",
+          0
+        ],
+        "vae": [
+          "1",
+          2
+        ]
+      },
+      "class_type": "VAEDecode"
+    },
+    "8": {
+      "inputs": {
+        "filename_prefix": "final_output",
+        "images": [
+          "7",
+          0
+        ]
+      },
+      "class_type": "SaveImage"
+    },
+    "10": {
+      "inputs": {
+        "amount": 4,
+        "samples": [
+          "6",
+          0
+        ]
+      },
+      "class_type": "RepeatLatentBatch"
+    }
+  }

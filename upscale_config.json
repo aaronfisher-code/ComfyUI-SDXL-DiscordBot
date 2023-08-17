@@ -27,7 +27,7 @@
     },
     "4": {
       "inputs": {
-        "filename_prefix": "ComfyUI",
+        "filename_prefix": "final_output",
         "images": [
           "2",
           0

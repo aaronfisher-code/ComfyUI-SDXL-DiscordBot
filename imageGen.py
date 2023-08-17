@@ -15,8 +15,9 @@ import requests
 config = configparser.ConfigParser()
 config.read('config.properties')
 server_address = config['LOCAL']['SERVER_ADDRESS']
-model_config = config['LOCAL']['MODEL_CONFIG']
-upscale_config = config['LOCAL']['UPSCALE_CONFIG']
+text2img_config = config['LOCAL_TEXT2IMG']['CONFIG']
+img2img_config = config['LOCAL_IMG2IMG']['CONFIG']
+upscale_config = config['LOCAL_UPSCALE']['CONFIG']
 
 def queue_prompt(prompt, client_id):
     p = {"prompt": prompt, "client_id": client_id}
@@ -56,7 +57,7 @@ class ImageGenerator:
     async def connect(self):
         self.ws = await websockets.connect(self.uri)
 
-    async def get_images(self, prompt, upscale):
+    async def get_images(self, prompt):
         if not self.ws:
             await self.connect()
     
@@ -80,7 +81,7 @@ class ImageGenerator:
             if 'images' in node_output:
                 for image in node_output['images']:
                     image_data = get_image(image['filename'], image['subfolder'], image['type'])
-                    if upscale or 'refiner_output' in image['filename']:
+                    if 'final_output' in image['filename']:
                         pil_image = Image.open(BytesIO(image_data))
                         output_images.append(pil_image)
 
@@ -90,28 +91,68 @@ class ImageGenerator:
         if self.ws:
             await self.ws.close()
 
-async def generate_images(text: str, interaction):
-    with open(model_config, 'r') as file:
-      prompt = json.load(file)
+async def generate_images(prompt: str,negative_prompt: str,interaction):
+    with open(text2img_config, 'r') as file:
+      workflow = json.load(file)
       
     generator = ImageGenerator()
     await generator.connect()
 
-    prompt_nodes = config.get('LOCAL', 'PROMPT_NODES').split(',')
-    rand_seed_nodes = config.get('LOCAL', 'RAND_SEED_NODES').split(',') 
+    prompt_nodes = config.get('LOCAL_TEXT2IMG', 'PROMPT_NODES').split(',')
+    neg_prompt_nodes = config.get('LOCAL_TEXT2IMG', 'NEG_PROMPT_NODES').split(',')
+    rand_seed_nodes = config.get('LOCAL_TEXT2IMG', 'RAND_SEED_NODES').split(',') 
 
     # Modify the prompt dictionary
-    for node in prompt_nodes:
-        prompt[node]["inputs"]["text"] = text
+    if(prompt != None and prompt_nodes[0] != ''):
+      for node in prompt_nodes:
+          workflow[node]["inputs"]["text"] = prompt
+    if(negative_prompt != None and neg_prompt_nodes[0] != ''):
+      for node in neg_prompt_nodes:
+          workflow[node]["inputs"]["text"] = negative_prompt
     for node in rand_seed_nodes:
-        prompt[node]["inputs"]["seed"] = random.randint(0,999999999999999)
+        workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
 
-    images = await generator.get_images(prompt, False)
+    images = await generator.get_images(workflow)
     await generator.close()
 
     return images
 
-async def upscale_image(image: Image.Image, width: int = 2048):
+async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt: str):
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
+      image.save(temp_file, format="PNG")
+      temp_filepath = temp_file.name
+
+    # Upload the temporary file using the upload_image method
+    response_data = upload_image(temp_filepath)
+    filename = response_data['name']
+    with open(img2img_config, 'r') as file:
+      workflow = json.load(file)
+      
+    generator = ImageGenerator()
+    await generator.connect()
+
+    prompt_nodes = config.get('LOCAL_IMG2IMG', 'PROMPT_NODES').split(',')
+    neg_prompt_nodes = config.get('LOCAL_IMG2IMG', 'NEG_PROMPT_NODES').split(',')
+    rand_seed_nodes = config.get('LOCAL_IMG2IMG', 'RAND_SEED_NODES').split(',') 
+    file_input_nodes = config.get('LOCAL_IMG2IMG', 'FILE_INPUT_NODES').split(',') 
+
+    if(prompt != None and prompt_nodes[0] != ''):
+      for node in prompt_nodes:
+          workflow[node]["inputs"]["text"] = prompt
+    if(negative_prompt != None and neg_prompt_nodes[0] != ''):
+      for node in neg_prompt_nodes:
+          workflow[node]["inputs"]["text"] = negative_prompt
+    for node in rand_seed_nodes:
+        workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
+    for node in file_input_nodes:
+        workflow[node]["inputs"]["image"] = filename
+
+    images = await generator.get_images(workflow)
+    await generator.close()
+
+    return images
+
+async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
       image.save(temp_file, format="PNG")
       temp_filepath = temp_file.name
@@ -120,16 +161,29 @@ async def upscale_image(image: Image.Image, width: int = 2048):
     response_data = upload_image(temp_filepath)
     filename = response_data['name']
     with open(upscale_config, 'r') as file:
-      prompt = json.load(file)
+      workflow = json.load(file)
 
     generator = ImageGenerator()
     await generator.connect()
 
-    file_input_nodes = config.get('LOCAL', 'FILE_INPUT_NODES').split(',')
-    for node in file_input_nodes:
-        prompt[node]["inputs"]["image"] = filename
+    prompt_nodes = config.get('LOCAL_UPSCALE', 'PROMPT_NODES').split(',')
+    neg_prompt_nodes = config.get('LOCAL_UPSCALE', 'NEG_PROMPT_NODES').split(',')
+    rand_seed_nodes = config.get('LOCAL_UPSCALE', 'RAND_SEED_NODES').split(',') 
+    file_input_nodes = config.get('LOCAL_UPSCALE', 'FILE_INPUT_NODES').split(',') 
 
-    images = await generator.get_images(prompt, True)
+    # Modify the prompt dictionary
+    if(prompt != None and prompt_nodes[0] != ''):
+      for node in prompt_nodes:
+          workflow[node]["inputs"]["text"] = prompt
+    if(negative_prompt != None and neg_prompt_nodes[0] != ''):
+      for node in neg_prompt_nodes:
+          workflow[node]["inputs"]["text"] = negative_prompt
+    for node in rand_seed_nodes:
+        workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
+    for node in file_input_nodes:
+        workflow[node]["inputs"]["image"] = filename
+
+    images = await generator.get_images(workflow)
     await generator.close()
 
     return images[0]

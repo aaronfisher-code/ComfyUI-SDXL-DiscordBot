@@ -116,7 +116,7 @@
     },
     "19": {
       "inputs": {
-        "filename_prefix": "refiner_output",
+        "filename_prefix": "final_output",
         "images": [
           "18",
           0

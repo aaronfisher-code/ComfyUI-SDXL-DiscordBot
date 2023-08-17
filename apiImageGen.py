@@ -3,39 +3,40 @@ import aiohttp
 from aiohttp import FormData
 from PIL import Image
 import io
+import json
 import configparser
 
 # Read the configuration
 config = configparser.ConfigParser()
 config.read('config.properties')
 api_key = config['API']['API_KEY']
-engine_id = config['API']['API_IMAGE_ENGINE']
 api_host = config['API']['API_HOST']
 
-async def generate_images(text: str, interaction):
+async def generate_images(prompt: str,negative_prompt: str,interaction):
     if api_key is None:
         raise Exception("Missing Stability API key.")
+    
+    text_prompts = [{"text": f"{prompt}","weight": 1.0,}]
 
-    async with aiohttp.ClientSession() as session:
+    if negative_prompt != None:
+        text_prompts.append({"text": f"{negative_prompt}","weight": -1.0,})
+
+    async with aiohttp.ClientSession() as session:        
         async with session.post(
-            f"{api_host}/v1/generation/{engine_id}/text-to-image",
+            f"{api_host}/v1/generation/{config['API_TEXT2IMG']['ENGINE']}/text-to-image",
             headers={
                 "Content-Type": "application/json",
                 "Accept": "application/json",
                 "Authorization": f"Bearer {api_key}"
             },
             json={
-                "text_prompts": [
-                    {
-                        "text": f"\"{text}\""
-                    }
-                ],
-                "cfg_scale": 8,
-                "height": 1024,
-                "width": 1024,
-                "samples": 4,
-                "sampler": "K_DPMPP_2S_ANCESTRAL",
-                "steps": 70
+                "text_prompts": text_prompts,
+                "cfg_scale": float(config['API_TEXT2IMG']['CFG']),
+                "height": int(config['API_TEXT2IMG']['HEIGHT']),
+                "width": int(config['API_TEXT2IMG']['WIDTH']),
+                "samples": int(config['API_TEXT2IMG']['SAMPLES']),
+                "sampler": str(config['API_TEXT2IMG']['SAMPLER']),
+                "steps": int(config['API_TEXT2IMG']['STEPS'])
             }
         ) as response:
             if response.status != 200:
@@ -52,7 +53,7 @@ async def generate_images(text: str, interaction):
     return images
 
 
-async def generate_alternatives(image: Image.Image, prompt: str):
+async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt: str):
     if api_key is None:
         raise Exception("Missing Stability API key.")
 
@@ -64,17 +65,22 @@ async def generate_alternatives(image: Image.Image, prompt: str):
     # Create FormData object
     data = FormData()
     data.add_field('init_image', image_bytes, filename='init_image.png', content_type='image/png')
-    data.add_field('image_strength', '0.35')
-    data.add_field('init_image_mode', 'IMAGE_STRENGTH')
-    data.add_field('cfg_scale', '7')
-    data.add_field('samples', '4')
-    data.add_field('sampler', 'K_DPMPP_2S_ANCESTRAL')
-    data.add_field('steps', '40')
+    data.add_field('image_strength', config['API_IMG2IMG']['IMAGE_STRENGTH'])
+    data.add_field('init_image_mode', config['API_IMG2IMG']['INIT_IMAGE_MODE'])
+    data.add_field('cfg_scale', config['API_IMG2IMG']['CFG'])
+    data.add_field('samples', config['API_IMG2IMG']['SAMPLES'])
+    data.add_field('sampler', config['API_IMG2IMG']['SAMPLER'])
+    data.add_field('steps', config['API_IMG2IMG']['STEPS'])
     data.add_field('text_prompts[0][text]', prompt)
+    data.add_field('text_prompts[0][weight]', str(1.0))
+
+    if negative_prompt != None:
+        data.add_field('text_prompts[1][text]', negative_prompt)
+        data.add_field('text_prompts[1][weight]', str(-1.0))
 
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            f"{api_host}/v1/generation/{engine_id}/image-to-image",
+            f"{api_host}/v1/generation/{config['API_IMG2IMG']['ENGINE']}/image-to-image",
             headers={
                 "Accept": "application/json",
                 "Authorization": f"Bearer {api_key}"
@@ -93,7 +99,7 @@ async def generate_alternatives(image: Image.Image, prompt: str):
 
     return alternatives
 
-async def upscale_image(image: Image.Image, width: int = 2048):
+async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str):
     if api_key is None:
         raise Exception("Missing Stability API key.")
 
@@ -105,11 +111,21 @@ async def upscale_image(image: Image.Image, width: int = 2048):
     # Create FormData object
     data = FormData()
     data.add_field('image', image_bytes, filename='init_image.png', content_type='image/png')
-    data.add_field('width', str(width))
+    data.add_field('width', config['API_UPSCALE']['WIDTH'])
+
+    if config['API_UPSCALE']['ENGINE']!='esrgan-v1-x2plus':
+        data.add_field('seed',config['API_UPSCALE']['SEED'])
+        data.add_field('steps',config['API_UPSCALE']['STEPS'])
+        data.add_field('cfg_scale',config['API_UPSCALE']['CFG'])
+        data.add_field('text_prompts[0][text]', prompt)
+        data.add_field('text_prompts[0][weight]', str(1.0))
+        if negative_prompt != None:
+            data.add_field('text_prompts[1][text]', negative_prompt)
+            data.add_field('text_prompts[1][weight]', str(-1.0))
 
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            f"{api_host}/v1/generation/esrgan-v1-x2plus/image-to-image/upscale",
+            f"{api_host}/v1/generation/{config['API_IMG2IMG']['ENGINE']}/image-to-image/upscale",
             headers={
                 "Accept": "image/png",
                 "Authorization": f"Bearer {api_key}"
