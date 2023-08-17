@@ -1,5 +1,14 @@
 # SDXL-DiscordBot
 
+<p float="center">
+  <img src="https://github.com/s3840619/ComfyUI-SDXL-DiscordBot/assets/79825913/4d9f60f5-6937-4c73-b5a2-0ff665ac2360" height="300px" align="top" />
+  <img src="https://github.com/s3840619/ComfyUI-SDXL-DiscordBot/assets/79825913/d4c4f26e-b6de-4874-87f9-49d5f5a5ab2a" height="300px" align="top" /> 
+  <img src="https://github.com/s3840619/ComfyUI-SDXL-DiscordBot/assets/79825913/8e0134df-77b2-4e0e-8018-7015090f3a20" height="300px" align="top" />
+</p>
+
+
+
+
 ## Quick Start
 
 ### 1. **Download & Extract**
