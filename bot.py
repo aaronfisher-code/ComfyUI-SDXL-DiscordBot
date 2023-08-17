@@ -1,87 +1,155 @@
-# imports
 import discord
 import discord.ext
 from discord import app_commands
 import configparser
 import os
-from imageGen import generate_image
+from PIL import Image
+from datetime import datetime
+from math import ceil, sqrt
+
+def setup_config():
+    if not os.path.exists('config.properties'):
+        generate_default_config()
+
+    if not os.path.exists('./out'):
+        os.makedirs('./out')
+
+    config = configparser.ConfigParser()
+    config.read('config.properties')
+    return config['BOT']['TOKEN'], config['BOT']['SDXL_SOURCE']
 
 def generate_default_config():
     config = configparser.ConfigParser()
-    config['DEFAULT'] = {
-        'TOKEN': 'YOUR_DEFAULT_DISCORD_BOT_TOKEN',
-        'SERVER_ADDRESS': 'YOUR_COMFYUI_URL',
-        'GUILD_ID': 'PREFERRED GUILD ID'
+    config['DISCORD'] = {
+        'TOKEN': 'YOUR_DEFAULT_DISCORD_BOT_TOKEN'
     }
-    
+    config['LOCAL'] = {
+        'SERVER_ADDRESS': 'YOUR_COMFYUI_URL'
+    }
+    config['API'] = {
+        'API_KEY': 'STABILITY_AI_API_KEY',
+        'API_HOST': 'https://api.stability.ai',
+        'API_IMAGE_ENGINE': 'STABILITY_AI_IMAGE_GEN_MODEL'
+    }
     with open('config.properties', 'w') as configfile:
         config.write(configfile)
 
-# Check if the config file exists, if not, generate it
-if not os.path.exists('config.properties'):
-    generate_default_config()
+def create_collage(images):
+    num_images = len(images)
+    num_cols = ceil(sqrt(num_images))
+    num_rows = ceil(num_images / num_cols)
+    collage_width = max(image.width for image in images) * num_cols
+    collage_height = max(image.height for image in images) * num_rows
+    collage = Image.new('RGB', (collage_width, collage_height))
 
-# Read the configuration
-config = configparser.ConfigParser()
-config.read('config.properties')
+    for idx, image in enumerate(images):
+        row = idx // num_cols
+        col = idx % num_cols
+        x_offset = col * image.width
+        y_offset = row * image.height
+        collage.paste(image, (x_offset, y_offset))
 
-TOKEN = config['DEFAULT']['TOKEN']
+    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+    collage_path = f"./out/images_{timestamp}.png"
+    collage.save(collage_path)
+
+    return collage_path
 
 # setting up the bot
+TOKEN, IMAGE_SOURCE = setup_config()
 intents = discord.Intents.default() 
-# if you don't want all intents you can do discord.Intents.default()
 client = discord.Client(intents=intents)
 tree = discord.app_commands.CommandTree(client)
+
+if IMAGE_SOURCE == "LOCAL":
+    from imageGen import generate_images, upscale_image, generate_alternatives
+elif IMAGE_SOURCE == "API":
+    from apiImageGen import generate_images, upscale_image, generate_alternatives
 
 # sync the slash command to your server
 @client.event
 async def on_ready():
     await tree.sync()
-    # print "ready" in the console when the bot is ready to work
     print(f'Logged in as {client.user.name} ({client.user.id})')
 
-class Buttons(discord.ui.View):
-    def __init__(self, base_image,prompt, *, timeout=180):
-        super().__init__(timeout=timeout)
-        self.base_image = base_image
-        self.prompt = prompt
+class ImageButton(discord.ui.Button):
+    def __init__(self, label, emoji, row, callback):
+        super().__init__(label=label, style=discord.ButtonStyle.grey, emoji=emoji, row=row)
+        self._callback = callback
 
-    @discord.ui.button(label="Re-roll", style=discord.ButtonStyle.green, emoji="🎲")
+    async def callback(self, interaction: discord.Interaction):
+        await self._callback(interaction, self)
+
+
+class Buttons(discord.ui.View):
+    def __init__(self, prompt, negative_prompt, images, *, timeout=180):
+        super().__init__(timeout=timeout)
+        self.prompt = prompt
+        self.negative_prompt = negative_prompt
+        self.images = images
+
+        total_buttons = len(images) * 2 + 1  # For both alternative and upscale buttons + re-roll button
+        if total_buttons > 25:  # Limit to 25 buttons
+            images = images[:12]  # Adjust to only use the first 12 images
+
+        # Determine if re-roll button should be on its own row
+        reroll_row = 1 if total_buttons <= 21 else 0
+
+        # Dynamically add alternative buttons
+        for idx, _ in enumerate(images):
+            row = (idx + 1) // 5 + reroll_row  # Determine row based on index and re-roll row
+            btn = ImageButton(f"V{idx + 1}", "♻️", row, self.generate_alternatives_and_send)
+            self.add_item(btn)
+
+        # Dynamically add upscale buttons
+        for idx, _ in enumerate(images):
+            row = (idx + len(images) + 1) // 5 + reroll_row  # Determine row based on index, number of alternative buttons, and re-roll row
+            btn = ImageButton(f"U{idx + 1}", "⬆️", row, self.upscale_and_send)
+            self.add_item(btn)
+
+    async def generate_alternatives_and_send(self, interaction, button):
+        index = int(button.label[1:]) - 1  # Extract index from label
+        await interaction.response.send_message("Creating some alternatives, this shouldn't take too long...")
+        images = await generate_alternatives(self.images[index], self.prompt, self.negative_prompt)
+        collage_path = create_collage(images)
+        final_message = f"{interaction.user.mention} here are your alternative images"
+        await interaction.followup.send(content=final_message, file=discord.File(fp=collage_path, filename='collage.png'), view=Buttons(self.prompt, self.negative_prompt, images))
+
+    async def upscale_and_send(self, interaction, button):
+        index = int(button.label[1:]) - 1  # Extract index from label
+        await interaction.response.send_message("Upscaling the image, this shouldn't take too long...")
+        upscaled_image = await upscale_image(self.images[index], self.prompt, self.negative_prompt)
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
+        upscaled_image.save(upscaled_image_path)
+        final_message = f"{interaction.user.mention} here is your upscaled image"
+        await interaction.followup.send(content=final_message, file=discord.File(fp=upscaled_image_path, filename='upscaled_image.png'))
+
+    @discord.ui.button(label="Re-roll", style=discord.ButtonStyle.green, emoji="🎲", row=0)
     async def reroll_image(self, interaction, btn):
-        await interaction.response.send_message("Starting image generation...")
+        await interaction.response.send_message(f"{interaction.user.mention} asked me to re-imagine \"{self.prompt}\", this shouldn't take too long...")
         btn.disabled = True
         await interaction.message.edit(view=self)
         # Generate a new image with the same prompt
-        base_image_binary, refined_image_binary = await generate_image(self.prompt, interaction)
-        # Send the newly generated image
+        images = await generate_images(self.prompt,self.negative_prompt,interaction)
+
+        # Construct the final message with user mention
         final_message = f"{interaction.user.mention} asked me to re-imagine \"{self.prompt}\", here is what I imagined for them."
-        await interaction.followup.send(content=final_message, file=discord.File(fp=refined_image_binary, filename='generated_image.png'), view=Buttons(base_image_binary,self.prompt))
-        # Update the base image for the view
-        self.base_image = base_image_binary
-
-
-    @discord.ui.button(label="View Unrefined Image",style=discord.ButtonStyle.blurple)
-    async def view_base_image(self, interaction, btn):
-        await interaction.response.send_message(content=f"No worries {interaction.user.mention}, Heres the base image", file=discord.File(fp=self.base_image, filename='base_image.png'))
-        btn.disabled = True
-        await interaction.message.edit(view=self)
-
-    def on_timeout(self):
-        # Close the binaries when the view times out
-        self.base_image.close()
+        await interaction.followup.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view = Buttons(self.prompt,self.negative_prompt,images))
 
 @tree.command(name="imagine", description="Generate an image based on input text")
 @app_commands.describe(prompt='Prompt for the image being generated')
-async def slash_command(interaction: discord.Interaction, prompt: str):
+@app_commands.describe(negative_prompt='Prompt for what you want to steer the AI away from')
+async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None):
     # Send an initial message
-    await interaction.response.send_message("Starting image generation...")
+    await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")
 
     # Generate the image and get progress updates
-    base_image_binary, refined_image_binary = await generate_image(prompt, interaction)
+    images = await generate_images(prompt,negative_prompt,interaction)
 
     # Construct the final message with user mention
     final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them."
-    await interaction.followup.send(content=final_message, file=discord.File(fp=refined_image_binary, filename='generated_image.png'), view=Buttons(base_image_binary,prompt))
+    await interaction.followup.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,images))
 
 # run the bot
 client.run(TOKEN)
