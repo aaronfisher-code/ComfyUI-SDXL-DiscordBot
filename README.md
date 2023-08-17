@@ -13,7 +13,7 @@ Certainly! Here's a more detailed description for your GitHub README:
 
 
 
-**SDXL-DiscordBot** is a powerful and versatile Discord bot designed specifically for image generation using the renowned SDXL model. It's inspired by the features of the Midjourney Discord bot, offering capabilities like text-to-image generation, variations in outputs, and the ability to upscale these outputs for enhanced clarity.
+**SDXL-DiscordBot** is a Discord bot designed specifically for image generation using the renowned SDXL 1.0 model. It's inspired by the features of the Midjourney Discord bot, offering capabilities like text-to-image generation, variations in outputs, and the ability to upscale these outputs for enhanced clarity.
 
 ## Key Features:
 
