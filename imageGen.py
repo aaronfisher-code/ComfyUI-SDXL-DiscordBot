@@ -91,7 +91,7 @@ class ImageGenerator:
         if self.ws:
             await self.ws.close()
 
-async def generate_images(prompt: str,negative_prompt: str,interaction):
+async def generate_images(prompt: str,negative_prompt: str):
     with open(text2img_config, 'r') as file:
       workflow = json.load(file)
       
