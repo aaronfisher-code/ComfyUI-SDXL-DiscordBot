@@ -65,14 +65,16 @@ class ImageGenerator:
         currently_Executing_Prompt = None
         output_images = []
         async for out in self.ws:
-            message = json.loads(out)
-            if message['type'] == 'execution_start':
-                currently_Executing_Prompt = message['data']['prompt_id']
-
-            if message['type'] == 'executing' and prompt_id == currently_Executing_Prompt:
-                data = message['data']
-                if data['node'] is None and data['prompt_id'] == prompt_id:
-                    break
+            try:
+                message = json.loads(out)
+                if message['type'] == 'execution_start':
+                    currently_Executing_Prompt = message['data']['prompt_id']
+                if message['type'] == 'executing' and prompt_id == currently_Executing_Prompt:
+                    data = message['data']
+                    if data['node'] is None and data['prompt_id'] == prompt_id:
+                        break
+            except ValueError as e:
+                print("Incompatible response from ComfyUI");
                 
         history = get_history(prompt_id)[prompt_id]
 
