@@ -18,6 +18,7 @@ server_address = config['LOCAL']['SERVER_ADDRESS']
 text2img_config = config['LOCAL_TEXT2IMG']['CONFIG']
 img2img_config = config['LOCAL_IMG2IMG']['CONFIG']
 upscale_config = config['LOCAL_UPSCALE']['CONFIG']
+text2video_config = config['LOCAL_TEXT2VIDEO']['CONFIG']
 
 def queue_prompt(prompt, client_id):
     p = {"prompt": prompt, "client_id": client_id}
@@ -123,6 +124,33 @@ async def generate_images(prompt: str,negative_prompt: str):
     if(rand_seed_nodes[0] != ''):
       for node in rand_seed_nodes:
           workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
+
+    images = await generator.get_images(workflow)
+    await generator.close()
+
+    return images
+
+async def generate_video(prompt: str, negative_prompt: str):
+    with open(text2video_config, 'r') as file:
+        workflow = json.load(file)
+
+    generator = ImageGenerator()
+    await generator.connect()
+
+    prompt_nodes = config.get('LOCAL_TEXT2VIDEO', 'PROMPT_NODES').split(',')
+    neg_prompt_nodes = config.get('LOCAL_TEXT2VIDEO', 'NEG_PROMPT_NODES').split(',')
+    rand_seed_nodes = config.get('LOCAL_TEXT2VIDEO', 'RAND_SEED_NODES').split(',')
+
+    # Modify the prompt dictionary
+    if (prompt != None and prompt_nodes[0] != ''):
+        for node in prompt_nodes:
+            workflow[node]["inputs"]["text"] = prompt
+    if (negative_prompt != None and neg_prompt_nodes[0] != ''):
+        for node in neg_prompt_nodes:
+            workflow[node]["inputs"]["text"] = negative_prompt
+    if (rand_seed_nodes[0] != ''):
+        for node in rand_seed_nodes:
+            workflow[node]["inputs"]["seed"] = random.randint(0, 999999999999999)
 
     images = await generator.get_images(workflow)
     await generator.close()

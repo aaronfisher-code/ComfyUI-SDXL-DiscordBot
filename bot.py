@@ -89,7 +89,7 @@ client = discord.Client(intents=intents)
 tree = discord.app_commands.CommandTree(client)
 
 if IMAGE_SOURCE == "LOCAL":
-    from imageGen import generate_images, upscale_image, generate_alternatives
+    from imageGen import generate_images, upscale_image, generate_alternatives, generate_video
 elif IMAGE_SOURCE == "API":
     from apiImageGen import generate_images, upscale_image, generate_alternatives
 
@@ -181,10 +181,22 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
     # Construct the final message with user mention
     final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them."
     # send as gif or png
-    if(images[0].format == 'GIF'):
-        await interaction.channel.send(content=final_message, file=discord.File(fp=create_gif_collage(images), filename='collage.gif'), view=Buttons(prompt,negative_prompt,images))
-    else:
-        await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,images))
+    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,images))
+
+@tree.command(name="video", description="Generate a video based on input text")
+@app_commands.describe(prompt='Prompt for the video being generated')
+@app_commands.describe(negative_prompt='Prompt for what you want to steer the AI away from')
+async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None):
+    # Send an initial message
+    await interaction.response.send_message(f"{interaction.user.mention} asked me to create the video \"{prompt}\", this shouldn't take too long...")
+
+    # Generate the video and get progress updates
+    video = await generate_video(prompt,negative_prompt)
+
+    # Construct the final message with user mention
+    final_message = f"{interaction.user.mention} asked me to create the video \"{prompt}\", here is what I created for them."
+
+    await interaction.channel.send(content=final_message, file=discord.File(fp=create_gif_collage(video), filename='collage.gif'))#, view=Buttons(prompt, negative_prompt, images))
 
 # run the bot
 client.run(TOKEN)
