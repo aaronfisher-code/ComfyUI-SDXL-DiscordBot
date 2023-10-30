@@ -34,7 +34,34 @@ def generate_default_config():
     with open('config.properties', 'w') as configfile:
         config.write(configfile)
 
+
+def create_gif_collage(images):
+    num_images = len(images)
+    num_cols = ceil(sqrt(num_images))
+    num_rows = ceil(num_images / num_cols)
+    collage_width = max(image.width for image in images) * num_cols
+    collage_height = max(image.height for image in images) * num_rows
+    collage = Image.new('RGB', (collage_width, collage_height))
+    collage.n_frames = images[0].n_frames
+
+    for idx, image in enumerate(images):
+        row = idx // num_cols
+        col = idx % num_cols
+        x_offset = col * image.width
+        y_offset = row * image.height
+        collage.paste(image, (x_offset, y_offset))
+
+    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+    collage_path = f"./out/images_{timestamp}.gif"
+    images[0].save(collage_path, save_all=True, append_images=images[1:], duration=125, loop=0)
+
+    return collage_path
+
+
 def create_collage(images):
+    if(images[0].format == 'GIF'):
+        return create_gif_collage(images)
+
     num_images = len(images)
     num_cols = ceil(sqrt(num_images))
     num_rows = ceil(num_images / num_cols)
@@ -113,7 +140,11 @@ class Buttons(discord.ui.View):
         images = await generate_alternatives(self.images[index], self.prompt, self.negative_prompt)
         collage_path = create_collage(images)
         final_message = f"{interaction.user.mention} here are your alternative images"
-        await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage.png'), view=Buttons(self.prompt, self.negative_prompt, images))
+        # if a gif, set filename as gif, otherwise png
+        if(images[0].format == 'GIF'):
+            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage' + '.gif'), view=Buttons(self.prompt, self.negative_prompt, images))
+        else:
+            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage.png'), view=Buttons(self.prompt, self.negative_prompt, images))
 
     async def upscale_and_send(self, interaction, button):
         index = int(button.label[1:]) - 1  # Extract index from label
@@ -149,7 +180,11 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
 
     # Construct the final message with user mention
     final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them."
-    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,images))
+    # send as gif or png
+    if(images[0].format == 'GIF'):
+        await interaction.channel.send(content=final_message, file=discord.File(fp=create_gif_collage(images), filename='collage.gif'), view=Buttons(prompt,negative_prompt,images))
+    else:
+        await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,images))
 
 # run the bot
 client.run(TOKEN)

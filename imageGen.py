@@ -87,6 +87,15 @@ class ImageGenerator:
                         pil_image = Image.open(BytesIO(image_data))
                         output_images.append(pil_image)
 
+        for node_id in history['outputs']:
+            node_output = history['outputs'][node_id]
+            if 'gifs' in node_output:
+                for gif in node_output['gifs']:
+                    image_data = get_image(gif['filename'], gif['subfolder'], gif['type'])
+                    if 'final_output' in gif['filename']:
+                        pil_image = Image.open(BytesIO(image_data))
+                        output_images.append(pil_image)
+
         return output_images
 
     async def close(self):
