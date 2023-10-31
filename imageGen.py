@@ -138,7 +138,10 @@ async def generate_images(prompt: str,negative_prompt: str, model: str = None, l
     # Modify the prompt dictionary
     if(prompt != None and prompt_nodes[0] != ''):
       for node in prompt_nodes:
-          workflow[node]["inputs"]["text"] = prompt
+          if("text" in workflow[node]["inputs"]):
+              workflow[node]["inputs"]["text"] = prompt
+          elif("prompt" in workflow[node]["inputs"]):
+              workflow[node]["inputs"]["prompt"] = prompt
     if(negative_prompt != None and neg_prompt_nodes[0] != ''):
       for node in neg_prompt_nodes:
           workflow[node]["inputs"]["text"] = negative_prompt

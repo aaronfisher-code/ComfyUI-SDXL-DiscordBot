@@ -1,47 +1,9 @@
 {
-  "3": {
-    "inputs": {
-      "seed": [
-        "12",
-        0
-      ],
-      "steps": 20,
-      "cfg": 8,
-      "sampler_name": "ddim",
-      "scheduler": "ddim_uniform",
-      "denoise": 0.8,
-      "model": [
-        "11",
-        0
-      ],
-      "positive": [
-        "19",
-        0
-      ],
-      "negative": [
-        "19",
-        1
-      ],
-      "latent_image": [
-        "20",
-        0
-      ]
-    },
-    "class_type": "KSampler"
-  },
   "4": {
     "inputs": {
       "ckpt_name": "rundiffusionFX_v10.safetensors"
     },
     "class_type": "CheckpointLoaderSimple"
-  },
-  "5": {
-    "inputs": {
-      "width": 512,
-      "height": 512,
-      "batch_size": 4
-    },
-    "class_type": "EmptyLatentImage"
   },
   "6": {
     "inputs": {
@@ -63,24 +25,11 @@
     },
     "class_type": "CLIPTextEncode"
   },
-  "8": {
-    "inputs": {
-      "samples": [
-        "3",
-        0
-      ],
-      "vae": [
-        "21",
-        0
-      ]
-    },
-    "class_type": "VAEDecode"
-  },
   "9": {
     "inputs": {
       "filename_prefix": "final_output",
       "images": [
-        "8",
+        "22",
         0
       ]
     },
@@ -109,7 +58,7 @@
   },
   "12": {
     "inputs": {
-      "seed": 609268786121003
+      "seed": 88855871091011
     },
     "class_type": "Seed (rgthree)"
   },
@@ -120,19 +69,6 @@
     },
     "class_type": "LoadImage"
   },
-  "14": {
-    "inputs": {
-      "pixels": [
-        "13",
-        0
-      ],
-      "vae": [
-        "21",
-        0
-      ]
-    },
-    "class_type": "VAEEncode"
-  },
   "18": {
     "inputs": {
       "control_net_name": "control_v11f1e_sd15_tile.pth"
@@ -141,7 +77,7 @@
   },
   "19": {
     "inputs": {
-      "strength": 0.7000000000000001,
+      "strength": 0.5,
       "start_percent": 0,
       "end_percent": 1,
       "positive": [
@@ -163,21 +99,66 @@
     },
     "class_type": "ControlNetApplyAdvanced"
   },
-  "20": {
+  "21": {
     "inputs": {
-      "upscale_method": "bilinear",
-      "scale_by": 2,
-      "samples": [
-        "14",
+      "vae_name": "vae-ft-mse-840000-ema-pruned.ckpt"
+    },
+    "class_type": "VAELoader"
+  },
+  "22": {
+    "inputs": {
+      "upscale_by": 2,
+      "seed": [
+        "12",
+        0
+      ],
+      "steps": 20,
+      "cfg": 8,
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 0.4,
+      "mode_type": "Linear",
+      "tile_width": 512,
+      "tile_height": 512,
+      "mask_blur": 8,
+      "tile_padding": 32,
+      "seam_fix_mode": "None",
+      "seam_fix_denoise": 0.15,
+      "seam_fix_width": 64,
+      "seam_fix_mask_blur": 8,
+      "seam_fix_padding": 16,
+      "force_uniform_tiles": "enable",
+      "image": [
+        "13",
+        0
+      ],
+      "model": [
+        "4",
+        0
+      ],
+      "positive": [
+        "19",
+        0
+      ],
+      "negative": [
+        "19",
+        1
+      ],
+      "vae": [
+        "21",
+        0
+      ],
+      "upscale_model": [
+        "23",
         0
       ]
     },
-    "class_type": "LatentUpscaleBy"
+    "class_type": "UltimateSDUpscale"
   },
-  "21": {
+  "23": {
     "inputs": {
-      "vae_name": "vae-ft-mse-840000-ema-pruned.safetensors"
+      "model_name": "ESRGAN_4x.pth"
     },
-    "class_type": "VAELoader"
+    "class_type": "Upscale Model Loader"
   }
 }

@@ -115,7 +115,7 @@
   },
   "13": {
     "inputs": {
-      "vae_name": "vae-ft-mse-840000-ema-pruned.safetensors"
+      "vae_name": "vae-ft-mse-840000-ema-pruned.ckpt"
     },
     "class_type": "VAELoader"
   }
