@@ -70,8 +70,8 @@
         0
       ],
       "vae": [
-        "4",
-        2
+        "13",
+        0
       ]
     },
     "class_type": "VAEDecode"
@@ -112,5 +112,11 @@
       "seed": 609268786121003
     },
     "class_type": "Seed (rgthree)"
+  },
+  "13": {
+    "inputs": {
+      "vae_name": "vae-ft-mse-840000-ema-pruned.safetensors"
+    },
+    "class_type": "VAELoader"
   }
 }

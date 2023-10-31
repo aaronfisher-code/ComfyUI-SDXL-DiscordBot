@@ -1,6 +1,6 @@
 {
-  "last_node_id": 20,
-  "last_link_id": 35,
+  "last_node_id": 21,
+  "last_link_id": 37,
   "nodes": [
     {
       "id": 7,
@@ -14,7 +14,7 @@
         "1": 180.6060791015625
       },
       "flags": {},
-      "order": 8,
+      "order": 9,
       "mode": 0,
       "inputs": [
         {
@@ -52,7 +52,7 @@
         "1": 164.31304931640625
       },
       "flags": {},
-      "order": 7,
+      "order": 8,
       "mode": 0,
       "inputs": [
         {
@@ -90,7 +90,7 @@
         "1": 46
       },
       "flags": {},
-      "order": 12,
+      "order": 13,
       "mode": 0,
       "inputs": [
         {
@@ -101,7 +101,7 @@
         {
           "name": "vae",
           "type": "VAE",
-          "link": 8
+          "link": 37
         }
       ],
       "outputs": [
@@ -161,7 +161,7 @@
         "1": 246
       },
       "flags": {},
-      "order": 5,
+      "order": 6,
       "mode": 0,
       "inputs": [
         {
@@ -246,66 +246,18 @@
       ]
     },
     {
-      "id": 4,
-      "type": "CheckpointLoaderSimple",
-      "pos": [
-        -357,
-        460
-      ],
-      "size": {
-        "0": 315,
-        "1": 98
-      },
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            16
-          ],
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            17
-          ],
-          "slot_index": 1
-        },
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": [
-            8,
-            23
-          ],
-          "slot_index": 2
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CheckpointLoaderSimple"
-      },
-      "widgets_values": [
-        "rundiffusionFX_v10.safetensors"
-      ]
-    },
-    {
       "id": 13,
       "type": "LoadImage",
       "pos": [
         -350,
         -25
       ],
-      "size": [
-        315,
-        313.99999618530273
-      ],
+      "size": {
+        "0": 315,
+        "1": 314
+      },
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
       "outputs": [
         {
@@ -340,12 +292,12 @@
         2180,
         190
       ],
-      "size": [
-        210,
-        270
-      ],
+      "size": {
+        "0": 210,
+        "1": 270
+      },
       "flags": {},
-      "order": 13,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
@@ -371,7 +323,7 @@
         "1": 262
       },
       "flags": {},
-      "order": 11,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
@@ -439,7 +391,7 @@
         "1": 166
       },
       "flags": {},
-      "order": 10,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
@@ -507,7 +459,7 @@
         "1": 58
       },
       "flags": {},
-      "order": 4,
+      "order": 3,
       "mode": 0,
       "outputs": [
         {
@@ -539,7 +491,7 @@
         "1": 46
       },
       "flags": {},
-      "order": 6,
+      "order": 7,
       "mode": 0,
       "inputs": [
         {
@@ -550,7 +502,7 @@
         {
           "name": "vae",
           "type": "VAE",
-          "link": 23,
+          "link": 36,
           "slot_index": 1
         }
       ],
@@ -581,7 +533,7 @@
         "1": 82
       },
       "flags": {},
-      "order": 9,
+      "order": 10,
       "mode": 0,
       "inputs": [
         {
@@ -608,6 +560,84 @@
         "bilinear",
         2
       ]
+    },
+    {
+      "id": 4,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -515,
+        455
+      ],
+      "size": {
+        "0": 315,
+        "1": 98
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            16
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            17
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "rundiffusionFX_v10.safetensors"
+      ]
+    },
+    {
+      "id": 21,
+      "type": "VAELoader",
+      "pos": [
+        -554,
+        718
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            36,
+            37
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "vae-ft-mse-840000-ema-pruned.safetensors"
+      ]
     }
   ],
   "links": [
@@ -618,14 +648,6 @@
       8,
       0,
       "LATENT"
-    ],
-    [
-      8,
-      4,
-      2,
-      8,
-      1,
-      "VAE"
     ],
     [
       9,
@@ -692,14 +714,6 @@
       "IMAGE"
     ],
     [
-      23,
-      4,
-      2,
-      14,
-      1,
-      "VAE"
-    ],
-    [
       28,
       6,
       0,
@@ -762,6 +776,22 @@
       3,
       3,
       "LATENT"
+    ],
+    [
+      36,
+      21,
+      0,
+      14,
+      1,
+      "VAE"
+    ],
+    [
+      37,
+      21,
+      0,
+      8,
+      1,
+      "VAE"
     ]
   ],
   "groups": [],

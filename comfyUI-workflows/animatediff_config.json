@@ -1,7 +1,7 @@
 {
   "2": {
     "inputs": {
-      "vae_name": "vae-ft-mse-840000-ema-pruned.ckpt"
+      "vae_name": "vae-ft-mse-840000-ema-pruned.safetensors"
     },
     "class_type": "VAELoader"
   },

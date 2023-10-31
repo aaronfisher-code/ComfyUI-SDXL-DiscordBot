@@ -1,6 +1,6 @@
 {
-  "last_node_id": 12,
-  "last_link_id": 21,
+  "last_node_id": 13,
+  "last_link_id": 22,
   "nodes": [
     {
       "id": 7,
@@ -14,7 +14,7 @@
         "1": 180.6060791015625
       },
       "flags": {},
-      "order": 5,
+      "order": 6,
       "mode": 0,
       "inputs": [
         {
@@ -52,7 +52,7 @@
         "1": 164.31304931640625
       },
       "flags": {},
-      "order": 4,
+      "order": 5,
       "mode": 0,
       "inputs": [
         {
@@ -90,7 +90,7 @@
         "1": 46
       },
       "flags": {},
-      "order": 7,
+      "order": 8,
       "mode": 0,
       "inputs": [
         {
@@ -101,7 +101,7 @@
         {
           "name": "vae",
           "type": "VAE",
-          "link": 8
+          "link": 22
         }
       ],
       "outputs": [
@@ -163,7 +163,7 @@
         "1": 58
       },
       "flags": {},
-      "order": 8,
+      "order": 9,
       "mode": 0,
       "inputs": [
         {
@@ -189,7 +189,7 @@
         "1": 246
       },
       "flags": {},
-      "order": 3,
+      "order": 4,
       "mode": 0,
       "inputs": [
         {
@@ -250,7 +250,7 @@
         "1": 262
       },
       "flags": {},
-      "order": 6,
+      "order": 7,
       "mode": 0,
       "inputs": [
         {
@@ -345,8 +345,8 @@
       "id": 4,
       "type": "CheckpointLoaderSimple",
       "pos": [
-        -357,
-        460
+        -628,
+        442
       ],
       "size": {
         "0": 315,
@@ -375,9 +375,7 @@
         {
           "name": "VAE",
           "type": "VAE",
-          "links": [
-            8
-          ],
+          "links": [],
           "slot_index": 2
         }
       ],
@@ -386,6 +384,38 @@
       },
       "widgets_values": [
         "rundiffusionFX_v10.safetensors"
+      ]
+    },
+    {
+      "id": 13,
+      "type": "VAELoader",
+      "pos": [
+        -543,
+        266
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            22
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "vae-ft-mse-840000-ema-pruned.safetensors"
       ]
     }
   ],
@@ -421,14 +451,6 @@
       8,
       0,
       "LATENT"
-    ],
-    [
-      8,
-      4,
-      2,
-      8,
-      1,
-      "VAE"
     ],
     [
       9,
@@ -485,6 +507,14 @@
       3,
       4,
       "INT"
+    ],
+    [
+      22,
+      13,
+      0,
+      8,
+      1,
+      "VAE"
     ]
   ],
   "groups": [],

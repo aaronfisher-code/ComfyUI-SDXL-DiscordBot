@@ -241,7 +241,7 @@
         26
       ],
       "flags": {},
-      "order": 4,
+      "order": 5,
       "mode": 0,
       "inputs": [
         {
@@ -264,38 +264,6 @@
         "showOutputText": false,
         "horizontal": false
       }
-    },
-    {
-      "id": 2,
-      "type": "VAELoader",
-      "pos": [
-        313.8570326567498,
-        138.21976155488264
-      ],
-      "size": {
-        "0": 385.8948669433594,
-        "1": 58
-      },
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": [
-            102
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VAELoader"
-      },
-      "widgets_values": [
-        "vae-ft-mse-840000-ema-pruned.ckpt"
-      ]
     },
     {
       "id": 39,
@@ -438,7 +406,7 @@
         "1": 106
       },
       "flags": {},
-      "order": 1,
+      "order": 0,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -473,7 +441,7 @@
         "1": 130
       },
       "flags": {},
-      "order": 2,
+      "order": 1,
       "mode": 0,
       "outputs": [
         {
@@ -590,7 +558,7 @@
         "1": 246
       },
       "flags": {},
-      "order": 5,
+      "order": 4,
       "mode": 0,
       "inputs": [
         {
@@ -689,7 +657,7 @@
         "1": 122
       },
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
       "outputs": [
         {
@@ -724,6 +692,38 @@
       "widgets_values": [
         "rundiffusionFX_v10.safetensors",
         "linear (HotshotXL/default)"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "VAELoader",
+      "pos": [
+        313.8570326567498,
+        138.21976155488264
+      ],
+      "size": {
+        "0": 385.8948669433594,
+        "1": 58
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            102
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "vae-ft-mse-840000-ema-pruned.safetensors"
       ]
     }
   ],

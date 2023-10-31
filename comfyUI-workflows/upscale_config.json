@@ -70,8 +70,8 @@
         0
       ],
       "vae": [
-        "4",
-        2
+        "21",
+        0
       ]
     },
     "class_type": "VAEDecode"
@@ -127,8 +127,8 @@
         0
       ],
       "vae": [
-        "4",
-        2
+        "21",
+        0
       ]
     },
     "class_type": "VAEEncode"
@@ -173,5 +173,11 @@
       ]
     },
     "class_type": "LatentUpscaleBy"
+  },
+  "21": {
+    "inputs": {
+      "vae_name": "vae-ft-mse-840000-ema-pruned.safetensors"
+    },
+    "class_type": "VAELoader"
   }
 }
