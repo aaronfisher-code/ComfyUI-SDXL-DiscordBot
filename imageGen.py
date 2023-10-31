@@ -16,7 +16,9 @@ config = configparser.ConfigParser()
 config.read('config.properties')
 server_address = config['LOCAL']['SERVER_ADDRESS']
 text2img_config = config['LOCAL_TEXT2IMG']['CONFIG']
+sdxltxt2img_config = config['LOCAL_SDXL_TXT2IMG_CONFIG']['CONFIG']
 img2img_config = config['LOCAL_IMG2IMG']['CONFIG']
+sdxlimg2img_config = config['LOCAL_SDXL_IMG2IMG_CONFIG']['CONFIG']
 upscale_config = config['LOCAL_UPSCALE']['CONFIG']
 text2video_config = config['LOCAL_TEXT2VIDEO']['CONFIG']
 
@@ -113,18 +115,25 @@ class ImageGenerator:
         if self.ws:
             await self.ws.close()
 
-async def generate_images(prompt: str,negative_prompt: str, model: str = None, lora: str = None):
-    with open(text2img_config, 'r') as file:
-      workflow = json.load(file)
-      
+async def generate_images(prompt: str,negative_prompt: str, model: str = None, lora: str = None, config_name: str = None):
+    if config_name == None:
+        config_name = 'LOCAL_TEXT2IMG'
+
+    if(config_name == 'LOCAL_TEXT2IMG'):
+        with open(text2img_config, 'r') as file:
+          workflow = json.load(file)
+    else:
+        with open(sdxltxt2img_config, 'r') as file:
+          workflow = json.load(file)
+
     generator = ImageGenerator()
     await generator.connect()
 
-    prompt_nodes = config.get('LOCAL_TEXT2IMG', 'PROMPT_NODES').split(',')
-    neg_prompt_nodes = config.get('LOCAL_TEXT2IMG', 'NEG_PROMPT_NODES').split(',')
-    rand_seed_nodes = config.get('LOCAL_TEXT2IMG', 'RAND_SEED_NODES').split(',') 
-    model_node = config.get('LOCAL_TEXT2IMG', 'MODEL_NODE').split(',')
-    lora_node = config.get('LOCAL_TEXT2IMG', 'LORA_NODE').split(',')
+    prompt_nodes = config.get(config_name, 'PROMPT_NODES').split(',')
+    neg_prompt_nodes = config.get(config_name, 'NEG_PROMPT_NODES').split(',')
+    rand_seed_nodes = config.get(config_name, 'RAND_SEED_NODES').split(',')
+    model_node = config.get(config_name, 'MODEL_NODE').split(',')
+    lora_node = config.get(config_name, 'LORA_NODE').split(',')
 
     # Modify the prompt dictionary
     if(prompt != None and prompt_nodes[0] != ''):
@@ -183,7 +192,10 @@ async def generate_video(prompt: str, negative_prompt: str, model: str = None, l
 
     return images
 
-async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt: str, model: str = None, lora: str = None):
+async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt: str, model: str = None, lora: str = None, config_name: str = None):
+    if config_name == None:
+        config_name = 'LOCAL_IMG2IMG'
+
     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
       image.save(temp_file, format="PNG")
       temp_filepath = temp_file.name
@@ -191,22 +203,30 @@ async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt
     # Upload the temporary file using the upload_image method
     response_data = upload_image(temp_filepath)
     filename = response_data['name']
-    with open(img2img_config, 'r') as file:
-      workflow = json.load(file)
+
+    if(config_name == 'LOCAL_IMG2IMG'):
+        with open(img2img_config, 'r') as file:
+          workflow = json.load(file)
+    elif('SDXL' in config_name):
+        with open(sdxlimg2img_config, 'r') as file:
+          workflow = json.load(file)
       
     generator = ImageGenerator()
     await generator.connect()
 
-    prompt_nodes = config.get('LOCAL_IMG2IMG', 'PROMPT_NODES').split(',')
-    neg_prompt_nodes = config.get('LOCAL_IMG2IMG', 'NEG_PROMPT_NODES').split(',')
-    rand_seed_nodes = config.get('LOCAL_IMG2IMG', 'RAND_SEED_NODES').split(',') 
-    file_input_nodes = config.get('LOCAL_IMG2IMG', 'FILE_INPUT_NODES').split(',')
-    model_node = config.get('LOCAL_IMG2IMG', 'MODEL_NODE').split(',')
-    lora_node = config.get('LOCAL_IMG2IMG', 'LORA_NODE').split(',')
+    prompt_nodes = config.get(config_name, 'PROMPT_NODES').split(',')
+    neg_prompt_nodes = config.get(config_name, 'NEG_PROMPT_NODES').split(',')
+    rand_seed_nodes = config.get(config_name, 'RAND_SEED_NODES').split(',')
+    file_input_nodes = config.get(config_name, 'FILE_INPUT_NODES').split(',')
+    model_node = config.get(config_name, 'MODEL_NODE').split(',')
+    lora_node = config.get(config_name, 'LORA_NODE').split(',')
 
     if(prompt != None and prompt_nodes[0] != ''):
       for node in prompt_nodes:
-          workflow[node]["inputs"]["text"] = prompt
+        if("text" in workflow[node]["inputs"]):
+            workflow[node]["inputs"]["text"] = prompt
+        elif("prompt" in workflow[node]["inputs"]):
+            workflow[node]["inputs"]["prompt"] = prompt
     if(negative_prompt != None and neg_prompt_nodes[0] != ''):
       for node in neg_prompt_nodes:
           workflow[node]["inputs"]["text"] = negative_prompt
