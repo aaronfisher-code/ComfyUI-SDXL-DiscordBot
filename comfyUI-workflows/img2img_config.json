@@ -9,7 +9,7 @@
       "cfg": 8,
       "sampler_name": "ddim",
       "scheduler": "ddim_uniform",
-      "denoise": 0.9,
+      "denoise": 0.8,
       "model": [
         "11",
         0
@@ -23,7 +23,7 @@
         0
       ],
       "latent_image": [
-        "15",
+        "14",
         0
       ]
     },
@@ -34,6 +34,14 @@
       "ckpt_name": "rundiffusionFX_v10.safetensors"
     },
     "class_type": "CheckpointLoaderSimple"
+  },
+  "5": {
+    "inputs": {
+      "width": 512,
+      "height": 512,
+      "batch_size": 4
+    },
+    "class_type": "EmptyLatentImage"
   },
   "6": {
     "inputs": {
@@ -124,15 +132,5 @@
       ]
     },
     "class_type": "VAEEncode"
-  },
-  "15": {
-    "inputs": {
-      "amount": 4,
-      "samples": [
-        "14",
-        0
-      ]
-    },
-    "class_type": "RepeatLatentBatch"
   }
 }

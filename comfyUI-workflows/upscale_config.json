@@ -1,9 +1,47 @@
 {
+  "3": {
+    "inputs": {
+      "seed": [
+        "12",
+        0
+      ],
+      "steps": 20,
+      "cfg": 8,
+      "sampler_name": "ddim",
+      "scheduler": "ddim_uniform",
+      "denoise": 0.8,
+      "model": [
+        "11",
+        0
+      ],
+      "positive": [
+        "19",
+        0
+      ],
+      "negative": [
+        "19",
+        1
+      ],
+      "latent_image": [
+        "20",
+        0
+      ]
+    },
+    "class_type": "KSampler"
+  },
   "4": {
     "inputs": {
       "ckpt_name": "rundiffusionFX_v10.safetensors"
     },
     "class_type": "CheckpointLoaderSimple"
+  },
+  "5": {
+    "inputs": {
+      "width": 512,
+      "height": 512,
+      "batch_size": 4
+    },
+    "class_type": "EmptyLatentImage"
   },
   "6": {
     "inputs": {
@@ -25,11 +63,24 @@
     },
     "class_type": "CLIPTextEncode"
   },
+  "8": {
+    "inputs": {
+      "samples": [
+        "3",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
+    },
+    "class_type": "VAEDecode"
+  },
   "9": {
     "inputs": {
       "filename_prefix": "final_output",
       "images": [
-        "15",
+        "8",
         0
       ]
     },
@@ -69,37 +120,30 @@
     },
     "class_type": "LoadImage"
   },
-  "15": {
+  "14": {
     "inputs": {
-      "upscale_by": 2,
-      "seed": [
-        "12",
-        0
-      ],
-      "steps": 40,
-      "cfg": 8,
-      "sampler_name": "ddim",
-      "scheduler": "ddim_uniform",
-      "denoise": 0.2,
-      "mode_type": "Linear",
-      "tile_width": 512,
-      "tile_height": 512,
-      "mask_blur": 8,
-      "tile_padding": 32,
-      "seam_fix_mode": "None",
-      "seam_fix_denoise": 1,
-      "seam_fix_width": 64,
-      "seam_fix_mask_blur": 8,
-      "seam_fix_padding": 16,
-      "force_uniform_tiles": "enable",
-      "image": [
+      "pixels": [
         "13",
         0
       ],
-      "model": [
-        "11",
-        0
-      ],
+      "vae": [
+        "4",
+        2
+      ]
+    },
+    "class_type": "VAEEncode"
+  },
+  "18": {
+    "inputs": {
+      "control_net_name": "control_v11f1e_sd15_tile.pth"
+    },
+    "class_type": "ControlNetLoader"
+  },
+  "19": {
+    "inputs": {
+      "strength": 0.7000000000000001,
+      "start_percent": 0,
+      "end_percent": 1,
       "positive": [
         "6",
         0
@@ -108,21 +152,26 @@
         "7",
         0
       ],
-      "vae": [
-        "4",
-        2
+      "control_net": [
+        "18",
+        0
       ],
-      "upscale_model": [
-        "16",
+      "image": [
+        "13",
         0
       ]
     },
-    "class_type": "UltimateSDUpscale"
+    "class_type": "ControlNetApplyAdvanced"
   },
-  "16": {
+  "20": {
     "inputs": {
-      "model_name": "ESRGAN_4x.pth"
+      "upscale_method": "bilinear",
+      "scale_by": 2,
+      "samples": [
+        "14",
+        0
+      ]
     },
-    "class_type": "Upscale Model Loader"
+    "class_type": "LatentUpscaleBy"
   }
 }
