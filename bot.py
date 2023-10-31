@@ -184,7 +184,7 @@ class Buttons(discord.ui.View):
 @app_commands.describe(negative_prompt='Prompt for what you want to steer the AI away from')
 @app_commands.describe(model='Model checkpoint to use')
 @app_commands.describe(lora='LoRA to apply')
-@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]], lora=[app_commands.Choice(name=l, value=l) for l in loras[0]])
+@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0]][0:25])
 async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None):
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")
@@ -202,7 +202,7 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
 @app_commands.describe(negative_prompt='Prompt for what you want to steer the AI away from')
 @app_commands.describe(model='Model checkpoint to use')
 @app_commands.describe(lora='LoRA to apply')
-@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]], lora=[app_commands.Choice(name=l, value=l) for l in loras[0]])
+@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0]][0:25])
 async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None):
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to create the video \"{prompt}\", this shouldn't take too long...")
@@ -220,7 +220,7 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
 @app_commands.describe(negative_prompt='Prompt for what you want to steer the AI away from')
 @app_commands.describe(model='Model checkpoint to use')
 @app_commands.describe(lora='LoRA to apply')
-@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0] if "sdxl" in m], lora=[app_commands.Choice(name=l, value=l) for l in loras[0] if "sdxl" in l])
+@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0] if "sdxl" in m][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0] if "sdxl" in l][0:25])
 async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None):
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")
