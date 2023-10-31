@@ -1,0 +1,159 @@
+{
+  "2": {
+    "inputs": {
+      "vae_name": "vae-ft-mse-840000-ema-pruned.ckpt"
+    },
+    "class_type": "VAELoader"
+  },
+  "3": {
+    "inputs": {
+      "text": "best quality, masterpiece,\na full shot of erikhelwig kicking music instruments around in front of a solid color background, simple background, greenscreen",
+      "clip": [
+        "4",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "4": {
+    "inputs": {
+      "stop_at_clip_layer": -1,
+      "clip": [
+        "140",
+        1
+      ]
+    },
+    "class_type": "CLIPSetLastLayer"
+  },
+  "6": {
+    "inputs": {
+      "text": "(worst quality, low quality: 1.4), door, outdoors",
+      "clip": [
+        "4",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "7": {
+    "inputs": {
+      "seed": [
+        "123",
+        0
+      ],
+      "steps": 20,
+      "cfg": 8,
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "denoise": 1,
+      "model": [
+        "39",
+        0
+      ],
+      "positive": [
+        "3",
+        0
+      ],
+      "negative": [
+        "6",
+        0
+      ],
+      "latent_image": [
+        "39",
+        1
+      ]
+    },
+    "class_type": "KSampler"
+  },
+  "10": {
+    "inputs": {
+      "samples": [
+        "7",
+        0
+      ],
+      "vae": [
+        "2",
+        0
+      ]
+    },
+    "class_type": "VAEDecode"
+  },
+  "28": {
+    "inputs": {
+      "width": 512,
+      "height": 512,
+      "batch_size": 32
+    },
+    "class_type": "ADE_EmptyLatentImageLarge"
+  },
+  "39": {
+    "inputs": {
+      "model_name": "mm-Stabilized_high.pth",
+      "unlimited_area_hack": false,
+      "context_length": 16,
+      "context_stride": 2,
+      "context_overlap": 4,
+      "context_schedule": "uniform",
+      "closed_loop": false,
+      "beta_schedule": "sqrt_linear (AnimateDiff)",
+      "model": [
+        "140",
+        0
+      ],
+      "latents": [
+        "28",
+        0
+      ]
+    },
+    "class_type": "ADE_AnimateDiffLoaderV1Advanced"
+  },
+  "118": {
+    "inputs": {
+      "ckpt_name": "rundiffusionFX_v10.safetensors",
+      "beta_schedule": "linear (HotshotXL/default)"
+    },
+    "class_type": "CheckpointLoaderSimpleWithNoiseSelect"
+  },
+  "123": {
+    "inputs": {
+      "seed": 980596870328812
+    },
+    "class_type": "Seed (rgthree)"
+  },
+  "139": {
+    "inputs": {
+      "frame_rate": 8,
+      "loop_count": 0,
+      "filename_prefix": "final_output",
+      "format": "image/gif",
+      "pingpong": false,
+      "save_image": false,
+      "images": [
+        "10",
+        0
+      ]
+    },
+    "class_type": "ADE_AnimateDiffCombine"
+  },
+  "140": {
+    "inputs": {
+      "lora_01": "None",
+      "strength_01": 1,
+      "lora_02": "None",
+      "strength_02": 1,
+      "lora_03": "None",
+      "strength_03": 1,
+      "lora_04": "None",
+      "strength_04": 1,
+      "model": [
+        "118",
+        0
+      ],
+      "clip": [
+        "118",
+        1
+      ]
+    },
+    "class_type": "Lora Loader Stack (rgthree)"
+  }
+}

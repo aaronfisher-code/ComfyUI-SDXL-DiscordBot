@@ -15,7 +15,7 @@
         0
       ],
       "positive": [
-        "6",
+        "17",
         0
       ],
       "negative": [
@@ -31,19 +31,9 @@
   },
   "4": {
     "inputs": {
-      "ckpt_name": "photon_v1_2.safetensors"
+      "ckpt_name": "sd_xl_base_1.0.safetensors"
     },
     "class_type": "CheckpointLoaderSimple"
-  },
-  "6": {
-    "inputs": {
-      "text": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,",
-      "clip": [
-        "11",
-        1
-      ]
-    },
-    "class_type": "CLIPTextEncode"
   },
   "7": {
     "inputs": {
@@ -134,5 +124,40 @@
       ]
     },
     "class_type": "RepeatLatentBatch"
+  },
+  "17": {
+    "inputs": {
+      "width": 4096,
+      "height": 4096,
+      "crop_w": 0,
+      "crop_h": 0,
+      "target_width": 4096,
+      "target_height": 4096,
+      "text_g": [
+        "21",
+        0
+      ],
+      "text_l": [
+        "22",
+        0
+      ],
+      "clip": [
+        "11",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncodeSDXL"
+  },
+  "21": {
+    "inputs": {
+      "prompt": "text1"
+    },
+    "class_type": "CR Prompt Text"
+  },
+  "22": {
+    "inputs": {
+      "prompt": "text2"
+    },
+    "class_type": "CR Prompt Text"
   }
 }

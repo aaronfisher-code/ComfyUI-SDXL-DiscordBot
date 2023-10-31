@@ -1,162 +1,116 @@
 {
-    "4": {
-      "inputs": {
-        "ckpt_name": "sd_xl_base_1.0.safetensors"
-      },
-      "class_type": "CheckpointLoaderSimple"
+  "3": {
+    "inputs": {
+      "seed": [
+        "12",
+        0
+      ],
+      "steps": 20,
+      "cfg": 8,
+      "sampler_name": "ddim",
+      "scheduler": "ddim_uniform",
+      "denoise": 1,
+      "model": [
+        "11",
+        0
+      ],
+      "positive": [
+        "6",
+        0
+      ],
+      "negative": [
+        "7",
+        0
+      ],
+      "latent_image": [
+        "5",
+        0
+      ]
     },
-    "6": {
-      "inputs": {
-        "text": "",
-        "clip": [
-          "4",
-          1
-        ]
-      },
-      "class_type": "CLIPTextEncode"
+    "class_type": "KSampler"
+  },
+  "4": {
+    "inputs": {
+      "ckpt_name": "rundiffusionFX_v10.safetensors"
     },
-    "7": {
-      "inputs": {
-        "text": "",
-        "clip": [
-          "4",
-          1
-        ]
-      },
-      "class_type": "CLIPTextEncode"
+    "class_type": "CheckpointLoaderSimple"
+  },
+  "5": {
+    "inputs": {
+      "width": 512,
+      "height": 512,
+      "batch_size": 4
     },
-    "8": {
-      "inputs": {
-        "samples": [
-          "17",
-          0
-        ],
-        "vae": [
-          "4",
-          2
-        ]
-      },
-      "class_type": "VAEDecode"
+    "class_type": "EmptyLatentImage"
+  },
+  "6": {
+    "inputs": {
+      "text": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,",
+      "clip": [
+        "11",
+        1
+      ]
     },
-    "9": {
-      "inputs": {
-        "filename_prefix": "base_output",
-        "images": [
-          "8",
-          0
-        ]
-      },
-      "class_type": "SaveImage"
+    "class_type": "CLIPTextEncode"
+  },
+  "7": {
+    "inputs": {
+      "text": "text, watermark",
+      "clip": [
+        "11",
+        1
+      ]
     },
-    "11": {
-      "inputs": {
-        "ckpt_name": "sd_xl_refiner_1.0.safetensors"
-      },
-      "class_type": "CheckpointLoaderSimple"
+    "class_type": "CLIPTextEncode"
+  },
+  "8": {
+    "inputs": {
+      "samples": [
+        "3",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
     },
-    "12": {
-      "inputs": {
-        "text": "",
-        "clip": [
-          "11",
-          1
-        ]
-      },
-      "class_type": "CLIPTextEncode"
+    "class_type": "VAEDecode"
+  },
+  "9": {
+    "inputs": {
+      "filename_prefix": "final_output",
+      "images": [
+        "8",
+        0
+      ]
     },
-    "13": {
-      "inputs": {
-        "text": "",
-        "clip": [
-          "11",
-          1
-        ]
-      },
-      "class_type": "CLIPTextEncode"
+    "class_type": "SaveImage"
+  },
+  "11": {
+    "inputs": {
+      "lora_01": "None",
+      "strength_01": 1,
+      "lora_02": "None",
+      "strength_02": 1,
+      "lora_03": "None",
+      "strength_03": 1,
+      "lora_04": "None",
+      "strength_04": 1,
+      "model": [
+        "4",
+        0
+      ],
+      "clip": [
+        "4",
+        1
+      ]
     },
-    "17": {
-      "inputs": {
-        "seed": 1002925642440624,
-        "steps": 20,
-        "cfg": 6,
-        "sampler_name": "dpmpp_2s_ancestral",
-        "scheduler": "normal",
-        "denoise": 1,
-        "model": [
-          "4",
-          0
-        ],
-        "positive": [
-          "6",
-          0
-        ],
-        "negative": [
-          "7",
-          0
-        ],
-        "latent_image": [
-          "21",
-          0
-        ]
-      },
-      "class_type": "KSampler"
+    "class_type": "Lora Loader Stack (rgthree)"
+  },
+  "12": {
+    "inputs": {
+      "seed": 609268786121003
     },
-    "18": {
-      "inputs": {
-        "samples": [
-          "20",
-          0
-        ],
-        "vae": [
-          "11",
-          2
-        ]
-      },
-      "class_type": "VAEDecode"
-    },
-    "19": {
-      "inputs": {
-        "filename_prefix": "final_output",
-        "images": [
-          "18",
-          0
-        ]
-      },
-      "class_type": "SaveImage"
-    },
-    "20": {
-      "inputs": {
-        "seed": 84204593769148,
-        "steps": 15,
-        "cfg": 8,
-        "sampler_name": "dpmpp_2m",
-        "scheduler": "normal",
-        "denoise": 0.25,
-        "model": [
-          "11",
-          0
-        ],
-        "positive": [
-          "12",
-          0
-        ],
-        "negative": [
-          "13",
-          0
-        ],
-        "latent_image": [
-          "17",
-          0
-        ]
-      },
-      "class_type": "KSampler"
-    },
-    "21": {
-      "inputs": {
-        "width": 1024,
-        "height": 1024,
-        "batch_size": 4
-      },
-      "class_type": "EmptyLatentImage"
-    }
+    "class_type": "Seed (rgthree)"
+  }
 }
