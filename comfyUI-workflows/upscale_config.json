@@ -1,7 +1,7 @@
 {
   "4": {
     "inputs": {
-      "ckpt_name": "photon_v1_2.safetensors"
+      "ckpt_name": "rundiffusionFX_v10.safetensors"
     },
     "class_type": "CheckpointLoaderSimple"
   },

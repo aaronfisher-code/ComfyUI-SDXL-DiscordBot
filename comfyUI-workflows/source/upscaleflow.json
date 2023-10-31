@@ -72,7 +72,7 @@
         "Node name for S&R": "CheckpointLoaderSimple"
       },
       "widgets_values": [
-        "photon_v1_2.safetensors"
+        "rundiffusionFX_v10.safetensors"
       ]
     },
     {
