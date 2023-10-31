@@ -88,7 +88,7 @@
   },
   "39": {
     "inputs": {
-      "model_name": "mm-Stabilized_high.pth",
+      "model_name": "mm-Stabilized_mid.pth",
       "unlimited_area_hack": false,
       "context_length": 16,
       "context_stride": 2,

@@ -266,67 +266,6 @@
       }
     },
     {
-      "id": 39,
-      "type": "ADE_AnimateDiffLoaderV1Advanced",
-      "pos": [
-        738,
-        0
-      ],
-      "size": {
-        "0": 411.6000061035156,
-        "1": 246
-      },
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 223,
-          "slot_index": 0
-        },
-        {
-          "name": "latents",
-          "type": "LATENT",
-          "link": 69
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            97
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            70
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ADE_AnimateDiffLoaderV1Advanced"
-      },
-      "widgets_values": [
-        "mm-Stabilized_high.pth",
-        false,
-        16,
-        2,
-        4,
-        "uniform",
-        false,
-        "sqrt_linear (AnimateDiff)"
-      ]
-    },
-    {
       "id": 7,
       "type": "KSampler",
       "pos": [
@@ -724,6 +663,67 @@
       },
       "widgets_values": [
         "vae-ft-mse-840000-ema-pruned.safetensors"
+      ]
+    },
+    {
+      "id": 39,
+      "type": "ADE_AnimateDiffLoaderV1Advanced",
+      "pos": [
+        738,
+        0
+      ],
+      "size": {
+        "0": 411.6000061035156,
+        "1": 246
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 223,
+          "slot_index": 0
+        },
+        {
+          "name": "latents",
+          "type": "LATENT",
+          "link": 69
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            97
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            70
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ADE_AnimateDiffLoaderV1Advanced"
+      },
+      "widgets_values": [
+        "mm-Stabilized_mid.pth",
+        false,
+        16,
+        2,
+        4,
+        "uniform",
+        false,
+        "sqrt_linear (AnimateDiff)"
       ]
     }
   ],
