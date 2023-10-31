@@ -1,6 +1,6 @@
 {
-  "last_node_id": 14,
-  "last_link_id": 24,
+  "last_node_id": 15,
+  "last_link_id": 26,
   "nodes": [
     {
       "id": 7,
@@ -90,7 +90,7 @@
         "1": 46
       },
       "flags": {},
-      "order": 9,
+      "order": 10,
       "mode": 0,
       "inputs": [
         {
@@ -161,7 +161,7 @@
         "1": 58
       },
       "flags": {},
-      "order": 10,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
@@ -326,10 +326,10 @@
         -350,
         -25
       ],
-      "size": [
-        315,
-        313.99999618530273
-      ],
+      "size": {
+        "0": 315,
+        "1": 314
+      },
       "flags": {},
       "order": 3,
       "mode": 0,
@@ -356,6 +356,74 @@
       "widgets_values": [
         "example.png",
         "image"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "KSampler",
+      "pos": [
+        863,
+        186
+      ],
+      "size": {
+        "0": 315,
+        "1": 262
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 18
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 4
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 6
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 26
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 21,
+          "widget": {
+            "name": "seed"
+          },
+          "slot_index": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            7
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        156680208700286,
+        "randomize",
+        20,
+        8,
+        "ddim",
+        "ddim_uniform",
+        0.8
       ]
     },
     {
@@ -390,7 +458,7 @@
           "name": "LATENT",
           "type": "LATENT",
           "links": [
-            24
+            25
           ],
           "shape": 3,
           "slot_index": 0
@@ -401,48 +469,25 @@
       }
     },
     {
-      "id": 3,
-      "type": "KSampler",
+      "id": 15,
+      "type": "RepeatLatentBatch",
       "pos": [
-        863,
-        186
+        429,
+        14
       ],
       "size": {
         "0": 315,
-        "1": 262
+        "1": 58
       },
       "flags": {},
       "order": 8,
       "mode": 0,
       "inputs": [
         {
-          "name": "model",
-          "type": "MODEL",
-          "link": 18
-        },
-        {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "link": 4
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "link": 6
-        },
-        {
-          "name": "latent_image",
+          "name": "samples",
           "type": "LATENT",
-          "link": 24
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": 21,
-          "widget": {
-            "name": "seed"
-          },
-          "slot_index": 4
+          "link": 25,
+          "slot_index": 0
         }
       ],
       "outputs": [
@@ -450,22 +495,17 @@
           "name": "LATENT",
           "type": "LATENT",
           "links": [
-            7
+            26
           ],
+          "shape": 3,
           "slot_index": 0
         }
       ],
       "properties": {
-        "Node name for S&R": "KSampler"
+        "Node name for S&R": "RepeatLatentBatch"
       },
       "widgets_values": [
-        156680208700286,
-        "randomize",
-        20,
-        8,
-        "ddim",
-        "ddim_uniform",
-        0.8
+        4
       ]
     }
   ],
@@ -575,8 +615,16 @@
       "VAE"
     ],
     [
-      24,
+      25,
       14,
+      0,
+      15,
+      0,
+      "LATENT"
+    ],
+    [
+      26,
+      15,
       0,
       3,
       3,

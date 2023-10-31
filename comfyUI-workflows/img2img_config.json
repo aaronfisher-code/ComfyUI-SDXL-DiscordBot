@@ -23,7 +23,7 @@
         0
       ],
       "latent_image": [
-        "14",
+        "15",
         0
       ]
     },
@@ -132,5 +132,15 @@
       ]
     },
     "class_type": "VAEEncode"
+  },
+  "15": {
+    "inputs": {
+      "amount": 4,
+      "samples": [
+        "14",
+        0
+      ]
+    },
+    "class_type": "RepeatLatentBatch"
   }
 }
