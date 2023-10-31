@@ -6,6 +6,10 @@ import os
 from PIL import Image
 from datetime import datetime
 from math import ceil, sqrt
+from typing import List
+
+from discord.app_commands import Choice
+
 
 def setup_config():
     if not os.path.exists('config.properties'):
@@ -89,9 +93,12 @@ client = discord.Client(intents=intents)
 tree = discord.app_commands.CommandTree(client)
 
 if IMAGE_SOURCE == "LOCAL":
-    from imageGen import generate_images, upscale_image, generate_alternatives, generate_video
+    from imageGen import generate_images, upscale_image, generate_alternatives, generate_video, get_models, get_loras
 elif IMAGE_SOURCE == "API":
     from apiImageGen import generate_images, upscale_image, generate_alternatives
+
+models = get_models()
+loras = get_loras()
 
 # sync the slash command to your server
 @client.event
@@ -109,10 +116,12 @@ class ImageButton(discord.ui.Button):
 
 
 class Buttons(discord.ui.View):
-    def __init__(self, prompt, negative_prompt, images, *, timeout=180):
+    def __init__(self, prompt, negative_prompt, model, lora, images, *, timeout=180):
         super().__init__(timeout=timeout)
         self.prompt = prompt
         self.negative_prompt = negative_prompt
+        self.model = model
+        self.lora = lora
         self.images = images
 
         total_buttons = len(images) * 2 + 1  # For both alternative and upscale buttons + re-roll button
@@ -137,19 +146,19 @@ class Buttons(discord.ui.View):
     async def generate_alternatives_and_send(self, interaction, button):
         index = int(button.label[1:]) - 1  # Extract index from label
         await interaction.response.send_message("Creating some alternatives, this shouldn't take too long...")
-        images = await generate_alternatives(self.images[index], self.prompt, self.negative_prompt)
+        images = await generate_alternatives(self.images[index], self.prompt, self.negative_prompt, self.model, self.lora)
         collage_path = create_collage(images)
         final_message = f"{interaction.user.mention} here are your alternative images"
         # if a gif, set filename as gif, otherwise png
         if(images[0].format == 'GIF'):
-            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage' + '.gif'), view=Buttons(self.prompt, self.negative_prompt, images))
+            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage' + '.gif'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora, images))
         else:
-            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage.png'), view=Buttons(self.prompt, self.negative_prompt, images))
+            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage.png'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora, images))
 
     async def upscale_and_send(self, interaction, button):
         index = int(button.label[1:]) - 1  # Extract index from label
         await interaction.response.send_message("Upscaling the image, this shouldn't take too long...")
-        upscaled_image = await upscale_image(self.images[index], self.prompt, self.negative_prompt)
+        upscaled_image = await upscale_image(self.images[index], self.prompt, self.negative_prompt, self.model, self.lora)
         timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
         upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
         upscaled_image.save(upscaled_image_path)
@@ -162,26 +171,30 @@ class Buttons(discord.ui.View):
         btn.disabled = True
         await interaction.message.edit(view=self)
         # Generate a new image with the same prompt
-        images = await generate_images(self.prompt,self.negative_prompt)
+        images = await generate_images(self.prompt,self.negative_prompt, self.model, self.lora)
 
         # Construct the final message with user mention
         final_message = f"{interaction.user.mention} asked me to re-imagine \"{self.prompt}\", here is what I imagined for them."
-        await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view = Buttons(self.prompt,self.negative_prompt,images))
+        await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view = Buttons(self.prompt,self.negative_prompt, self.model, self.lora, images))
+
 
 @tree.command(name="imagine", description="Generate an image based on input text")
 @app_commands.describe(prompt='Prompt for the image being generated')
 @app_commands.describe(negative_prompt='Prompt for what you want to steer the AI away from')
-async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None):
+@app_commands.describe(model='Model checkpoint to use')
+@app_commands.describe(lora='LoRA to apply')
+@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]], lora=[app_commands.Choice(name=l, value=l) for l in loras[0]])
+async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None):
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")
 
     # Generate the image and get progress updates
-    images = await generate_images(prompt,negative_prompt)
+    images = await generate_images(prompt,negative_prompt, model, lora)
 
     # Construct the final message with user mention
     final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them."
     # send as gif or png
-    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,images))
+    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora,images))
 
 @tree.command(name="video", description="Generate a video based on input text")
 @app_commands.describe(prompt='Prompt for the video being generated')
