@@ -199,12 +199,15 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
 @tree.command(name="video", description="Generate a video based on input text")
 @app_commands.describe(prompt='Prompt for the video being generated')
 @app_commands.describe(negative_prompt='Prompt for what you want to steer the AI away from')
-async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None):
+@app_commands.describe(model='Model checkpoint to use')
+@app_commands.describe(lora='LoRA to apply')
+@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]], lora=[app_commands.Choice(name=l, value=l) for l in loras[0]])
+async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None):
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to create the video \"{prompt}\", this shouldn't take too long...")
 
     # Generate the video and get progress updates
-    video = await generate_video(prompt,negative_prompt)
+    video = await generate_video(prompt,negative_prompt, model, lora)
 
     # Construct the final message with user mention
     final_message = f"{interaction.user.mention} asked me to create the video \"{prompt}\", here is what I created for them."

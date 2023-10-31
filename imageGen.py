@@ -148,7 +148,7 @@ async def generate_images(prompt: str,negative_prompt: str, model: str = None, l
 
     return images
 
-async def generate_video(prompt: str, negative_prompt: str, model: str, lora: str):
+async def generate_video(prompt: str, negative_prompt: str, model: str = None, lora: str = None):
     with open(text2video_config, 'r') as file:
         workflow = json.load(file)
 
@@ -171,7 +171,7 @@ async def generate_video(prompt: str, negative_prompt: str, model: str, lora: st
     if (rand_seed_nodes[0] != ''):
         for node in rand_seed_nodes:
             workflow[node]["inputs"]["seed"] = random.randint(0, 999999999999999)
-    if (model_node[0] != ''):
+    if (model_node[0] != '' and model != None):
         for node in model_node:
             workflow[node]["inputs"]["ckpt_name"] = model
     if (lora_node[0] != '' and lora != None):
