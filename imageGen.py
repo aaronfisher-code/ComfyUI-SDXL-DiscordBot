@@ -115,7 +115,7 @@ class ImageGenerator:
         if self.ws:
             await self.ws.close()
 
-async def generate_images(prompt: str,negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 0.85, config_name: str = None):
+async def generate_images(prompt: str,negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 1.0, config_name: str = None):
     if config_name == None:
         config_name = 'LOCAL_TEXT2IMG'
 
@@ -161,7 +161,7 @@ async def generate_images(prompt: str,negative_prompt: str, model: str = None, l
 
     return images
 
-async def generate_video(prompt: str, negative_prompt: str, model: str = None, lora: str = None):
+async def generate_video(prompt: str, negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 1.0):
     with open(text2video_config, 'r') as file:
         workflow = json.load(file)
 
@@ -190,6 +190,7 @@ async def generate_video(prompt: str, negative_prompt: str, model: str = None, l
     if (lora_node[0] != '' and lora != None):
         for node in lora_node:
             workflow[node]["inputs"]["lora_01"] = lora.value
+            workflow[node]["inputs"]["strength_01"] = lora_strength
 
     images = await generator.get_images(workflow)
     await generator.close()
