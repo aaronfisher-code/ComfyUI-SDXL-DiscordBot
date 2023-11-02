@@ -1,241 +1,36 @@
 {
-  "last_node_id": 50,
-  "last_link_id": 69,
+  "last_node_id": 62,
+  "last_link_id": 112,
   "nodes": [
     {
-      "id": 11,
-      "type": "Lora Loader Stack (rgthree)",
+      "id": 37,
+      "type": "VAELoader",
       "pos": [
-        -762,
-        410
+        -1181,
+        569
       ],
       "size": {
         "0": 315,
-        "1": 246
-      },
-      "flags": {},
-      "order": 9,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 56,
-          "slot_index": 0
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 49
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            57
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            20,
-            28
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Lora Loader Stack (rgthree)"
-      },
-      "widgets_values": [
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1
-      ]
-    },
-    {
-      "id": 12,
-      "type": "Seed (rgthree)",
-      "pos": [
-        -1084,
-        699
-      ],
-      "size": {
-        "0": 210,
-        "1": 130
+        "1": 58
       },
       "flags": {},
       "order": 0,
       "mode": 0,
       "outputs": [
         {
-          "name": "SEED",
-          "type": "INT",
+          "name": "VAE",
+          "type": "VAE",
           "links": [
-            65,
-            66
+            55
           ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Seed (rgthree)"
-      },
-      "widgets_values": [
-        324975934459406,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "id": 7,
-      "type": "CLIPTextEncode",
-      "pos": [
-        -331,
-        305
-      ],
-      "size": {
-        "0": 425.27801513671875,
-        "1": 180.6060791015625
-      },
-      "flags": {},
-      "order": 12,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 20
-        },
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 64,
-          "widget": {
-            "name": "text"
-          },
-          "slot_index": 1
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            62
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CLIPTextEncode"
-      },
-      "widgets_values": [
-        "text, watermark"
-      ]
-    },
-    {
-      "id": 26,
-      "type": "SDXLPromptStylerAdvanced",
-      "pos": [
-        -315,
-        -134
-      ],
-      "size": {
-        "0": 400,
-        "1": 348
-      },
-      "flags": {},
-      "order": 8,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "text_positive_g",
-          "type": "STRING",
-          "link": 39,
-          "widget": {
-            "name": "text_positive_g"
-          }
-        },
-        {
-          "name": "text_positive_l",
-          "type": "STRING",
-          "link": 36,
-          "widget": {
-            "name": "text_positive_l"
-          },
-          "slot_index": 1
-        }
-      ],
-      "outputs": [
-        {
-          "name": "text_positive_g",
-          "type": "STRING",
-          "links": [
-            37,
-            59
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "text_positive_l",
-          "type": "STRING",
-          "links": [
-            38,
-            60
-          ],
-          "shape": 3,
-          "slot_index": 1
-        },
-        {
-          "name": "text_positive",
-          "type": "STRING",
-          "links": null,
-          "shape": 3
-        },
-        {
-          "name": "text_negative_g",
-          "type": "STRING",
-          "links": null,
-          "shape": 3
-        },
-        {
-          "name": "text_negative_l",
-          "type": "STRING",
-          "links": null,
-          "shape": 3
-        },
-        {
-          "name": "text_negative",
-          "type": "STRING",
-          "links": null,
           "shape": 3
         }
       ],
       "properties": {
-        "Node name for S&R": "SDXLPromptStylerAdvanced"
+        "Node name for S&R": "VAELoader"
       },
       "widgets_values": [
-        "",
-        "",
-        "",
-        "base",
-        "Both",
-        "Yes"
+        "sdxl_vae.safetensors"
       ]
     },
     {
@@ -257,7 +52,7 @@
           "name": "prompt",
           "type": "STRING",
           "links": [
-            39
+            81
           ],
           "shape": 3,
           "slot_index": 0
@@ -289,7 +84,7 @@
           "name": "prompt",
           "type": "STRING",
           "links": [
-            36
+            82
           ],
           "shape": 3,
           "slot_index": 0
@@ -321,8 +116,8 @@
           "name": "prompt",
           "type": "STRING",
           "links": [
-            64,
-            67
+            100,
+            101
           ],
           "shape": 3,
           "slot_index": 0
@@ -332,146 +127,115 @@
         "Node name for S&R": "CR Prompt Text"
       },
       "widgets_values": [
-        "text, watermark"
+        "child, children, loli, kid, kids"
       ]
     },
     {
-      "id": 17,
-      "type": "CLIPTextEncodeSDXL",
+      "id": 36,
+      "type": "CheckpointLoaderSimple",
       "pos": [
-        157,
-        -132
-      ],
-      "size": {
-        "0": 400,
-        "1": 270.0000305175781
-      },
-      "flags": {},
-      "order": 13,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 28,
-          "slot_index": 0
-        },
-        {
-          "name": "text_g",
-          "type": "STRING",
-          "link": 37,
-          "widget": {
-            "name": "text_g"
-          },
-          "slot_index": 1
-        },
-        {
-          "name": "text_l",
-          "type": "STRING",
-          "link": 38,
-          "widget": {
-            "name": "text_l"
-          },
-          "slot_index": 2
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            50
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CLIPTextEncodeSDXL"
-      },
-      "widgets_values": [
-        4096,
-        4096,
-        0,
-        0,
-        4096,
-        4096,
-        "CLIP_G",
-        "CLIP_L"
-      ]
-    },
-    {
-      "id": 23,
-      "type": "EmptyLatentImage",
-      "pos": [
-        -782,
-        740
+        -1170,
+        406
       ],
       "size": {
         "0": 315,
-        "1": 106
+        "1": 98
       },
       "flags": {},
       "order": 4,
       "mode": 0,
       "outputs": [
         {
-          "name": "LATENT",
-          "type": "LATENT",
+          "name": "MODEL",
+          "type": "MODEL",
           "links": [
-            54
+            91
           ],
           "shape": 3,
           "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "EmptyLatentImage"
-      },
-      "widgets_values": [
-        1024,
-        1024,
-        1
-      ]
-    },
-    {
-      "id": 38,
-      "type": "CLIPTextEncodeSDXL",
-      "pos": [
-        870,
-        592
-      ],
-      "size": {
-        "0": 400,
-        "1": 270.0000305175781
-      },
-      "flags": {},
-      "order": 11,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 58,
-          "slot_index": 0
         },
         {
-          "name": "text_g",
-          "type": "STRING",
-          "link": 59,
-          "widget": {
-            "name": "text_g"
-          },
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            90
+          ],
+          "shape": 3,
           "slot_index": 1
         },
         {
-          "name": "text_l",
-          "type": "STRING",
-          "link": 60,
+          "name": "VAE",
+          "type": "VAE",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "sd_xl_base_1.0.safetensors"
+      ]
+    },
+    {
+      "id": 57,
+      "type": "SDXL Power Prompt - Simple / Negative (rgthree)",
+      "pos": [
+        -170,
+        192
+      ],
+      "size": [
+        394.79998779296875,
+        126.05017390625017
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "opt_clip",
+          "type": "CLIP",
+          "link": 94,
+          "dir": 3
+        },
+        {
+          "name": "opt_clip_width",
+          "type": "INT",
+          "link": 95,
           "widget": {
-            "name": "text_l"
+            "name": "opt_clip_width"
           },
+          "dir": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "opt_clip_height",
+          "type": "INT",
+          "link": 96,
+          "widget": {
+            "name": "opt_clip_height"
+          },
+          "dir": 3,
           "slot_index": 2
+        },
+        {
+          "name": "prompt_g",
+          "type": "STRING",
+          "link": 100,
+          "widget": {
+            "name": "prompt_g"
+          },
+          "dir": 3,
+          "slot_index": 3
+        },
+        {
+          "name": "prompt_l",
+          "type": "STRING",
+          "link": 101,
+          "widget": {
+            "name": "prompt_l"
+          },
+          "dir": 3
         }
       ],
       "outputs": [
@@ -479,93 +243,265 @@
           "name": "CONDITIONING",
           "type": "CONDITIONING",
           "links": [
-            61
+            109
           ],
           "shape": 3,
+          "dir": 4,
+          "disabled": false,
           "slot_index": 0
+        },
+        {
+          "name": "TEXT_G",
+          "type": "STRING",
+          "links": null,
+          "shape": 3,
+          "dir": 4,
+          "color_off": "#7F7",
+          "color_on": "#7F7"
+        },
+        {
+          "name": "TEXT_L",
+          "type": "STRING",
+          "links": null,
+          "shape": 3,
+          "dir": 4,
+          "color_off": "#7F7",
+          "color_on": "#7F7"
         }
       ],
       "properties": {
-        "Node name for S&R": "CLIPTextEncodeSDXL"
+        "Node name for S&R": "SDXL Power Prompt - Simple / Negative (rgthree)",
+        "combos_filter": ""
       },
       "widgets_values": [
-        4096,
-        4096,
-        0,
-        0,
-        4096,
-        4096,
-        "CLIP_G",
-        "CLIP_L"
+        "",
+        "",
+        1024,
+        1024
       ]
     },
     {
-      "id": 41,
-      "type": "CLIPTextEncode",
+      "id": 56,
+      "type": "SDXL Power Prompt - Positive (rgthree)",
       "pos": [
-        882,
-        922
+        -172,
+        -42
       ],
-      "size": {
-        "0": 388.1387634277344,
-        "1": 164.8618621826172
+      "size": [
+        407.8853757226565,
+        182.96826390625017
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "opt_model",
+          "type": "MODEL",
+          "link": 92,
+          "dir": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "opt_clip",
+          "type": "CLIP",
+          "link": 93,
+          "dir": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "opt_clip_width",
+          "type": "INT",
+          "link": 75,
+          "widget": {
+            "name": "opt_clip_width"
+          },
+          "dir": 3
+        },
+        {
+          "name": "opt_clip_height",
+          "type": "INT",
+          "link": 76,
+          "widget": {
+            "name": "opt_clip_height"
+          },
+          "dir": 3
+        },
+        {
+          "name": "prompt_g",
+          "type": "STRING",
+          "link": 81,
+          "widget": {
+            "name": "prompt_g"
+          },
+          "dir": 3
+        },
+        {
+          "name": "prompt_l",
+          "type": "STRING",
+          "link": 82,
+          "widget": {
+            "name": "prompt_l"
+          },
+          "dir": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            108
+          ],
+          "shape": 3,
+          "dir": 4,
+          "disabled": false,
+          "slot_index": 0
+        },
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            107
+          ],
+          "shape": 3,
+          "dir": 4,
+          "disabled": false,
+          "slot_index": 1
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [],
+          "shape": 3,
+          "dir": 4,
+          "disabled": false,
+          "slot_index": 2
+        },
+        {
+          "name": "TEXT_G",
+          "type": "STRING",
+          "links": [],
+          "shape": 3,
+          "dir": 4,
+          "color_off": "#7F7",
+          "color_on": "#7F7",
+          "slot_index": 3
+        },
+        {
+          "name": "TEXT_L",
+          "type": "STRING",
+          "links": [],
+          "shape": 3,
+          "dir": 4,
+          "color_off": "#7F7",
+          "color_on": "#7F7",
+          "slot_index": 4
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SDXL Power Prompt - Positive (rgthree)",
+        "combos_filter": ""
       },
+      "widgets_values": [
+        "",
+        "",
+        1024,
+        1024,
+        "CHOOSE"
+      ]
+    },
+    {
+      "id": 62,
+      "type": "KSampler",
+      "pos": [
+        338,
+        -30
+      ],
+      "size": [
+        315,
+        446
+      ],
       "flags": {},
       "order": 10,
       "mode": 0,
       "inputs": [
         {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 68,
+          "name": "model",
+          "type": "MODEL",
+          "link": 107,
           "slot_index": 0
         },
         {
-          "name": "text",
-          "type": "STRING",
-          "link": 67,
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 108
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 109,
+          "slot_index": 2
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 110,
+          "slot_index": 3
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 112,
           "widget": {
-            "name": "text"
+            "name": "seed"
           },
-          "slot_index": 1
+          "slot_index": 4
         }
       ],
       "outputs": [
         {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
+          "name": "LATENT",
+          "type": "LATENT",
           "links": [
-            69
+            111
           ],
+          "shape": 3,
           "slot_index": 0
         }
       ],
       "properties": {
-        "Node name for S&R": "CLIPTextEncode"
+        "Node name for S&R": "KSampler"
       },
       "widgets_values": [
-        "text, watermark"
+        477981258810233,
+        "randomize",
+        70,
+        8,
+        "dpmpp_2m_sde",
+        "karras",
+        1
       ]
     },
     {
       "id": 8,
       "type": "VAEDecode",
       "pos": [
-        1568,
-        -109
+        774,
+        -19
       ],
       "size": {
         "0": 210,
         "1": 46
       },
       "flags": {},
-      "order": 16,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
           "name": "samples",
           "type": "LATENT",
-          "link": 46,
+          "link": 111,
           "slot_index": 0
         },
         {
@@ -593,15 +529,15 @@
       "id": 9,
       "type": "SaveImage",
       "pos": [
-        1875,
-        -109
+        1096,
+        -27
       ],
       "size": {
         "0": 210,
         "1": 270
       },
       "flags": {},
-      "order": 17,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
@@ -616,167 +552,92 @@
       ]
     },
     {
-      "id": 33,
-      "type": "KSamplerAdvanced",
+      "id": 55,
+      "type": "SDXL Empty Latent Image (rgthree)",
       "pos": [
-        608,
-        -133
+        -110,
+        395
       ],
       "size": {
         "0": 315,
-        "1": 546
-      },
-      "flags": {},
-      "order": 14,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 57
-        },
-        {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "link": 50
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "link": 62
-        },
-        {
-          "name": "latent_image",
-          "type": "LATENT",
-          "link": 54
-        },
-        {
-          "name": "noise_seed",
-          "type": "INT",
-          "link": 65,
-          "widget": {
-            "name": "noise_seed"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            44
-          ],
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "KSamplerAdvanced"
-      },
-      "widgets_values": [
-        "enable",
-        939814759510906,
-        "randomize",
-        40,
-        8,
-        "uni_pc",
-        "simple",
-        0,
-        35,
-        "enable"
-      ]
-    },
-    {
-      "id": 34,
-      "type": "KSamplerAdvanced",
-      "pos": [
-        1167,
-        -113
-      ],
-      "size": {
-        "0": 315,
-        "1": 518
-      },
-      "flags": {},
-      "order": 15,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 45,
-          "slot_index": 0
-        },
-        {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "link": 61
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "link": 69
-        },
-        {
-          "name": "latent_image",
-          "type": "LATENT",
-          "link": 44,
-          "slot_index": 3
-        },
-        {
-          "name": "noise_seed",
-          "type": "INT",
-          "link": 66,
-          "widget": {
-            "name": "noise_seed"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            46
-          ],
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "KSamplerAdvanced"
-      },
-      "widgets_values": [
-        "disable",
-        668966925819363,
-        "randomize",
-        40,
-        8,
-        "uni_pc",
-        "simple",
-        35,
-        40,
-        "enable"
-      ]
-    },
-    {
-      "id": 36,
-      "type": "CheckpointLoaderSimple",
-      "pos": [
-        -1170,
-        406
-      ],
-      "size": {
-        "0": 315,
-        "1": 98
+        "1": 146
       },
       "flags": {},
       "order": 5,
       "mode": 0,
       "outputs": [
         {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            110
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP_WIDTH",
+          "type": "INT",
+          "links": [
+            75,
+            95
+          ],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "CLIP_HEIGHT",
+          "type": "INT",
+          "links": [
+            76,
+            96
+          ],
+          "shape": 3,
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SDXL Empty Latent Image (rgthree)"
+      },
+      "widgets_values": [
+        "1024 x 1024  (square)",
+        4,
+        1
+      ]
+    },
+    {
+      "id": 11,
+      "type": "Lora Loader Stack (rgthree)",
+      "pos": [
+        -798,
+        406
+      ],
+      "size": {
+        "0": 315,
+        "1": 246
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 91,
+          "slot_index": 0
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 90
+        }
+      ],
+      "outputs": [
+        {
           "name": "MODEL",
           "type": "MODEL",
           "links": [
-            56
+            92
           ],
           "shape": 3,
           "slot_index": 0
@@ -785,101 +646,60 @@
           "name": "CLIP",
           "type": "CLIP",
           "links": [
-            49
+            93,
+            94
           ],
           "shape": 3,
           "slot_index": 1
-        },
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": null,
-          "shape": 3
         }
       ],
       "properties": {
-        "Node name for S&R": "CheckpointLoaderSimple"
+        "Node name for S&R": "Lora Loader Stack (rgthree)"
       },
       "widgets_values": [
-        "sd_xl_base_1.0.safetensors"
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1
       ]
     },
     {
-      "id": 37,
-      "type": "VAELoader",
+      "id": 12,
+      "type": "Seed (rgthree)",
       "pos": [
-        -1181,
-        569
+        -1084,
+        699
       ],
       "size": {
-        "0": 315,
-        "1": 58
+        "0": 210,
+        "1": 130
       },
       "flags": {},
       "order": 6,
       "mode": 0,
       "outputs": [
         {
-          "name": "VAE",
-          "type": "VAE",
+          "name": "SEED",
+          "type": "INT",
           "links": [
-            55
-          ],
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VAELoader"
-      },
-      "widgets_values": [
-        "sdxl_vae.safetensors"
-      ]
-    },
-    {
-      "id": 35,
-      "type": "CheckpointLoaderSimple",
-      "pos": [
-        418,
-        750
-      ],
-      "size": {
-        "0": 315,
-        "1": 98
-      },
-      "flags": {},
-      "order": 7,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            45
-          ],
-          "shape": 3
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            58,
-            68
+            112
           ],
           "shape": 3,
-          "slot_index": 1
-        },
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": null,
-          "shape": 3
+          "slot_index": 0
         }
       ],
       "properties": {
-        "Node name for S&R": "CheckpointLoaderSimple"
+        "Node name for S&R": "Seed (rgthree)"
       },
       "widgets_values": [
-        "sd_xl_refiner_1.0.safetensors"
+        10066698790571,
+        null,
+        null,
+        null
       ]
     }
   ],
@@ -893,102 +713,6 @@
       "IMAGE"
     ],
     [
-      20,
-      11,
-      1,
-      7,
-      0,
-      "CLIP"
-    ],
-    [
-      28,
-      11,
-      1,
-      17,
-      0,
-      "CLIP"
-    ],
-    [
-      36,
-      22,
-      0,
-      26,
-      1,
-      "STRING"
-    ],
-    [
-      37,
-      26,
-      0,
-      17,
-      1,
-      "STRING"
-    ],
-    [
-      38,
-      26,
-      1,
-      17,
-      2,
-      "STRING"
-    ],
-    [
-      39,
-      21,
-      0,
-      26,
-      0,
-      "STRING"
-    ],
-    [
-      44,
-      33,
-      0,
-      34,
-      3,
-      "LATENT"
-    ],
-    [
-      45,
-      35,
-      0,
-      34,
-      0,
-      "MODEL"
-    ],
-    [
-      46,
-      34,
-      0,
-      8,
-      0,
-      "LATENT"
-    ],
-    [
-      49,
-      36,
-      1,
-      11,
-      1,
-      "CLIP"
-    ],
-    [
-      50,
-      17,
-      0,
-      33,
-      1,
-      "CONDITIONING"
-    ],
-    [
-      54,
-      23,
-      0,
-      33,
-      3,
-      "LATENT"
-    ],
-    [
       55,
       37,
       0,
@@ -997,7 +721,47 @@
       "VAE"
     ],
     [
+      75,
+      55,
+      1,
       56,
+      2,
+      "INT"
+    ],
+    [
+      76,
+      55,
+      2,
+      56,
+      3,
+      "INT"
+    ],
+    [
+      81,
+      21,
+      0,
+      56,
+      4,
+      "STRING"
+    ],
+    [
+      82,
+      22,
+      0,
+      56,
+      5,
+      "STRING"
+    ],
+    [
+      90,
+      36,
+      1,
+      11,
+      1,
+      "CLIP"
+    ],
+    [
+      91,
       36,
       0,
       11,
@@ -1005,100 +769,108 @@
       "MODEL"
     ],
     [
-      57,
+      92,
       11,
       0,
-      33,
+      56,
       0,
       "MODEL"
     ],
     [
-      58,
-      35,
+      93,
+      11,
       1,
-      38,
+      56,
+      1,
+      "CLIP"
+    ],
+    [
+      94,
+      11,
+      1,
+      57,
       0,
       "CLIP"
     ],
     [
-      59,
-      26,
-      0,
-      38,
+      95,
+      55,
       1,
-      "STRING"
+      57,
+      1,
+      "INT"
     ],
     [
-      60,
-      26,
-      1,
-      38,
+      96,
+      55,
       2,
+      57,
+      2,
+      "INT"
+    ],
+    [
+      100,
+      40,
+      0,
+      57,
+      3,
       "STRING"
     ],
     [
-      61,
-      38,
+      101,
+      40,
       0,
-      34,
-      1,
-      "CONDITIONING"
+      57,
+      4,
+      "STRING"
     ],
     [
+      107,
+      56,
+      1,
       62,
-      7,
       0,
-      33,
+      "MODEL"
+    ],
+    [
+      108,
+      56,
+      0,
+      62,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      109,
+      57,
+      0,
+      62,
       2,
       "CONDITIONING"
     ],
     [
-      64,
-      40,
+      110,
+      55,
       0,
-      7,
-      1,
-      "STRING"
+      62,
+      3,
+      "LATENT"
     ],
     [
-      65,
+      111,
+      62,
+      0,
+      8,
+      0,
+      "LATENT"
+    ],
+    [
+      112,
       12,
       0,
-      33,
+      62,
       4,
       "INT"
-    ],
-    [
-      66,
-      12,
-      0,
-      34,
-      4,
-      "INT"
-    ],
-    [
-      67,
-      40,
-      0,
-      41,
-      1,
-      "STRING"
-    ],
-    [
-      68,
-      35,
-      1,
-      41,
-      0,
-      "CLIP"
-    ],
-    [
-      69,
-      41,
-      0,
-      34,
-      2,
-      "CONDITIONING"
     ]
   ],
   "groups": [],
