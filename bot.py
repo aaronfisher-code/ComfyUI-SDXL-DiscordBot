@@ -38,6 +38,23 @@ def generate_default_config():
     with open('config.properties', 'w') as configfile:
         config.write(configfile)
 
+def should_filter(positive_prompt : str, negative_prompt : str) -> bool:
+    if(positive_prompt == None):
+        positive_prompt = ""
+
+    if(negative_prompt == None):
+        negative_prompt = ""
+
+    config = configparser.ConfigParser()
+    config.read('config.properties')
+    word_list = config["BLOCKED_WORDS"]["WORDS"].split(",")
+    if word_list is None:
+        print("No blocked words found in config.properties")
+        return False
+    for word in word_list:
+        if word.lower() in positive_prompt.lower() or word in negative_prompt.lower():
+            return True
+    return False
 
 def create_gif_collage(images):
     num_images = len(images)
@@ -178,7 +195,6 @@ class Buttons(discord.ui.View):
         final_message = f"{interaction.user.mention} asked me to re-imagine \"{self.prompt}\", here is what I imagined for them."
         await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view = Buttons(self.prompt,self.negative_prompt, self.model, self.lora, images))
 
-
 @tree.command(name="imagine", description="Generate an image based on input text")
 @app_commands.describe(prompt='Prompt for the image being generated')
 @app_commands.describe(negative_prompt='Prompt for what you want to steer the AI away from')
@@ -187,6 +203,11 @@ class Buttons(discord.ui.View):
 @app_commands.describe(lora_strength='Strength of LoRA')
 @app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0]][0:25])
 async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0):
+    if should_filter(prompt, negative_prompt):
+        print(f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {prompt}, Negative Prompt: {negative_prompt}")
+        await interaction.response.send_message(f"The prompt {prompt} or negative prompt {negative_prompt} contains a blocked word, not generating image.",ephemeral=True)
+        return
+
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")
 
@@ -206,6 +227,11 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
 @app_commands.describe(lora_strength='Strength of LoRA')
 @app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0]][0:25])
 async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0):
+    if should_filter(prompt, negative_prompt):
+        print(f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {prompt}, Negative Prompt: {negative_prompt}")
+        await interaction.response.send_message(f"The prompt {prompt} or negative prompt {negative_prompt} contains a blocked word, not generating image.", ephemeral=True)
+        return
+
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to create the video \"{prompt}\", this shouldn't take too long...")
 
@@ -225,6 +251,11 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
 @app_commands.describe(lora_strength='Strength of LoRA')
 @app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0] if "xl" in m.lower()][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][0:25])
 async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0):
+    if should_filter(prompt, negative_prompt):
+        print(f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {prompt}, Negative Prompt: {negative_prompt}")
+        await interaction.response.send_message(f"The prompt {prompt} or negative prompt {negative_prompt} contains a blocked word, not generating image.", ephemeral=True)
+        return
+
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")
 
