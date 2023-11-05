@@ -1,0 +1,246 @@
+{
+  "8": {
+    "inputs": {
+      "samples": [
+        "62",
+        0
+      ],
+      "vae": [
+        "37",
+        0
+      ]
+    },
+    "class_type": "VAEDecode"
+  },
+  "9": {
+    "inputs": {
+      "filename_prefix": "final_output",
+      "images": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "SaveImage"
+  },
+  "11": {
+    "inputs": {
+      "lora_01": "None",
+      "strength_01": 1,
+      "lora_02": "None",
+      "strength_02": 1,
+      "lora_03": "None",
+      "strength_03": 1,
+      "lora_04": "None",
+      "strength_04": 1,
+      "model": [
+        "36",
+        0
+      ],
+      "clip": [
+        "36",
+        1
+      ]
+    },
+    "class_type": "Lora Loader Stack (rgthree)"
+  },
+  "12": {
+    "inputs": {
+      "seed": 46811505232519
+    },
+    "class_type": "Seed (rgthree)"
+  },
+  "21": {
+    "inputs": {
+      "prompt": "a dog"
+    },
+    "class_type": "CR Prompt Text"
+  },
+  "36": {
+    "inputs": {
+      "ckpt_name": "sd_xl_base_1.0.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple"
+  },
+  "37": {
+    "inputs": {
+      "vae_name": "sdxl_vae.safetensors"
+    },
+    "class_type": "VAELoader"
+  },
+  "40": {
+    "inputs": {
+      "prompt": "child, children, loli, kid, kids"
+    },
+    "class_type": "CR Prompt Text"
+  },
+  "55": {
+    "inputs": {
+      "dimensions": "1024 x 1024  (square)",
+      "clip_scale": 4,
+      "batch_size": 1
+    },
+    "class_type": "SDXL Empty Latent Image (rgthree)"
+  },
+  "56": {
+    "inputs": {
+      "prompt_g": [
+        "69",
+        0
+      ],
+      "prompt_l": [
+        "69",
+        0
+      ],
+      "opt_clip_width": [
+        "55",
+        1
+      ],
+      "opt_clip_height": [
+        "55",
+        2
+      ],
+      "insert_lora": "CHOOSE",
+      "opt_model": [
+        "11",
+        0
+      ],
+      "opt_clip": [
+        "11",
+        1
+      ]
+    },
+    "class_type": "SDXL Power Prompt - Positive (rgthree)"
+  },
+  "57": {
+    "inputs": {
+      "prompt_g": [
+        "40",
+        0
+      ],
+      "prompt_l": [
+        "40",
+        0
+      ],
+      "opt_clip_width": [
+        "55",
+        1
+      ],
+      "opt_clip_height": [
+        "55",
+        2
+      ],
+      "opt_clip": [
+        "11",
+        1
+      ]
+    },
+    "class_type": "SDXL Power Prompt - Simple / Negative (rgthree)"
+  },
+  "62": {
+    "inputs": {
+      "seed": [
+        "12",
+        0
+      ],
+      "steps": 70,
+      "cfg": 8,
+      "sampler_name": "dpmpp_2m_sde",
+      "scheduler": "karras",
+      "denoise": 1,
+      "model": [
+        "56",
+        1
+      ],
+      "positive": [
+        "56",
+        0
+      ],
+      "negative": [
+        "57",
+        0
+      ],
+      "latent_image": [
+        "55",
+        0
+      ]
+    },
+    "class_type": "KSampler"
+  },
+  "63": {
+    "inputs": {
+      "model_dir": "/home/occlusion/ai/llm/PromptMKR",
+      "max_seq_len": 512
+    },
+    "class_type": "ZuellniExLlamaLoader"
+  },
+  "64": {
+    "inputs": {
+      "max_new_tokens": 128,
+      "temperature": 0.6,
+      "top_k": 40,
+      "top_p": 0.99,
+      "typical_p": 0.4,
+      "penalty": 1.15,
+      "seed": [
+        "12",
+        0
+      ],
+      "stop_on_newline": false,
+      "allowed_strings": "",
+      "text": [
+        "68",
+        0
+      ],
+      "model": [
+        "63",
+        0
+      ]
+    },
+    "class_type": "ZuellniExLlamaGenerator"
+  },
+  "66": {
+    "inputs": {
+      "text": [
+        "64",
+        0
+      ]
+    },
+    "class_type": "ZuellniTextPreview"
+  },
+  "68": {
+    "inputs": {
+      "text_a": [
+        "72",
+        0
+      ],
+      "text_b": [
+        "21",
+        0
+      ],
+      "linebreak_addition": "false",
+      "delimiter": ""
+    },
+    "class_type": "Text Concatenate"
+  },
+  "69": {
+    "inputs": {
+      "text_a": [
+        "21",
+        0
+      ],
+      "text_b": [
+        "64",
+        0
+      ],
+      "linebreak_addition": "false",
+      "delimiter": ", "
+    },
+    "class_type": "Text Concatenate"
+  },
+  "72": {
+    "inputs": {
+      "prompt": "you are a stable diffusion prompt master. using the following prompt, please create a new prompt that matches the original intention of the input but enhances it in ways to improve detail and composition in the image. please include as much of the original prompt as you can in your output: \n\n"
+    },
+    "class_type": "CR Prompt Text"
+  }
+}

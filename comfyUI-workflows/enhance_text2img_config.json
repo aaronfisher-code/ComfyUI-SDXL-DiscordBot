@@ -1,0 +1,208 @@
+{
+  "3": {
+    "inputs": {
+      "seed": [
+        "12",
+        0
+      ],
+      "steps": 20,
+      "cfg": 8,
+      "sampler_name": "ddim",
+      "scheduler": "ddim_uniform",
+      "denoise": 1,
+      "model": [
+        "11",
+        0
+      ],
+      "positive": [
+        "6",
+        0
+      ],
+      "negative": [
+        "7",
+        0
+      ],
+      "latent_image": [
+        "5",
+        0
+      ]
+    },
+    "class_type": "KSampler"
+  },
+  "4": {
+    "inputs": {
+      "ckpt_name": "rundiffusionFX_v10.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple"
+  },
+  "5": {
+    "inputs": {
+      "width": 512,
+      "height": 512,
+      "batch_size": 4
+    },
+    "class_type": "EmptyLatentImage"
+  },
+  "6": {
+    "inputs": {
+      "text": [
+        "21",
+        0
+      ],
+      "clip": [
+        "11",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "7": {
+    "inputs": {
+      "text": "children, child, kids, kid",
+      "clip": [
+        "11",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "8": {
+    "inputs": {
+      "samples": [
+        "3",
+        0
+      ],
+      "vae": [
+        "13",
+        0
+      ]
+    },
+    "class_type": "VAEDecode"
+  },
+  "9": {
+    "inputs": {
+      "filename_prefix": "final_output",
+      "images": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "SaveImage"
+  },
+  "11": {
+    "inputs": {
+      "lora_01": "None",
+      "strength_01": 0.85,
+      "lora_02": "None",
+      "strength_02": 1,
+      "lora_03": "None",
+      "strength_03": 1,
+      "lora_04": "None",
+      "strength_04": 1,
+      "model": [
+        "4",
+        0
+      ],
+      "clip": [
+        "4",
+        1
+      ]
+    },
+    "class_type": "Lora Loader Stack (rgthree)"
+  },
+  "12": {
+    "inputs": {
+      "seed": 468264716010527
+    },
+    "class_type": "Seed (rgthree)"
+  },
+  "13": {
+    "inputs": {
+      "vae_name": "vae-ft-mse-840000-ema-pruned.ckpt"
+    },
+    "class_type": "VAELoader"
+  },
+  "14": {
+    "inputs": {
+      "model_dir": "/home/occlusion/ai/llm/PromptMKR",
+      "max_seq_len": 512
+    },
+    "class_type": "ZuellniExLlamaLoader"
+  },
+  "15": {
+    "inputs": {
+      "max_new_tokens": 128,
+      "temperature": 0.01,
+      "top_k": 40,
+      "top_p": 0.1,
+      "typical_p": 0.4,
+      "penalty": 1.15,
+      "seed": [
+        "12",
+        0
+      ],
+      "stop_on_newline": false,
+      "allowed_strings": "",
+      "text": [
+        "20",
+        0
+      ],
+      "model": [
+        "14",
+        0
+      ]
+    },
+    "class_type": "ZuellniExLlamaGenerator"
+  },
+  "18": {
+    "inputs": {
+      "text": [
+        "15",
+        0
+      ]
+    },
+    "class_type": "ZuellniTextPreview"
+  },
+  "20": {
+    "inputs": {
+      "text_a": [
+        "23",
+        0
+      ],
+      "text_b": [
+        "24",
+        0
+      ],
+      "linebreak_addition": "false",
+      "delimiter": ","
+    },
+    "class_type": "Text Concatenate"
+  },
+  "21": {
+    "inputs": {
+      "text_a": [
+        "24",
+        0
+      ],
+      "text_b": [
+        "15",
+        0
+      ],
+      "linebreak_addition": "false",
+      "delimiter": ""
+    },
+    "class_type": "Text Concatenate"
+  },
+  "23": {
+    "inputs": {
+      "prompt": "you are a stable diffusion prompt master. using the following prompt, please create a new prompt that matches the original intention of the input but enhances it in ways to improve detail and composition in the image. please include as much of the original prompt as you can in your output: \n\n"
+    },
+    "class_type": "CR Prompt Text"
+  },
+  "24": {
+    "inputs": {
+      "prompt": "a dog"
+    },
+    "class_type": "CR Prompt Text"
+  }
+}
