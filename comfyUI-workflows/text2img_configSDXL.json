@@ -148,7 +148,7 @@
         "12",
         0
       ],
-      "steps": 70,
+      "steps": 30,
       "cfg": 8,
       "sampler_name": "dpmpp_2m_sde",
       "scheduler": "karras",

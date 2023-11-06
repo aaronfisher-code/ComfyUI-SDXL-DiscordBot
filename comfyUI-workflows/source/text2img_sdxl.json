@@ -476,7 +476,7 @@
       "widgets_values": [
         477981258810233,
         "randomize",
-        70,
+        30,
         8,
         "dpmpp_2m_sde",
         "karras",
