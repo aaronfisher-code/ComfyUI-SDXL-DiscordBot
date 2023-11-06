@@ -133,12 +133,13 @@ class ImageButton(discord.ui.Button):
 
 
 class Buttons(discord.ui.View):
-    def __init__(self, prompt, negative_prompt, model, lora, images, config=None, *, timeout=180):
+    def __init__(self, prompt, negative_prompt, model, lora, enhance, images, config=None, *, timeout=180):
         super().__init__(timeout=timeout)
         self.prompt = prompt
         self.negative_prompt = negative_prompt
         self.model = model
         self.lora = lora
+        self.enhance = enhance
         self.images = images
         self.config = config
 
@@ -169,9 +170,9 @@ class Buttons(discord.ui.View):
         final_message = f"{interaction.user.mention} here are your alternative images"
         # if a gif, set filename as gif, otherwise png
         if(images[0].format == 'GIF'):
-            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage' + '.gif'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora, images, self.config))
+            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage' + '.gif'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora, self.enhance, images, self.config))
         else:
-            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage.png'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora, images, self.config))
+            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage.png'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora, self.enhance, images, self.config))
 
     async def upscale_and_send(self, interaction, button):
         index = int(button.label[1:]) - 1  # Extract index from label
@@ -189,11 +190,11 @@ class Buttons(discord.ui.View):
         btn.disabled = True
         await interaction.message.edit(view=self)
         # Generate a new image with the same prompt
-        images = await generate_images(self.prompt,self.negative_prompt, self.model, self.lora)
+        images = await generate_images(self.prompt,self.negative_prompt, self.model, self.lora, self.enhance)
 
         # Construct the final message with user mention
         final_message = f"{interaction.user.mention} asked me to re-imagine \"{self.prompt}\", here is what I imagined for them."
-        await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view = Buttons(self.prompt,self.negative_prompt, self.model, self.lora, images))
+        await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view = Buttons(self.prompt,self.negative_prompt, self.model, self.lora, self.enhance, images))
 
 @tree.command(name="imagine", description="Generate an image based on input text")
 @app_commands.describe(prompt='Prompt for the image being generated')
@@ -201,23 +202,29 @@ class Buttons(discord.ui.View):
 @app_commands.describe(model='Model checkpoint to use')
 @app_commands.describe(lora='LoRA to apply')
 @app_commands.describe(lora_strength='Strength of LoRA')
+@app_commands.describe(enhance='Enhance the image using a language model')
 @app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0]][0:25])
-async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0):
+async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0, enhance: bool = True):
     if should_filter(prompt, negative_prompt):
         print(f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {prompt}, Negative Prompt: {negative_prompt}")
         await interaction.response.send_message(f"The prompt {prompt} or negative prompt {negative_prompt} contains a blocked word, not generating image.",ephemeral=True)
         return
 
+    if enhance:
+        config = "ENHANCE_TEXT2IMG_CONFIG"
+    else:
+        config = None
+
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")
 
     # Generate the image and get progress updates
-    images = await generate_images(prompt,negative_prompt, model, lora, lora_strength)
+    images = await generate_images(prompt,negative_prompt, model, lora, lora_strength, config)
 
     # Construct the final message with user mention
     final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them."
     # send as gif or png
-    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora,images))
+    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora,enhance,images, config))
 
 @tree.command(name="video", description="Generate a video based on input text")
 @app_commands.describe(prompt='Prompt for the video being generated')
@@ -250,22 +257,27 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
 @app_commands.describe(lora='LoRA to apply')
 @app_commands.describe(lora_strength='Strength of LoRA')
 @app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0] if "xl" in m.lower()][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][0:25])
-async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0):
+async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0, enhance : bool = True):
     if should_filter(prompt, negative_prompt):
         print(f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {prompt}, Negative Prompt: {negative_prompt}")
         await interaction.response.send_message(f"The prompt {prompt} or negative prompt {negative_prompt} contains a blocked word, not generating image.", ephemeral=True)
         return
 
+    if enhance:
+        config = "ENHANCE_TEXT2IMG_SDXL_CONFIG"
+    else:
+        config = None
+
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")
 
     # Generate the image and get progress updates
-    images = await generate_images(prompt,negative_prompt, model, lora, lora_strength, "LOCAL_SDXL_TXT2IMG_CONFIG")
+    images = await generate_images(prompt,negative_prompt, model, lora, lora_strength, config)
 
     # Construct the final message with user mention
     final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them."
     # send as gif or png
-    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora,images, 'LOCAL_SDXL_IMG2IMG_CONFIG'))
+    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora,enhance,images, config))
 
 # run the bot
 client.run(TOKEN)
