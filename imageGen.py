@@ -119,13 +119,6 @@ async def generate_images(prompt: str,negative_prompt: str, model: str = None, l
     if config_name == None:
         config_name = 'LOCAL_TEXT2IMG'
 
-    # if(config_name == 'LOCAL_TEXT2IMG'):
-    #     with open(text2img_config, 'r') as file:
-    #       workflow = json.load(file)
-    # else:
-    #     with open(sdxltxt2img_config, 'r') as file:
-    #       workflow = json.load(file)
-
     with open(config[config_name]['CONFIG'], 'r') as file:
         workflow = json.load(file)
 
@@ -147,7 +140,7 @@ async def generate_images(prompt: str,negative_prompt: str, model: str = None, l
               workflow[node]["inputs"]["prompt"] = prompt
     if(negative_prompt != None and neg_prompt_nodes[0] != ''):
       for node in neg_prompt_nodes:
-          workflow[node]["inputs"]["text"] = negative_prompt = ", children, child, kids, kid"
+          workflow[node]["inputs"]["text"] = negative_prompt + ", (children, child, kids, kid:1.3)"
     if(rand_seed_nodes[0] != ''):
       for node in rand_seed_nodes:
           workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
@@ -183,7 +176,7 @@ async def generate_video(prompt: str, negative_prompt: str, model: str = None, l
             workflow[node]["inputs"]["text"] = prompt
     if (negative_prompt != None and neg_prompt_nodes[0] != ''):
         for node in neg_prompt_nodes:
-            workflow[node]["inputs"]["text"] = negative_prompt + ", children, child, kids, kid"
+            workflow[node]["inputs"]["text"] = negative_prompt + ", (children, child, kids, kid:1.3)"
     if (rand_seed_nodes[0] != ''):
         for node in rand_seed_nodes:
             workflow[node]["inputs"]["seed"] = random.randint(0, 999999999999999)
@@ -237,7 +230,7 @@ async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt
             workflow[node]["inputs"]["prompt"] = prompt
     if(negative_prompt != None and neg_prompt_nodes[0] != ''):
       for node in neg_prompt_nodes:
-          workflow[node]["inputs"]["text"] = negative_prompt
+          workflow[node]["inputs"]["text"] = negative_prompt + ", (children, child, kids, kid:1.3)"
     if(rand_seed_nodes[0] != ''):
       for node in rand_seed_nodes:
           workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
@@ -283,7 +276,7 @@ async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str, mo
           workflow[node]["inputs"]["text"] = prompt
     if(negative_prompt != None and neg_prompt_nodes[0] != ''):
       for node in neg_prompt_nodes:
-          workflow[node]["inputs"]["text"] = negative_prompt
+          workflow[node]["inputs"]["text"] = negative_prompt + ", (children, child, kids, kid:1.3)"
     if(rand_seed_nodes[0] != ''):
       for node in rand_seed_nodes:
           workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
