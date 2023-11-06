@@ -728,7 +728,7 @@
         1.68,
         77,
         0.17,
-        1.0,
+        1,
         1.2,
         989994453136280,
         "randomize",
@@ -944,7 +944,7 @@
         "Node name for S&R": "CR Prompt Text"
       },
       "widgets_values": [
-        "you are a stable diffusion prompt master. using the following prompt, please create a new prompt that matches the original intention of the input but enhances it in ways to improve detail and composition in the image. please include as much of the original prompt as you can in your output: \n\n"
+        "you are a stable diffusion prompt master. using the following prompt, please create a new prompt that matches the original intention of the input but enhances it in ways to improve detail and composition in the image. please do your best to not change the original intention of the input\n\nINPUT: \n\n"
       ]
     },
     {

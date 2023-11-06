@@ -114,32 +114,6 @@
       ]
     },
     {
-      "id": 9,
-      "type": "SaveImage",
-      "pos": [
-        1451,
-        189
-      ],
-      "size": {
-        "0": 210,
-        "1": 270
-      },
-      "flags": {},
-      "order": 16,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 9
-        }
-      ],
-      "properties": {},
-      "widgets_values": [
-        "final_output"
-      ]
-    },
-    {
       "id": 3,
       "type": "KSampler",
       "pos": [
@@ -392,150 +366,6 @@
       ]
     },
     {
-      "id": 20,
-      "type": "Text Concatenate",
-      "pos": [
-        -484,
-        -382
-      ],
-      "size": {
-        "0": 315,
-        "1": 178
-      },
-      "flags": {},
-      "order": 8,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "text_a",
-          "type": "STRING",
-          "link": 35,
-          "widget": {
-            "name": "text_a"
-          },
-          "slot_index": 0
-        },
-        {
-          "name": "text_b",
-          "type": "STRING",
-          "link": 36,
-          "widget": {
-            "name": "text_b"
-          }
-        },
-        {
-          "name": "text_c",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "text_c"
-          }
-        },
-        {
-          "name": "text_d",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "text_d"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            30
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Text Concatenate"
-      },
-      "widgets_values": [
-        "",
-        "",
-        "false",
-        "",
-        "",
-        ","
-      ]
-    },
-    {
-      "id": 21,
-      "type": "Text Concatenate",
-      "pos": [
-        542.741774804688,
-        -534.564905078125
-      ],
-      "size": {
-        "0": 315,
-        "1": 178
-      },
-      "flags": {},
-      "order": 12,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "text_a",
-          "type": "STRING",
-          "link": 37,
-          "widget": {
-            "name": "text_a"
-          },
-          "slot_index": 0
-        },
-        {
-          "name": "text_b",
-          "type": "STRING",
-          "link": 32,
-          "widget": {
-            "name": "text_b"
-          }
-        },
-        {
-          "name": "text_c",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "text_c"
-          }
-        },
-        {
-          "name": "text_d",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "text_d"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            33
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Text Concatenate"
-      },
-      "widgets_values": [
-        "",
-        "",
-        "false",
-        "",
-        "",
-        ""
-      ]
-    },
-    {
       "id": 23,
       "type": "CR Prompt Text",
       "pos": [
@@ -564,7 +394,7 @@
         "Node name for S&R": "CR Prompt Text"
       },
       "widgets_values": [
-        "you are a stable diffusion prompt master. using the following prompt, please create a new prompt that matches the original intention of the input but enhances it in ways to improve detail and composition in the image. please include as much of the original prompt as you can in your output: \n\n"
+        "you are a stable diffusion prompt master. using the following prompt, please create a new prompt that matches the original intention of the input but enhances it in ways to improve detail and composition in the image. please do your best to not change the original intention of the input\n\nINPUT: \n\n"
       ]
     },
     {
@@ -759,11 +589,181 @@
         1.68,
         77,
         0.17,
-        1.0,
+        1,
         1.2,
         620963896509939,
         "randomize",
         false,
+        "",
+        ""
+      ]
+    },
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "pos": [
+        1452,
+        190
+      ],
+      "size": {
+        "0": 210,
+        "1": 270
+      },
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 9
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "final_output"
+      ]
+    },
+    {
+      "id": 20,
+      "type": "Text Concatenate",
+      "pos": [
+        -484,
+        -382
+      ],
+      "size": {
+        "0": 315,
+        "1": 178
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text_a",
+          "type": "STRING",
+          "link": 35,
+          "widget": {
+            "name": "text_a"
+          },
+          "slot_index": 0
+        },
+        {
+          "name": "text_b",
+          "type": "STRING",
+          "link": 36,
+          "widget": {
+            "name": "text_b"
+          }
+        },
+        {
+          "name": "text_c",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text_c"
+          }
+        },
+        {
+          "name": "text_d",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text_d"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            30
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Text Concatenate"
+      },
+      "widgets_values": [
+        "",
+        "",
+        "false",
+        "",
+        "",
+        ","
+      ]
+    },
+    {
+      "id": 21,
+      "type": "Text Concatenate",
+      "pos": [
+        543,
+        -535
+      ],
+      "size": {
+        "0": 315,
+        "1": 178
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text_a",
+          "type": "STRING",
+          "link": 37,
+          "widget": {
+            "name": "text_a"
+          },
+          "slot_index": 0
+        },
+        {
+          "name": "text_b",
+          "type": "STRING",
+          "link": 32,
+          "widget": {
+            "name": "text_b"
+          }
+        },
+        {
+          "name": "text_c",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text_c"
+          }
+        },
+        {
+          "name": "text_d",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text_d"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            33
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Text Concatenate"
+      },
+      "widgets_values": [
+        "",
+        "",
+        "false",
+        "",
         "",
         ""
       ]

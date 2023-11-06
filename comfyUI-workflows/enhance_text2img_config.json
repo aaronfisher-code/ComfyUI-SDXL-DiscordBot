@@ -135,7 +135,7 @@
       "temperature": 1.68,
       "top_k": 77,
       "top_p": 0.17,
-      "typical_p": 1.0,
+      "typical_p": 1,
       "penalty": 1.2,
       "seed": [
         "12",
@@ -195,7 +195,7 @@
   },
   "23": {
     "inputs": {
-      "prompt": "you are a stable diffusion prompt master. using the following prompt, please create a new prompt that matches the original intention of the input but enhances it in ways to improve detail and composition in the image. please include as much of the original prompt as you can in your output: \n\n"
+      "prompt": "you are a stable diffusion prompt master. using the following prompt, please create a new prompt that matches the original intention of the input but enhances it in ways to improve detail and composition in the image. please do your best to not change the original intention of the input\n\nINPUT: \n\n"
     },
     "class_type": "CR Prompt Text"
   },
