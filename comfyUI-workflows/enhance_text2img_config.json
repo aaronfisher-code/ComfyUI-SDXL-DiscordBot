@@ -112,7 +112,7 @@
   },
   "12": {
     "inputs": {
-      "seed": 468264716010527
+      "seed": 422496937209488
     },
     "class_type": "Seed (rgthree)"
   },
@@ -157,7 +157,7 @@
   "18": {
     "inputs": {
       "text": [
-        "15",
+        "21",
         0
       ]
     },
@@ -185,10 +185,18 @@
         0
       ],
       "text_b": [
-        "15",
+        "25",
         0
       ],
       "linebreak_addition": "false",
+      "text_c": [
+        "15",
+        0
+      ],
+      "text_d": [
+        "25",
+        1
+      ],
       "delimiter": ""
     },
     "class_type": "Text Concatenate"
@@ -204,5 +212,24 @@
       "prompt": "a dog"
     },
     "class_type": "CR Prompt Text"
+  },
+  "25": {
+    "inputs": {
+      "text": " (",
+      "text_b": ":0.6)",
+      "text_c": "",
+      "text_d": ""
+    },
+    "class_type": "Text String"
+  },
+  "26": {
+    "inputs": {
+      "text": [
+        "21",
+        0
+      ],
+      "label": "Full Prompt"
+    },
+    "class_type": "Text to Console"
   }
 }

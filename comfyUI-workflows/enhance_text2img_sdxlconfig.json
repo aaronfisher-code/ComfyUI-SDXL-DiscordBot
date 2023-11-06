@@ -229,10 +229,18 @@
         0
       ],
       "text_b": [
-        "64",
+        "73",
         0
       ],
       "linebreak_addition": "false",
+      "text_c": [
+        "64",
+        0
+      ],
+      "text_d": [
+        "73",
+        1
+      ],
       "delimiter": ", "
     },
     "class_type": "Text Concatenate"
@@ -242,5 +250,14 @@
       "prompt": "you are a stable diffusion prompt master. using the following prompt, please create a new prompt that matches the original intention of the input but enhances it in ways to improve detail and composition in the image. please do your best to not change the original intention of the input\n\nINPUT: \n\n"
     },
     "class_type": "CR Prompt Text"
+  },
+  "73": {
+    "inputs": {
+      "text": " (",
+      "text_b": ":0.6)",
+      "text_c": "",
+      "text_d": ""
+    },
+    "class_type": "Text String"
   }
 }

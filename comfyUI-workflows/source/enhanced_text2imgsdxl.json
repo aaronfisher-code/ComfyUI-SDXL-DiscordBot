@@ -1,6 +1,6 @@
 {
-  "last_node_id": 72,
-  "last_link_id": 126,
+  "last_node_id": 73,
+  "last_link_id": 129,
   "nodes": [
     {
       "id": 37,
@@ -125,7 +125,7 @@
         "1": 126.0501708984375
       },
       "flags": {},
-      "order": 10,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
@@ -228,7 +228,7 @@
         "1": 182.96826171875
       },
       "flags": {},
-      "order": 14,
+      "order": 15,
       "mode": 0,
       "inputs": [
         {
@@ -359,7 +359,7 @@
         "1": 446
       },
       "flags": {},
-      "order": 15,
+      "order": 16,
       "mode": 0,
       "inputs": [
         {
@@ -431,7 +431,7 @@
         "1": 46
       },
       "flags": {},
-      "order": 16,
+      "order": 17,
       "mode": 0,
       "inputs": [
         {
@@ -473,7 +473,7 @@
         "1": 270
       },
       "flags": {},
-      "order": 17,
+      "order": 18,
       "mode": 0,
       "inputs": [
         {
@@ -553,7 +553,7 @@
         "1": 246
       },
       "flags": {},
-      "order": 8,
+      "order": 9,
       "mode": 0,
       "inputs": [
         {
@@ -615,7 +615,7 @@
         "1": 173.47203063964844
       },
       "flags": {},
-      "order": 12,
+      "order": 13,
       "mode": 0,
       "inputs": [
         {
@@ -682,7 +682,7 @@
         "1": 316
       },
       "flags": {},
-      "order": 11,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
@@ -714,7 +714,7 @@
           "type": "STRING",
           "links": [
             115,
-            119
+            127
           ],
           "shape": 3,
           "slot_index": 0
@@ -749,7 +749,7 @@
         "1": 178
       },
       "flags": {},
-      "order": 9,
+      "order": 10,
       "mode": 0,
       "inputs": [
         {
@@ -810,79 +810,6 @@
       ]
     },
     {
-      "id": 69,
-      "type": "Text Concatenate",
-      "pos": [
-        0,
-        -1010
-      ],
-      "size": {
-        "0": 315,
-        "1": 178
-      },
-      "flags": {},
-      "order": 13,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "text_a",
-          "type": "STRING",
-          "link": 122,
-          "widget": {
-            "name": "text_a"
-          },
-          "slot_index": 0
-        },
-        {
-          "name": "text_b",
-          "type": "STRING",
-          "link": 119,
-          "widget": {
-            "name": "text_b"
-          }
-        },
-        {
-          "name": "text_c",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "text_c"
-          }
-        },
-        {
-          "name": "text_d",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "text_d"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            123,
-            124
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Text Concatenate"
-      },
-      "widgets_values": [
-        "",
-        "",
-        "false",
-        "",
-        "",
-        ", "
-      ]
-    },
-    {
       "id": 21,
       "type": "CR Prompt Text",
       "pos": [
@@ -922,10 +849,10 @@
         -1472,
         -913
       ],
-      "size": [
-        421.1591559687497,
-        223.15302946093732
-      ],
+      "size": {
+        "0": 421.1591491699219,
+        "1": 223.1530303955078
+      },
       "flags": {},
       "order": 6,
       "mode": 0,
@@ -978,6 +905,136 @@
       "widgets_values": [
         "/home/occlusion/ai/llm/PromptMKR",
         512
+      ]
+    },
+    {
+      "id": 69,
+      "type": "Text Concatenate",
+      "pos": [
+        0,
+        -1010
+      ],
+      "size": {
+        "0": 315,
+        "1": 178
+      },
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text_a",
+          "type": "STRING",
+          "link": 122,
+          "widget": {
+            "name": "text_a"
+          },
+          "slot_index": 0
+        },
+        {
+          "name": "text_b",
+          "type": "STRING",
+          "link": 128,
+          "widget": {
+            "name": "text_b"
+          }
+        },
+        {
+          "name": "text_c",
+          "type": "STRING",
+          "link": 127,
+          "widget": {
+            "name": "text_c"
+          }
+        },
+        {
+          "name": "text_d",
+          "type": "STRING",
+          "link": 129,
+          "widget": {
+            "name": "text_d"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            123,
+            124
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Text Concatenate"
+      },
+      "widgets_values": [
+        "",
+        "",
+        "false",
+        "",
+        "",
+        ", "
+      ]
+    },
+    {
+      "id": 73,
+      "type": "Text String",
+      "pos": [
+        -500,
+        -1213
+      ],
+      "size": {
+        "0": 315,
+        "1": 190
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            128
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            129
+          ],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": null,
+          "shape": 3,
+          "slot_index": 2
+        },
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Text String"
+      },
+      "widgets_values": [
+        " (",
+        ":0.6)",
+        "",
+        ""
       ]
     }
   ],
@@ -1159,14 +1216,6 @@
       "STRING"
     ],
     [
-      119,
-      64,
-      0,
-      69,
-      1,
-      "STRING"
-    ],
-    [
       121,
       21,
       0,
@@ -1212,6 +1261,30 @@
       0,
       68,
       0,
+      "STRING"
+    ],
+    [
+      127,
+      64,
+      0,
+      69,
+      2,
+      "STRING"
+    ],
+    [
+      128,
+      73,
+      0,
+      69,
+      1,
+      "STRING"
+    ],
+    [
+      129,
+      73,
+      1,
+      69,
+      3,
       "STRING"
     ]
   ],
