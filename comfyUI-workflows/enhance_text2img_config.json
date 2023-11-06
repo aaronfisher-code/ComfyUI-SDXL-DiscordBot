@@ -132,9 +132,9 @@
   "15": {
     "inputs": {
       "max_new_tokens": 128,
-      "temperature": 0.01,
+      "temperature": 0.6,
       "top_k": 40,
-      "top_p": 0.1,
+      "top_p": 0.99,
       "typical_p": 0.4,
       "penalty": 1.15,
       "seed": [

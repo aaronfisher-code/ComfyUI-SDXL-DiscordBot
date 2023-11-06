@@ -536,83 +536,16 @@
       ]
     },
     {
-      "id": 15,
-      "type": "ZuellniExLlamaGenerator",
-      "pos": [
-        -92,
-        -425
-      ],
-      "size": {
-        "0": 400,
-        "1": 316
-      },
-      "flags": {},
-      "order": 10,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "EXL_MODEL",
-          "link": 23
-        },
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 30,
-          "widget": {
-            "name": "text"
-          },
-          "slot_index": 1
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": 34,
-          "widget": {
-            "name": "seed"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "TEXT",
-          "type": "STRING",
-          "links": [
-            27,
-            32
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ZuellniExLlamaGenerator"
-      },
-      "widgets_values": [
-        128,
-        0.01,
-        40,
-        0.1,
-        0.4,
-        1.15,
-        620963896509939,
-        "randomize",
-        false,
-        "",
-        ""
-      ]
-    },
-    {
       "id": 23,
       "type": "CR Prompt Text",
       "pos": [
         -1137,
         -581
       ],
-      "size": [
-        407.6018575000003,
-        214.78307948828137
-      ],
+      "size": {
+        "0": 407.60186767578125,
+        "1": 214.7830810546875
+      },
       "flags": {},
       "order": 2,
       "mode": 0,
@@ -766,6 +699,73 @@
         null,
         null,
         null
+      ]
+    },
+    {
+      "id": 15,
+      "type": "ZuellniExLlamaGenerator",
+      "pos": [
+        -92,
+        -425
+      ],
+      "size": {
+        "0": 400,
+        "1": 316
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "EXL_MODEL",
+          "link": 23
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 30,
+          "widget": {
+            "name": "text"
+          },
+          "slot_index": 1
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 34,
+          "widget": {
+            "name": "seed"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "TEXT",
+          "type": "STRING",
+          "links": [
+            27,
+            32
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ZuellniExLlamaGenerator"
+      },
+      "widgets_values": [
+        128,
+        0.6,
+        40,
+        0.99,
+        0.4,
+        1.15,
+        620963896509939,
+        "randomize",
+        false,
+        "",
+        ""
       ]
     }
   ],
