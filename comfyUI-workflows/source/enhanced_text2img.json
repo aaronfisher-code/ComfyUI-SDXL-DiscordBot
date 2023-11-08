@@ -1,6 +1,6 @@
 {
-  "last_node_id": 26,
-  "last_link_id": 42,
+  "last_node_id": 32,
+  "last_link_id": 60,
   "nodes": [
     {
       "id": 7,
@@ -14,7 +14,7 @@
         "1": 180.6060791015625
       },
       "flags": {},
-      "order": 10,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
@@ -172,58 +172,13 @@
         "Node name for S&R": "KSampler"
       },
       "widgets_values": [
-        494629467439013,
+        789059219392503,
         "randomize",
         20,
         8,
         "ddim",
         "ddim_uniform",
         1
-      ]
-    },
-    {
-      "id": 4,
-      "type": "CheckpointLoaderSimple",
-      "pos": [
-        -628,
-        442
-      ],
-      "size": {
-        "0": 315,
-        "1": 98
-      },
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            16
-          ],
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            17
-          ],
-          "slot_index": 1
-        },
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": [],
-          "slot_index": 2
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CheckpointLoaderSimple"
-      },
-      "widgets_values": [
-        "rundiffusionFX_v10.safetensors"
       ]
     },
     {
@@ -238,7 +193,7 @@
         "1": 164.31304931640625
       },
       "flags": {},
-      "order": 13,
+      "order": 15,
       "mode": 0,
       "inputs": [
         {
@@ -249,7 +204,7 @@
         {
           "name": "text",
           "type": "STRING",
-          "link": 33,
+          "link": 60,
           "widget": {
             "name": "text"
           },
@@ -285,7 +240,7 @@
         "1": 246
       },
       "flags": {},
-      "order": 8,
+      "order": 9,
       "mode": 0,
       "inputs": [
         {
@@ -346,7 +301,7 @@
         "1": 214.7830810546875
       },
       "flags": {},
-      "order": 2,
+      "order": 1,
       "mode": 0,
       "outputs": [
         {
@@ -363,171 +318,7 @@
         "Node name for S&R": "CR Prompt Text"
       },
       "widgets_values": [
-        "you are a stable diffusion prompt master. using the following prompt, please create a new prompt that matches the original intention of the input but enhances it in ways to improve detail and composition in the image. please do your best to not change the original intention of the input\n\nINPUT: \n\n"
-      ]
-    },
-    {
-      "id": 13,
-      "type": "VAELoader",
-      "pos": [
-        -543,
-        266
-      ],
-      "size": {
-        "0": 315,
-        "1": 58
-      },
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": [
-            22
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VAELoader"
-      },
-      "widgets_values": [
-        "vae-ft-mse-840000-ema-pruned.ckpt"
-      ]
-    },
-    {
-      "id": 14,
-      "type": "ZuellniExLlamaLoader",
-      "pos": [
-        -685,
-        47
-      ],
-      "size": {
-        "0": 315,
-        "1": 82
-      },
-      "flags": {},
-      "order": 4,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "EXL_MODEL",
-          "links": [
-            23
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ZuellniExLlamaLoader"
-      },
-      "widgets_values": [
-        "/home/occlusion/ai/llm/PromptMKR",
-        512
-      ]
-    },
-    {
-      "id": 24,
-      "type": "CR Prompt Text",
-      "pos": [
-        -971,
-        -233
-      ],
-      "size": {
-        "0": 210,
-        "1": 78.17271423339844
-      },
-      "flags": {},
-      "order": 5,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "prompt",
-          "type": "STRING",
-          "links": [
-            36,
-            37
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CR Prompt Text"
-      },
-      "widgets_values": [
-        "a dog"
-      ]
-    },
-    {
-      "id": 15,
-      "type": "ZuellniExLlamaGenerator",
-      "pos": [
-        -92,
-        -425
-      ],
-      "size": {
-        "0": 400,
-        "1": 316
-      },
-      "flags": {},
-      "order": 11,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "EXL_MODEL",
-          "link": 23
-        },
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 30,
-          "widget": {
-            "name": "text"
-          },
-          "slot_index": 1
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": 34,
-          "widget": {
-            "name": "seed"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "TEXT",
-          "type": "STRING",
-          "links": [
-            38
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ZuellniExLlamaGenerator"
-      },
-      "widgets_values": [
-        128,
-        1.68,
-        77,
-        0.17,
-        1,
-        1.2,
-        526353395312868,
-        "randomize",
-        false,
-        "",
-        ""
+        "you are a stable diffusion prompt master. using the following prompt, please create more stable diffusion tags in a way that matches the original intention of the input but enhances it in ways to improve detail and composition in the image. please do your best to not change the original intention of the input. include styles and inspirations. do not mention children.\n\nINPUT: \n\n"
       ]
     },
     {
@@ -542,7 +333,7 @@
         "1": 178
       },
       "flags": {},
-      "order": 9,
+      "order": 8,
       "mode": 0,
       "inputs": [
         {
@@ -584,7 +375,7 @@
           "name": "STRING",
           "type": "STRING",
           "links": [
-            30
+            44
           ],
           "shape": 3,
           "slot_index": 0
@@ -603,152 +394,6 @@
       ]
     },
     {
-      "id": 18,
-      "type": "ZuellniTextPreview",
-      "pos": [
-        911,
-        -201
-      ],
-      "size": {
-        "0": 386.3573913574219,
-        "1": 173.47203063964844
-      },
-      "flags": {},
-      "order": 14,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 41,
-          "widget": {
-            "name": "text"
-          }
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ZuellniTextPreview"
-      },
-      "widgets_values": [
-        "a dog ('s loyalty towards its owner is unwavering.,Dog Loyalty :1.9],Portrait Photography, Close Up Shot, Eye Contact Between Dog & Owner, Faithful Companionship, Love Bond Strong Connection Emotionally Expressive Canine Features Soft Focus Light Source Golden Hour ambiance Outdoor Natural Environment Serene Setting Greenery Trees Grass Flowers Surrounding Nature Harmony Tranquility Quiet Contemplative Calm Comfort Contentment Inner Peace Satisfaction Fulfillment Joy Happiness Contentedness Wellbe:0.6)"
-      ]
-    },
-    {
-      "id": 21,
-      "type": "Text Concatenate",
-      "pos": [
-        543,
-        -535
-      ],
-      "size": {
-        "0": 315,
-        "1": 178
-      },
-      "flags": {},
-      "order": 12,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "text_a",
-          "type": "STRING",
-          "link": 37,
-          "widget": {
-            "name": "text_a"
-          },
-          "slot_index": 0
-        },
-        {
-          "name": "text_b",
-          "type": "STRING",
-          "link": 39,
-          "widget": {
-            "name": "text_b"
-          },
-          "slot_index": 1
-        },
-        {
-          "name": "text_c",
-          "type": "STRING",
-          "link": 38,
-          "widget": {
-            "name": "text_c"
-          }
-        },
-        {
-          "name": "text_d",
-          "type": "STRING",
-          "link": 40,
-          "widget": {
-            "name": "text_d"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            33,
-            41,
-            42
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Text Concatenate"
-      },
-      "widgets_values": [
-        "",
-        "",
-        "false",
-        "",
-        "",
-        ""
-      ]
-    },
-    {
-      "id": 26,
-      "type": "Text to Console",
-      "pos": [
-        953,
-        -430
-      ],
-      "size": [
-        315,
-        82
-      ],
-      "flags": {},
-      "order": 15,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 42,
-          "widget": {
-            "name": "text"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": null,
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Text to Console"
-      },
-      "widgets_values": [
-        "",
-        "Full Prompt"
-      ]
-    },
-    {
       "id": 25,
       "type": "Text String",
       "pos": [
@@ -760,7 +405,7 @@
         "1": 190
       },
       "flags": {},
-      "order": 6,
+      "order": 2,
       "mode": 0,
       "outputs": [
         {
@@ -799,46 +444,78 @@
         "Node name for S&R": "Text String"
       },
       "widgets_values": [
-        " (",
-        ":0.5)",
+        ", BREAK, (",
+        ":0.4)",
         "",
         ""
       ]
     },
     {
-      "id": 12,
-      "type": "Seed (rgthree)",
+      "id": 27,
+      "type": "ZuellniExLlamaGenerator",
       "pos": [
-        65,
-        724
+        5,
+        -396
       ],
       "size": {
-        "0": 210,
-        "1": 130
+        "0": 400,
+        "1": 316
       },
       "flags": {},
-      "order": 7,
+      "order": 10,
       "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "EXL_MODEL",
+          "link": 43,
+          "slot_index": 0
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 44,
+          "widget": {
+            "name": "text"
+          },
+          "slot_index": 1
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 48,
+          "widget": {
+            "name": "seed"
+          },
+          "slot_index": 2
+        }
+      ],
       "outputs": [
         {
-          "name": "SEED",
-          "type": "INT",
+          "name": "TEXT",
+          "type": "STRING",
           "links": [
-            21,
-            34
+            46
           ],
           "shape": 3,
           "slot_index": 0
         }
       ],
       "properties": {
-        "Node name for S&R": "Seed (rgthree)"
+        "Node name for S&R": "ZuellniExLlamaGenerator"
       },
       "widgets_values": [
-        422496937209488,
-        null,
-        null,
-        null
+        false,
+        false,
+        128,
+        0.7,
+        20,
+        0.9,
+        1,
+        1.15,
+        556697246632718,
+        "randomize",
+        ""
       ]
     },
     {
@@ -865,6 +542,331 @@
       "properties": {},
       "widgets_values": [
         "final_output"
+      ]
+    },
+    {
+      "id": 12,
+      "type": "Seed (rgthree)",
+      "pos": [
+        66,
+        723
+      ],
+      "size": {
+        "0": 210,
+        "1": 130
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "SEED",
+          "type": "INT",
+          "links": [
+            21,
+            48
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Seed (rgthree)"
+      },
+      "widgets_values": [
+        563480802472251,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "id": 31,
+      "type": "ZuellniTextPreview",
+      "pos": [
+        985,
+        -348
+      ],
+      "size": [
+        405.9633508300783,
+        247.46680908203132
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 57,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ZuellniTextPreview"
+      },
+      "widgets_values": [
+        "a dog, BREAK, (named Luna, petting Luna's head as he rests contentedly, his tail wagging happily behind him. by: Jean-Honoré Fragonard, Thomas Eakins:0.4)"
+      ]
+    },
+    {
+      "id": 32,
+      "type": "Text to Console",
+      "pos": [
+        995,
+        -535
+      ],
+      "size": [
+        315,
+        82
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 58,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Text to Console"
+      },
+      "widgets_values": [
+        "",
+        "FINAL_PROMPT"
+      ]
+    },
+    {
+      "id": 24,
+      "type": "CR Prompt Text",
+      "pos": [
+        -971,
+        -237
+      ],
+      "size": {
+        "0": 210,
+        "1": 78.17271423339844
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            36,
+            47
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CR Prompt Text"
+      },
+      "widgets_values": [
+        "a dog"
+      ]
+    },
+    {
+      "id": 21,
+      "type": "Text Concatenate",
+      "pos": [
+        544,
+        -530
+      ],
+      "size": {
+        "0": 315,
+        "1": 178
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text_a",
+          "type": "STRING",
+          "link": 47,
+          "widget": {
+            "name": "text_a"
+          },
+          "slot_index": 0
+        },
+        {
+          "name": "text_b",
+          "type": "STRING",
+          "link": 39,
+          "widget": {
+            "name": "text_b"
+          },
+          "slot_index": 1
+        },
+        {
+          "name": "text_c",
+          "type": "STRING",
+          "link": 46,
+          "widget": {
+            "name": "text_c"
+          }
+        },
+        {
+          "name": "text_d",
+          "type": "STRING",
+          "link": 40,
+          "widget": {
+            "name": "text_d"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            57,
+            58,
+            60
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Text Concatenate"
+      },
+      "widgets_values": [
+        "",
+        "",
+        "false",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "id": 13,
+      "type": "VAELoader",
+      "pos": [
+        -543,
+        266
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            22
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "vae-ft-mse-840000-ema-pruned.ckpt"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -628,
+        442
+      ],
+      "size": {
+        "0": 315,
+        "1": 98
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            16
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            17
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "rundiffusionFX_v10.safetensors"
+      ]
+    },
+    {
+      "id": 14,
+      "type": "ZuellniExLlamaLoader",
+      "pos": [
+        -685,
+        47
+      ],
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "EXL_MODEL",
+          "links": [
+            43
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ZuellniExLlamaLoader"
+      },
+      "widgets_values": [
+        "/home/occlusion/ai/llm/PromptMKR",
+        512
       ]
     }
   ],
@@ -966,38 +968,6 @@
       "VAE"
     ],
     [
-      23,
-      14,
-      0,
-      15,
-      0,
-      "EXL_MODEL"
-    ],
-    [
-      30,
-      20,
-      0,
-      15,
-      1,
-      "STRING"
-    ],
-    [
-      33,
-      21,
-      0,
-      6,
-      1,
-      "STRING"
-    ],
-    [
-      34,
-      12,
-      0,
-      15,
-      2,
-      "INT"
-    ],
-    [
       35,
       23,
       0,
@@ -1011,22 +981,6 @@
       0,
       20,
       1,
-      "STRING"
-    ],
-    [
-      37,
-      24,
-      0,
-      21,
-      0,
-      "STRING"
-    ],
-    [
-      38,
-      15,
-      0,
-      21,
-      2,
       "STRING"
     ],
     [
@@ -1046,19 +1000,67 @@
       "STRING"
     ],
     [
-      41,
-      21,
+      43,
+      14,
       0,
-      18,
+      27,
+      0,
+      "EXL_MODEL"
+    ],
+    [
+      44,
+      20,
+      0,
+      27,
+      1,
+      "STRING"
+    ],
+    [
+      46,
+      27,
+      0,
+      21,
+      2,
+      "STRING"
+    ],
+    [
+      47,
+      24,
+      0,
+      21,
       0,
       "STRING"
     ],
     [
-      42,
+      48,
+      12,
+      0,
+      27,
+      2,
+      "INT"
+    ],
+    [
+      57,
       21,
       0,
-      26,
+      31,
       0,
+      "STRING"
+    ],
+    [
+      58,
+      21,
+      0,
+      32,
+      0,
+      "STRING"
+    ],
+    [
+      60,
+      21,
+      0,
+      6,
+      1,
       "STRING"
     ]
   ],

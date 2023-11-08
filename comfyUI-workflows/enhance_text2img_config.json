@@ -112,7 +112,7 @@
   },
   "12": {
     "inputs": {
-      "seed": 422496937209488
+      "seed": 563480802472251
     },
     "class_type": "Seed (rgthree)"
   },
@@ -128,40 +128,6 @@
       "max_seq_len": 512
     },
     "class_type": "ZuellniExLlamaLoader"
-  },
-  "15": {
-    "inputs": {
-      "max_new_tokens": 128,
-      "temperature": 1.68,
-      "top_k": 77,
-      "top_p": 0.17,
-      "typical_p": 1,
-      "penalty": 1.2,
-      "seed": [
-        "12",
-        0
-      ],
-      "stop_on_newline": false,
-      "allowed_strings": "",
-      "text": [
-        "20",
-        0
-      ],
-      "model": [
-        "14",
-        0
-      ]
-    },
-    "class_type": "ZuellniExLlamaGenerator"
-  },
-  "18": {
-    "inputs": {
-      "text": [
-        "21",
-        0
-      ]
-    },
-    "class_type": "ZuellniTextPreview"
   },
   "20": {
     "inputs": {
@@ -190,7 +156,7 @@
       ],
       "linebreak_addition": "false",
       "text_c": [
-        "15",
+        "27",
         0
       ],
       "text_d": [
@@ -203,7 +169,7 @@
   },
   "23": {
     "inputs": {
-      "prompt": "you are a stable diffusion prompt master. using the following prompt, please create a new prompt that matches the original intention of the input but enhances it in ways to improve detail and composition in the image. please do your best to not change the original intention of the input\n\nINPUT: \n\n"
+      "prompt": "you are a stable diffusion prompt master. using the following prompt, please create more stable diffusion tags in a way that matches the original intention of the input but enhances it in ways to improve detail and composition in the image. please do your best to not change the original intention of the input. include styles and inspirations. do not mention children.\n\nINPUT: \n\n"
     },
     "class_type": "CR Prompt Text"
   },
@@ -215,20 +181,54 @@
   },
   "25": {
     "inputs": {
-      "text": " (",
-      "text_b": ":0.5)",
+      "text": ", BREAK, (",
+      "text_b": ":0.4)",
       "text_c": "",
       "text_d": ""
     },
     "class_type": "Text String"
   },
-  "26": {
+  "27": {
+    "inputs": {
+      "unload": false,
+      "stop_on_newline": false,
+      "max_new_tokens": 128,
+      "temperature": 0.7,
+      "top_k": 20,
+      "top_p": 0.9,
+      "typical_p": 1,
+      "penalty": 1.15,
+      "seed": [
+        "12",
+        0
+      ],
+      "text": [
+        "20",
+        0
+      ],
+      "model": [
+        "14",
+        0
+      ]
+    },
+    "class_type": "ZuellniExLlamaGenerator"
+  },
+  "31": {
+    "inputs": {
+      "text": [
+        "21",
+        0
+      ]
+    },
+    "class_type": "ZuellniTextPreview"
+  },
+  "32": {
     "inputs": {
       "text": [
         "21",
         0
       ],
-      "label": "Full Prompt"
+      "label": "FINAL_PROMPT"
     },
     "class_type": "Text to Console"
   }
