@@ -162,6 +162,8 @@ class Buttons(discord.ui.View):
             btn = ImageButton(f"U{idx + 1}", "⬆️", row, self.upscale_and_send)
             self.add_item(btn)
 
+        self.timeout = None
+
     async def generate_alternatives_and_send(self, interaction, button):
         index = int(button.label[1:]) - 1  # Extract index from label
         await interaction.response.send_message("Creating some alternatives, this shouldn't take too long...")
