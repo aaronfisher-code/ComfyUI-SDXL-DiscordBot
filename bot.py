@@ -110,7 +110,7 @@ client = discord.Client(intents=intents)
 tree = discord.app_commands.CommandTree(client)
 
 if IMAGE_SOURCE == "LOCAL":
-    from imageGen import generate_images, upscale_image, generate_alternatives, generate_video, get_models, get_loras
+    from imageGen import generate_images, upscale_image, generate_alternatives, get_models, get_loras
 elif IMAGE_SOURCE == "API":
     from apiImageGen import generate_images, upscale_image, generate_alternatives
 
@@ -209,13 +209,13 @@ class Buttons(discord.ui.View):
 async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0, enhance: bool = True):
     if should_filter(prompt, negative_prompt):
         print(f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {prompt}, Negative Prompt: {negative_prompt}")
-        await interaction.response.send_message(f"The prompt {prompt} or negative prompt {negative_prompt} contains a blocked word, not generating image.",ephemeral=True)
+        await interaction.response.send_message(f"The prompt {prompt} or negative prompt {negative_prompt} contains a blocked word, not generating image.", ephemeral=True)
         return
 
     if enhance:
         config = "ENHANCE_TEXT2IMG_CONFIG"
     else:
-        config = None
+        config = "LOCAL_TEXT2IMG"
 
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")
@@ -245,12 +245,12 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
     await interaction.response.send_message(f"{interaction.user.mention} asked me to create the video \"{prompt}\", this shouldn't take too long...")
 
     # Generate the video and get progress updates
-    video = await generate_video(prompt,negative_prompt, model, lora, lora_strength)
+    video = await generate_images(prompt,negative_prompt, model, lora, lora_strength, "LOCAL_TEXT2VIDEO")
 
     # Construct the final message with user mention
     final_message = f"{interaction.user.mention} asked me to create the video \"{prompt}\", here is what I created for them."
 
-    await interaction.channel.send(content=final_message, file=discord.File(fp=create_gif_collage(video), filename='collage.gif'))#, view=Buttons(prompt, negative_prompt, images))
+    await interaction.channel.send(content=final_message, file=discord.File(fp=create_gif_collage(video), filename='collage.gif'))
 
 @tree.command(name="sdxl", description="Generate an image using SDXL")
 @app_commands.describe(prompt='Prompt for the image being generated')
@@ -268,7 +268,7 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
     if enhance:
         config = "ENHANCE_TEXT2IMG_SDXL_CONFIG"
     else:
-        config = None
+        config = "LOCAL_SDXL_TXT2IMG_CONFIG"
 
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")

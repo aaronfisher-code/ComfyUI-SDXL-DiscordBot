@@ -15,12 +15,6 @@ import requests
 config = configparser.ConfigParser()
 config.read('config.properties')
 server_address = config['LOCAL']['SERVER_ADDRESS']
-text2img_config = config['LOCAL_TEXT2IMG']['CONFIG']
-sdxltxt2img_config = config['LOCAL_SDXL_TXT2IMG_CONFIG']['CONFIG']
-img2img_config = config['LOCAL_IMG2IMG']['CONFIG']
-sdxlimg2img_config = config['LOCAL_SDXL_IMG2IMG_CONFIG']['CONFIG']
-upscale_config = config['LOCAL_UPSCALE']['CONFIG']
-text2video_config = config['LOCAL_TEXT2VIDEO']['CONFIG']
 
 def queue_prompt(prompt, client_id):
     p = {"prompt": prompt, "client_id": client_id}
@@ -115,10 +109,7 @@ class ImageGenerator:
         if self.ws:
             await self.ws.close()
 
-async def generate_images(prompt: str,negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 1.0, config_name: str = None):
-    if config_name == None:
-        config_name = 'LOCAL_TEXT2IMG'
-
+async def generate_images(prompt: str,negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 1.0, config_name: str = 'LOCAL_TEXT2IMG'):
     with open(config[config_name]['CONFIG'], 'r') as file:
         workflow = json.load(file)
 
@@ -157,46 +148,7 @@ async def generate_images(prompt: str,negative_prompt: str, model: str = None, l
 
     return images
 
-async def generate_video(prompt: str, negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 1.0):
-    with open(text2video_config, 'r') as file:
-        workflow = json.load(file)
-
-    generator = ImageGenerator()
-    await generator.connect()
-
-    prompt_nodes = config.get('LOCAL_TEXT2VIDEO', 'PROMPT_NODES').split(',')
-    neg_prompt_nodes = config.get('LOCAL_TEXT2VIDEO', 'NEG_PROMPT_NODES').split(',')
-    rand_seed_nodes = config.get('LOCAL_TEXT2VIDEO', 'RAND_SEED_NODES').split(',')
-    model_node = config.get('LOCAL_TEXT2VIDEO', 'MODEL_NODE').split(',')
-    lora_node = config.get('LOCAL_TEXT2VIDEO', 'LORA_NODE').split(',')
-
-    # Modify the prompt dictionary
-    if (prompt != None and prompt_nodes[0] != ''):
-        for node in prompt_nodes:
-            workflow[node]["inputs"]["text"] = prompt
-    if (negative_prompt != None and neg_prompt_nodes[0] != ''):
-        for node in neg_prompt_nodes:
-            workflow[node]["inputs"]["text"] = negative_prompt + ", (children, child, kids, kid:1.3)"
-    if (rand_seed_nodes[0] != ''):
-        for node in rand_seed_nodes:
-            workflow[node]["inputs"]["seed"] = random.randint(0, 999999999999999)
-    if (model_node[0] != '' and model != None):
-        for node in model_node:
-            workflow[node]["inputs"]["ckpt_name"] = model
-    if (lora_node[0] != '' and lora != None):
-        for node in lora_node:
-            workflow[node]["inputs"]["lora_01"] = lora.value
-            workflow[node]["inputs"]["strength_01"] = lora_strength
-
-    images = await generator.get_images(workflow)
-    await generator.close()
-
-    return images
-
-async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt: str, model: str = None, lora: str = None, config_name: str = None):
-    if config_name == None:
-        config_name = 'LOCAL_IMG2IMG'
-
+async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt: str, model: str = None, lora: str = None, config_name: str = "LOCAL_IMG2IMG"):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
       image.save(temp_file, format="PNG")
       temp_filepath = temp_file.name
@@ -205,12 +157,8 @@ async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt
     response_data = upload_image(temp_filepath)
     filename = response_data['name']
 
-    if(config_name == 'LOCAL_IMG2IMG'):
-        with open(img2img_config, 'r') as file:
-          workflow = json.load(file)
-    elif('SDXL' in config_name):
-        with open(sdxlimg2img_config, 'r') as file:
-          workflow = json.load(file)
+    with open(config[config_name]['CONFIG'], 'r') as file:
+        workflow = json.load(file)
       
     generator = ImageGenerator()
     await generator.connect()
@@ -257,7 +205,7 @@ async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str, mo
     # Upload the temporary file using the upload_image method
     response_data = upload_image(temp_filepath)
     filename = response_data['name']
-    with open(upscale_config, 'r') as file:
+    with open(config['LOCAL_UPSCALE']['CONFIG'], 'r') as file:
       workflow = json.load(file)
 
     generator = ImageGenerator()
