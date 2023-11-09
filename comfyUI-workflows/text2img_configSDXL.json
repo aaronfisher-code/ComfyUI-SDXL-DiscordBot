@@ -45,7 +45,7 @@
   },
   "12": {
     "inputs": {
-      "seed": 10066698790571
+      "seed": 221691473223602
     },
     "class_type": "Seed (rgthree)"
   },
@@ -83,7 +83,7 @@
     "inputs": {
       "dimensions": "1024 x 1024  (square)",
       "clip_scale": 4,
-      "batch_size": 1
+      "batch_size": 4
     },
     "class_type": "SDXL Empty Latent Image (rgthree)"
   },
@@ -148,10 +148,10 @@
         "12",
         0
       ],
-      "steps": 30,
+      "steps": 15,
       "cfg": 8,
-      "sampler_name": "dpmpp_2m_sde",
-      "scheduler": "karras",
+      "sampler_name": "uni_pc",
+      "scheduler": "simple",
       "denoise": 1,
       "model": [
         "56",

@@ -190,18 +190,18 @@
   },
   "27": {
     "inputs": {
-      "unload": false,
-      "stop_on_newline": false,
-      "max_new_tokens": 128,
-      "temperature": 0.7,
-      "top_k": 20,
-      "top_p": 0.9,
-      "typical_p": 1,
-      "penalty": 1.15,
+      "max_new_tokens": false,
+      "temperature": false,
+      "top_k": 128,
+      "top_p": 0.7,
+      "typical_p": 20,
+      "penalty": 0.9,
       "seed": [
         "12",
         0
       ],
+      "stop_on_newline": 556697246632718,
+      "allowed_strings": "randomize",
       "text": [
         "20",
         0
