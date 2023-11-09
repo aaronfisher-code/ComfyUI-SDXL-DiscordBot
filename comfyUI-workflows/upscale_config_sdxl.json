@@ -38,7 +38,7 @@
   },
   "12": {
     "inputs": {
-      "seed": 50669553402424
+      "seed": 582749759832649
     },
     "class_type": "Seed (rgthree)"
   },
@@ -110,7 +110,7 @@
       "cfg": 8,
       "sampler_name": "ddim",
       "scheduler": "ddim_uniform",
-      "denoise": 0.5,
+      "denoise": 0.25,
       "mode_type": "Linear",
       "tile_width": 1024,
       "tile_height": 1024,
