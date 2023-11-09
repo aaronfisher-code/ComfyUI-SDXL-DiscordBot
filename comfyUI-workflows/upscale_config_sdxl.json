@@ -1,35 +1,15 @@
 {
   "4": {
     "inputs": {
-      "ckpt_name": "rundiffusionFX_v10.safetensors"
+      "ckpt_name": "sd_xl_base_1.0.safetensors"
     },
     "class_type": "CheckpointLoaderSimple"
-  },
-  "6": {
-    "inputs": {
-      "text": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,",
-      "clip": [
-        "11",
-        1
-      ]
-    },
-    "class_type": "CLIPTextEncode"
-  },
-  "7": {
-    "inputs": {
-      "text": "text, watermark",
-      "clip": [
-        "11",
-        1
-      ]
-    },
-    "class_type": "CLIPTextEncode"
   },
   "9": {
     "inputs": {
       "filename_prefix": "final_output",
       "images": [
-        "22",
+        "39",
         0
       ]
     },
@@ -58,7 +38,7 @@
   },
   "12": {
     "inputs": {
-      "seed": 88855871091011
+      "seed": 50669553402424
     },
     "class_type": "Seed (rgthree)"
   },
@@ -69,61 +49,75 @@
     },
     "class_type": "LoadImage"
   },
-  "18": {
-    "inputs": {
-      "control_net_name": "control_v11f1e_sd15_tile.pth"
-    },
-    "class_type": "ControlNetLoader"
-  },
-  "19": {
-    "inputs": {
-      "strength": 0.5,
-      "start_percent": 0,
-      "end_percent": 1,
-      "positive": [
-        "6",
-        0
-      ],
-      "negative": [
-        "7",
-        0
-      ],
-      "control_net": [
-        "18",
-        0
-      ],
-      "image": [
-        "13",
-        0
-      ]
-    },
-    "class_type": "ControlNetApplyAdvanced"
-  },
   "21": {
     "inputs": {
-      "vae_name": "vae-ft-mse-840000-ema-pruned.ckpt"
+      "vae_name": "sdxl_vae.safetensors"
     },
     "class_type": "VAELoader"
   },
-  "22": {
+  "32": {
+    "inputs": {
+      "pos_g": [
+        "33",
+        0
+      ],
+      "pos_l": [
+        "33",
+        0
+      ],
+      "neg_g": [
+        "34",
+        0
+      ],
+      "neg_l": [
+        "34",
+        0
+      ],
+      "preset": "preset A",
+      "base_width": 4096,
+      "base_height": 4096,
+      "crop_w": 0,
+      "crop_h": 0,
+      "target_width": 4096,
+      "target_height": 4096,
+      "base_clip": [
+        "11",
+        1
+      ]
+    },
+    "class_type": "CR SDXL Base Prompt Encoder"
+  },
+  "33": {
+    "inputs": {
+      "prompt": "a dog"
+    },
+    "class_type": "CR Prompt Text"
+  },
+  "34": {
+    "inputs": {
+      "prompt": "child, children, loli, kid, kids"
+    },
+    "class_type": "CR Prompt Text"
+  },
+  "39": {
     "inputs": {
       "upscale_by": 2,
       "seed": [
         "12",
         0
       ],
-      "steps": 20,
+      "steps": 10,
       "cfg": 8,
-      "sampler_name": "euler",
-      "scheduler": "normal",
-      "denoise": 0.4,
+      "sampler_name": "ddim",
+      "scheduler": "ddim_uniform",
+      "denoise": 0.5,
       "mode_type": "Linear",
-      "tile_width": 512,
-      "tile_height": 512,
+      "tile_width": 1024,
+      "tile_height": 1024,
       "mask_blur": 8,
       "tile_padding": 32,
       "seam_fix_mode": "None",
-      "seam_fix_denoise": 0.15,
+      "seam_fix_denoise": 1,
       "seam_fix_width": 64,
       "seam_fix_mask_blur": 8,
       "seam_fix_padding": 16,
@@ -137,11 +131,11 @@
         0
       ],
       "positive": [
-        "19",
+        "32",
         0
       ],
       "negative": [
-        "19",
+        "32",
         1
       ],
       "vae": [
@@ -149,13 +143,13 @@
         0
       ],
       "upscale_model": [
-        "23",
+        "40",
         0
       ]
     },
     "class_type": "UltimateSDUpscale"
   },
-  "23": {
+  "40": {
     "inputs": {
       "model_name": "ESRGAN_4x.pth"
     },

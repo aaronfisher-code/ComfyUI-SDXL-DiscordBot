@@ -197,7 +197,7 @@ async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt
 
     return images
 
-async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str, model: str = None, lora: str = None):
+async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str, model: str = None, lora: str = None, config_name: str = "LOCAL_UPSCALE"):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
       image.save(temp_file, format="PNG")
       temp_filepath = temp_file.name
@@ -205,18 +205,18 @@ async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str, mo
     # Upload the temporary file using the upload_image method
     response_data = upload_image(temp_filepath)
     filename = response_data['name']
-    with open(config['LOCAL_UPSCALE']['CONFIG'], 'r') as file:
+    with open(config[config_name]['CONFIG'], 'r') as file:
       workflow = json.load(file)
 
     generator = ImageGenerator()
     await generator.connect()
 
-    prompt_nodes = config.get('LOCAL_UPSCALE', 'PROMPT_NODES').split(',')
-    neg_prompt_nodes = config.get('LOCAL_UPSCALE', 'NEG_PROMPT_NODES').split(',')
-    rand_seed_nodes = config.get('LOCAL_UPSCALE', 'RAND_SEED_NODES').split(',') 
-    file_input_nodes = config.get('LOCAL_UPSCALE', 'FILE_INPUT_NODES').split(',')
-    model_node = config.get('LOCAL_UPSCALE', 'MODEL_NODE').split(',')
-    lora_node = config.get('LOCAL_UPSCALE', 'LORA_NODE').split(',')
+    prompt_nodes = config.get(config_name, 'PROMPT_NODES').split(',')
+    neg_prompt_nodes = config.get(config_name, 'NEG_PROMPT_NODES').split(',')
+    rand_seed_nodes = config.get(config_name, 'RAND_SEED_NODES').split(',')
+    file_input_nodes = config.get(config_name, 'FILE_INPUT_NODES').split(',')
+    model_node = config.get(config_name, 'MODEL_NODE').split(',')
+    lora_node = config.get(config_name, 'LORA_NODE').split(',')
 
     # Modify the prompt dictionary
     if(prompt != None and prompt_nodes[0] != ''):

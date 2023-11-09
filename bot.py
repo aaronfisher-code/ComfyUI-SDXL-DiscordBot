@@ -80,6 +80,10 @@ def create_gif_collage(images):
 
 
 def create_collage(images):
+    if(len(images) == 0):
+        print("Error: No images to make collage")
+        return None
+
     if(images[0].format == 'GIF'):
         return create_gif_collage(images)
 
@@ -133,7 +137,7 @@ class ImageButton(discord.ui.Button):
 
 
 class Buttons(discord.ui.View):
-    def __init__(self, prompt, negative_prompt, model, lora, enhance, images, config=None, *, timeout=180):
+    def __init__(self, prompt, negative_prompt, model, lora, enhance, images, config=None, *, timeout=None, is_sdxl=False):
         super().__init__(timeout=timeout)
         self.prompt = prompt
         self.negative_prompt = negative_prompt
@@ -142,6 +146,7 @@ class Buttons(discord.ui.View):
         self.enhance = enhance
         self.images = images
         self.config = config
+        self.is_sdxl = is_sdxl
 
         total_buttons = len(images) * 2 + 1  # For both alternative and upscale buttons + re-roll button
         if total_buttons > 25:  # Limit to 25 buttons
@@ -162,24 +167,30 @@ class Buttons(discord.ui.View):
             btn = ImageButton(f"U{idx + 1}", "⬆️", row, self.upscale_and_send)
             self.add_item(btn)
 
-        self.timeout = None
-
     async def generate_alternatives_and_send(self, interaction, button):
+        if self.is_sdxl:
+            sdxl_config = "LOCAL_SDXL_IMG2IMG_CONFIG"
+        else:
+            sdxl_config = "LOCAL_IMG2IMG"
         index = int(button.label[1:]) - 1  # Extract index from label
         await interaction.response.send_message("Creating some alternatives, this shouldn't take too long...")
-        images = await generate_alternatives(self.images[index], self.prompt, self.negative_prompt, self.model, self.lora, self.config)
+        images = await generate_alternatives(self.images[index], self.prompt, self.negative_prompt, self.model, self.lora, sdxl_config)
         collage_path = create_collage(images)
         final_message = f"{interaction.user.mention} here are your alternative images"
         # if a gif, set filename as gif, otherwise png
         if(images[0].format == 'GIF'):
-            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage' + '.gif'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora, self.enhance, images, self.config))
+            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage' + '.gif'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora, self.enhance, images, self.config, is_sdxl=self.is_sdxl))
         else:
-            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage.png'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora, self.enhance, images, self.config))
+            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage.png'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora, self.enhance, images, self.config, is_sdxl=self.is_sdxl))
 
     async def upscale_and_send(self, interaction, button):
+        if self.is_sdxl:
+            sdxl_config = "LOCAL_UPSCALE_SDXL"
+        else:
+            sdxl_config = "LOCAL_UPSCALE"
         index = int(button.label[1:]) - 1  # Extract index from label
         await interaction.response.send_message("Upscaling the image, this shouldn't take too long...")
-        upscaled_image = await upscale_image(self.images[index], self.prompt, self.negative_prompt, self.model, self.lora)
+        upscaled_image = await upscale_image(self.images[index], self.prompt, self.negative_prompt, self.model, self.lora, sdxl_config)
         timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
         upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
         upscaled_image.save(upscaled_image_path)
@@ -196,7 +207,7 @@ class Buttons(discord.ui.View):
 
         # Construct the final message with user mention
         final_message = f"{interaction.user.mention} asked me to re-imagine \"{self.prompt}\", here is what I imagined for them."
-        await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view = Buttons(self.prompt,self.negative_prompt, self.model, self.lora, self.enhance, images))
+        await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view = Buttons(self.prompt,self.negative_prompt, self.model, self.lora, self.enhance, images, self.config))
 
 @tree.command(name="imagine", description="Generate an image based on input text")
 @app_commands.describe(prompt='Prompt for the image being generated')
@@ -226,7 +237,7 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
     # Construct the final message with user mention
     final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them."
     # send as gif or png
-    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora,enhance,images, config))
+    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora,enhance,images,config))
 
 @tree.command(name="video", description="Generate a video based on input text")
 @app_commands.describe(prompt='Prompt for the video being generated')
@@ -279,7 +290,7 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
     # Construct the final message with user mention
     final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them."
     # send as gif or png
-    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora,enhance,images, config))
+    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora,enhance,images,config, is_sdxl=True))
 
 # run the bot
 client.run(TOKEN)

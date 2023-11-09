@@ -1,6 +1,6 @@
 {
   "last_node_id": 23,
-  "last_link_id": 45,
+  "last_link_id": 46,
   "nodes": [
     {
       "id": 7,
@@ -76,65 +76,6 @@
       },
       "widgets_values": [
         "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,"
-      ]
-    },
-    {
-      "id": 11,
-      "type": "Lora Loader Stack (rgthree)",
-      "pos": [
-        3,
-        404
-      ],
-      "size": {
-        "0": 315,
-        "1": 246
-      },
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 16
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 17
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            19,
-            20
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Lora Loader Stack (rgthree)"
-      },
-      "widgets_values": [
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1
       ]
     },
     {
@@ -254,8 +195,7 @@
           "name": "MODEL",
           "type": "MODEL",
           "links": [
-            16,
-            39
+            16
           ],
           "slot_index": 0
         },
@@ -392,10 +332,10 @@
         1568,
         100
       ],
-      "size": [
-        315,
-        802
-      ],
+      "size": {
+        "0": 315,
+        "1": 802
+      },
       "flags": {},
       "order": 10,
       "mode": 0,
@@ -408,7 +348,7 @@
         {
           "name": "model",
           "type": "MODEL",
-          "link": 39
+          "link": 46
         },
         {
           "name": "positive",
@@ -457,7 +397,7 @@
       },
       "widgets_values": [
         2,
-        979141717215606,
+        651947751532514,
         "randomize",
         20,
         8,
@@ -544,6 +484,67 @@
         0,
         1
       ]
+    },
+    {
+      "id": 11,
+      "type": "Lora Loader Stack (rgthree)",
+      "pos": [
+        3,
+        404
+      ],
+      "size": {
+        "0": 315,
+        "1": 246
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 16
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 17
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            46
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            19,
+            20
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Lora Loader Stack (rgthree)"
+      },
+      "widgets_values": [
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1
+      ]
     }
   ],
   "links": [
@@ -620,14 +621,6 @@
       "IMAGE"
     ],
     [
-      39,
-      4,
-      0,
-      22,
-      1,
-      "MODEL"
-    ],
-    [
       40,
       19,
       0,
@@ -674,6 +667,14 @@
       22,
       6,
       "INT"
+    ],
+    [
+      46,
+      11,
+      0,
+      22,
+      1,
+      "MODEL"
     ]
   ],
   "groups": [],
