@@ -110,7 +110,7 @@
       "cfg": 8,
       "sampler_name": "ddim",
       "scheduler": "ddim_uniform",
-      "denoise": 0.25,
+      "denoise": 0.4,
       "mode_type": "Linear",
       "tile_width": 1024,
       "tile_height": 1024,
@@ -131,11 +131,11 @@
         0
       ],
       "positive": [
-        "32",
+        "42",
         0
       ],
       "negative": [
-        "32",
+        "42",
         1
       ],
       "vae": [
@@ -154,5 +154,35 @@
       "model_name": "ESRGAN_4x.pth"
     },
     "class_type": "Upscale Model Loader"
+  },
+  "41": {
+    "inputs": {
+      "control_net_name": "sargezt_xl_softedge.safetensors"
+    },
+    "class_type": "ControlNetLoader"
+  },
+  "42": {
+    "inputs": {
+      "strength": 0.8,
+      "start_percent": 0,
+      "end_percent": 1,
+      "positive": [
+        "32",
+        0
+      ],
+      "negative": [
+        "32",
+        1
+      ],
+      "control_net": [
+        "41",
+        0
+      ],
+      "image": [
+        "13",
+        0
+      ]
+    },
+    "class_type": "ControlNetApplyAdvanced"
   }
 }

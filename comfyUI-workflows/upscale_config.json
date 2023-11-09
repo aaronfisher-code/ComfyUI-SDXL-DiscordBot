@@ -77,7 +77,7 @@
   },
   "19": {
     "inputs": {
-      "strength": 0.5,
+      "strength": 0.8,
       "start_percent": 0,
       "end_percent": 1,
       "positive": [
@@ -114,9 +114,9 @@
       ],
       "steps": 20,
       "cfg": 8,
-      "sampler_name": "euler",
-      "scheduler": "normal",
-      "denoise": 0.4,
+      "sampler_name": "ddim",
+      "scheduler": "ddim_uniform",
+      "denoise": 0.5,
       "mode_type": "Linear",
       "tile_width": 512,
       "tile_height": 512,
