@@ -191,7 +191,7 @@ class Buttons(discord.ui.View):
             sdxl_config = "LOCAL_UPSCALE"
         index = int(button.label[1:]) - 1  # Extract index from label
         await interaction.response.send_message("Upscaling the image, this shouldn't take too long...")
-        upscaled_image = await upscale_image(self.images[index], self.prompt, self.negative_prompt, self.model, self.lora, sdxl_config)
+        upscaled_image = await upscale_image(self.images[index], self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength, sdxl_config)
         timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
         upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
         upscaled_image.save(upscaled_image_path)
@@ -204,7 +204,7 @@ class Buttons(discord.ui.View):
         btn.disabled = True
         await interaction.message.edit(view=self)
         # Generate a new image with the same prompt
-        images = await generate_images(self.prompt,self.negative_prompt, self.model, self.lora, self.enhance)
+        images = await generate_images(self.prompt,self.negative_prompt, self.model, self.lora, self.lora_strength, self.config)
 
         # Construct the final message with user mention
         final_message = f"{interaction.user.mention} asked me to re-imagine \"{self.prompt}\", here is what I imagined for them."
