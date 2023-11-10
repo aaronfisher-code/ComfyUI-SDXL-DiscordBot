@@ -109,6 +109,42 @@ class ImageGenerator:
         if self.ws:
             await self.ws.close()
 
+def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora: str, lora_strength : float, config_name: str, filename : str = None):
+    prompt_nodes = config.get(config_name, 'PROMPT_NODES').split(',')
+    neg_prompt_nodes = config.get(config_name, 'NEG_PROMPT_NODES').split(',')
+    rand_seed_nodes = config.get(config_name, 'RAND_SEED_NODES').split(',')
+    model_node = config.get(config_name, 'MODEL_NODE').split(',')
+    lora_node = config.get(config_name, 'LORA_NODE').split(',')
+
+    if (config.has_option(config_name, 'FILE_INPUT_NODES')):
+        file_input_nodes = config.get(config_name, 'FILE_INPUT_NODES').split(',')
+
+    # Modify the prompt dictionary
+    if (prompt != None and prompt_nodes[0] != ''):
+        for node in prompt_nodes:
+            if ("text" in workflow[node]["inputs"]):
+                workflow[node]["inputs"]["text"] = prompt
+            elif ("prompt" in workflow[node]["inputs"]):
+                workflow[node]["inputs"]["prompt"] = prompt
+    if (negative_prompt != None and neg_prompt_nodes[0] != ''):
+        for node in neg_prompt_nodes:
+            workflow[node]["inputs"]["text"] = negative_prompt + ", (children, child, kids, kid:1.3)"
+    if (filename != None):
+        for node in file_input_nodes:
+            workflow[node]["inputs"]["image"] = filename
+    if (rand_seed_nodes[0] != ''):
+        for node in rand_seed_nodes:
+            workflow[node]["inputs"]["seed"] = random.randint(0, 999999999999999)
+    if (model_node[0] != '' and model != None):
+        for node in model_node:
+            workflow[node]["inputs"]["ckpt_name"] = model
+    if (lora_node[0] != '' and lora != None):
+        for node in lora_node:
+            workflow[node]["inputs"]["lora_01"] = lora.value
+            workflow[node]["inputs"]["strength_01"] = lora_strength
+
+    return workflow
+
 async def generate_images(prompt: str,negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 1.0, config_name: str = 'LOCAL_TEXT2IMG'):
     with open(config[config_name]['CONFIG'], 'r') as file:
         workflow = json.load(file)
@@ -116,39 +152,14 @@ async def generate_images(prompt: str,negative_prompt: str, model: str = None, l
     generator = ImageGenerator()
     await generator.connect()
 
-    prompt_nodes = config.get(config_name, 'PROMPT_NODES').split(',')
-    neg_prompt_nodes = config.get(config_name, 'NEG_PROMPT_NODES').split(',')
-    rand_seed_nodes = config.get(config_name, 'RAND_SEED_NODES').split(',')
-    model_node = config.get(config_name, 'MODEL_NODE').split(',')
-    lora_node = config.get(config_name, 'LORA_NODE').split(',')
-
-    # Modify the prompt dictionary
-    if(prompt != None and prompt_nodes[0] != ''):
-      for node in prompt_nodes:
-          if("text" in workflow[node]["inputs"]):
-              workflow[node]["inputs"]["text"] = prompt
-          elif("prompt" in workflow[node]["inputs"]):
-              workflow[node]["inputs"]["prompt"] = prompt
-    if(negative_prompt != None and neg_prompt_nodes[0] != ''):
-      for node in neg_prompt_nodes:
-          workflow[node]["inputs"]["text"] = negative_prompt + ", (children, child, kids, kid:1.3)"
-    if(rand_seed_nodes[0] != ''):
-      for node in rand_seed_nodes:
-          workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
-    if(model_node[0] != '' and model != None):
-      for node in model_node:
-          workflow[node]["inputs"]["ckpt_name"] = model
-    if(lora_node[0] != '' and lora != None):
-        for node in lora_node:
-            workflow[node]["inputs"]["lora_01"] = lora.value
-            workflow[node]["inputs"]["strength_01"] = lora_strength
+    setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name)
 
     images = await generator.get_images(workflow)
     await generator.close()
 
     return images
 
-async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt: str, model: str = None, lora: str = None, config_name: str = "LOCAL_IMG2IMG"):
+async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 1.0, config_name: str = "LOCAL_IMG2IMG"):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
       image.save(temp_file, format="PNG")
       temp_filepath = temp_file.name
@@ -163,41 +174,14 @@ async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt
     generator = ImageGenerator()
     await generator.connect()
 
-    prompt_nodes = config.get(config_name, 'PROMPT_NODES').split(',')
-    neg_prompt_nodes = config.get(config_name, 'NEG_PROMPT_NODES').split(',')
-    rand_seed_nodes = config.get(config_name, 'RAND_SEED_NODES').split(',')
-    file_input_nodes = config.get(config_name, 'FILE_INPUT_NODES').split(',')
-    model_node = config.get(config_name, 'MODEL_NODE').split(',')
-    lora_node = config.get(config_name, 'LORA_NODE').split(',')
-
-    if(prompt != None and prompt_nodes[0] != ''):
-      for node in prompt_nodes:
-        if("text" in workflow[node]["inputs"]):
-            workflow[node]["inputs"]["text"] = prompt
-        elif("prompt" in workflow[node]["inputs"]):
-            workflow[node]["inputs"]["prompt"] = prompt
-    if(negative_prompt != None and neg_prompt_nodes[0] != ''):
-      for node in neg_prompt_nodes:
-          workflow[node]["inputs"]["text"] = negative_prompt + ", (children, child, kids, kid:1.3)"
-    if(rand_seed_nodes[0] != ''):
-      for node in rand_seed_nodes:
-          workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
-    if(file_input_nodes[0] != ''):
-      for node in file_input_nodes:
-          workflow[node]["inputs"]["image"] = filename
-    if(model_node[0] != '' and model != None):
-        for node in model_node:
-            workflow[node]["inputs"]["ckpt_name"] = model
-    if(lora_node[0] != '' and lora != None):
-        for node in lora_node:
-            workflow[node]["inputs"]["lora_01"] = lora.value
+    setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name, filename)
 
     images = await generator.get_images(workflow)
     await generator.close()
 
     return images
 
-async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str, model: str = None, lora: str = None, config_name: str = "LOCAL_UPSCALE"):
+async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 1.0, config_name: str = "LOCAL_UPSCALE"):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
       image.save(temp_file, format="PNG")
       temp_filepath = temp_file.name
@@ -211,35 +195,7 @@ async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str, mo
     generator = ImageGenerator()
     await generator.connect()
 
-    prompt_nodes = config.get(config_name, 'PROMPT_NODES').split(',')
-    neg_prompt_nodes = config.get(config_name, 'NEG_PROMPT_NODES').split(',')
-    rand_seed_nodes = config.get(config_name, 'RAND_SEED_NODES').split(',')
-    file_input_nodes = config.get(config_name, 'FILE_INPUT_NODES').split(',')
-    model_node = config.get(config_name, 'MODEL_NODE').split(',')
-    lora_node = config.get(config_name, 'LORA_NODE').split(',')
-
-    # Modify the prompt dictionary
-    if(prompt != None and prompt_nodes[0] != ''):
-      for node in prompt_nodes:
-          if ("text" in workflow[node]["inputs"]):
-              workflow[node]["inputs"]["text"] = prompt
-          elif ("prompt" in workflow[node]["inputs"]):
-              workflow[node]["inputs"]["prompt"] = prompt
-    if(negative_prompt != None and neg_prompt_nodes[0] != ''):
-      for node in neg_prompt_nodes:
-          workflow[node]["inputs"]["text"] = negative_prompt + ", (children, child, kids, kid:1.3)"
-    if(rand_seed_nodes[0] != ''):
-      for node in rand_seed_nodes:
-          workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
-    if(file_input_nodes[0] != ''):
-      for node in file_input_nodes:
-          workflow[node]["inputs"]["image"] = filename
-    if(model_node[0] != '' and model != None):
-        for node in model_node:
-            workflow[node]["inputs"]["ckpt_name"] = model
-    if(lora_node[0] != '' and lora != None):
-        for node in lora_node:
-            workflow[node]["inputs"]["lora_01"] = lora.value
+    setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name, filename)
 
     images = await generator.get_images(workflow)
     await generator.close()
