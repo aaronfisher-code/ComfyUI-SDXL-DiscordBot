@@ -221,7 +221,10 @@ async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str, mo
     # Modify the prompt dictionary
     if(prompt != None and prompt_nodes[0] != ''):
       for node in prompt_nodes:
-          workflow[node]["inputs"]["text"] = prompt
+          if ("text" in workflow[node]["inputs"]):
+              workflow[node]["inputs"]["text"] = prompt
+          elif ("prompt" in workflow[node]["inputs"]):
+              workflow[node]["inputs"]["prompt"] = prompt
     if(negative_prompt != None and neg_prompt_nodes[0] != ''):
       for node in neg_prompt_nodes:
           workflow[node]["inputs"]["text"] = negative_prompt + ", (children, child, kids, kid:1.3)"
