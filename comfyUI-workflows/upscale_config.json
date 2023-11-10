@@ -7,7 +7,7 @@
   },
   "6": {
     "inputs": {
-      "text": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,",
+      "text": "a dog",
       "clip": [
         "11",
         1
@@ -29,7 +29,7 @@
     "inputs": {
       "filename_prefix": "final_output",
       "images": [
-        "22",
+        "30",
         0
       ]
     },
@@ -58,7 +58,7 @@
   },
   "12": {
     "inputs": {
-      "seed": 88855871091011
+      "seed": 698974145474093
     },
     "class_type": "Seed (rgthree)"
   },
@@ -79,7 +79,7 @@
     "inputs": {
       "strength": 0.8,
       "start_percent": 0,
-      "end_percent": 1,
+      "end_percent": 0.7000000000000001,
       "positive": [
         "6",
         0
@@ -105,33 +105,60 @@
     },
     "class_type": "VAELoader"
   },
-  "22": {
+  "23": {
     "inputs": {
-      "upscale_by": 2,
+      "model_name": "ESRGAN_4x.pth"
+    },
+    "class_type": "Upscale Model Loader"
+  },
+  "24": {
+    "inputs": {
+      "upscale_model": [
+        "23",
+        0
+      ],
+      "image": [
+        "13",
+        0
+      ]
+    },
+    "class_type": "ImageUpscaleWithModel"
+  },
+  "27": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "scale_by": 0.2,
+      "image": [
+        "24",
+        0
+      ]
+    },
+    "class_type": "ImageScaleBy"
+  },
+  "28": {
+    "inputs": {
+      "pixels": [
+        "27",
+        0
+      ],
+      "vae": [
+        "21",
+        0
+      ]
+    },
+    "class_type": "VAEEncode"
+  },
+  "29": {
+    "inputs": {
       "seed": [
         "12",
         0
       ],
       "steps": 20,
       "cfg": 8,
-      "sampler_name": "ddim",
-      "scheduler": "ddim_uniform",
-      "denoise": 0.5,
-      "mode_type": "Linear",
-      "tile_width": 512,
-      "tile_height": 512,
-      "mask_blur": 8,
-      "tile_padding": 32,
-      "seam_fix_mode": "None",
-      "seam_fix_denoise": 0.15,
-      "seam_fix_width": 64,
-      "seam_fix_mask_blur": 8,
-      "seam_fix_padding": 16,
-      "force_uniform_tiles": "enable",
-      "image": [
-        "13",
-        0
-      ],
+      "sampler_name": "dpmpp_2m_sde",
+      "scheduler": "karras",
+      "denoise": 0.6,
       "model": [
         "11",
         0
@@ -144,21 +171,24 @@
         "19",
         1
       ],
-      "vae": [
-        "21",
-        0
-      ],
-      "upscale_model": [
-        "23",
+      "latent_image": [
+        "28",
         0
       ]
     },
-    "class_type": "UltimateSDUpscale"
+    "class_type": "KSampler"
   },
-  "23": {
+  "30": {
     "inputs": {
-      "model_name": "ESRGAN_4x.pth"
+      "samples": [
+        "29",
+        0
+      ],
+      "vae": [
+        "21",
+        0
+      ]
     },
-    "class_type": "Upscale Model Loader"
+    "class_type": "VAEDecode"
   }
 }

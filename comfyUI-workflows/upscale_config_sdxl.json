@@ -9,7 +9,7 @@
     "inputs": {
       "filename_prefix": "final_output",
       "images": [
-        "39",
+        "47",
         0
       ]
     },
@@ -38,7 +38,7 @@
   },
   "12": {
     "inputs": {
-      "seed": 582749759832649
+      "seed": 755010071711686
     },
     "class_type": "Seed (rgthree)"
   },
@@ -99,56 +99,6 @@
     },
     "class_type": "CR Prompt Text"
   },
-  "39": {
-    "inputs": {
-      "upscale_by": 2,
-      "seed": [
-        "12",
-        0
-      ],
-      "steps": 10,
-      "cfg": 8,
-      "sampler_name": "ddim",
-      "scheduler": "ddim_uniform",
-      "denoise": 0.4,
-      "mode_type": "Linear",
-      "tile_width": 1024,
-      "tile_height": 1024,
-      "mask_blur": 8,
-      "tile_padding": 32,
-      "seam_fix_mode": "None",
-      "seam_fix_denoise": 1,
-      "seam_fix_width": 64,
-      "seam_fix_mask_blur": 8,
-      "seam_fix_padding": 16,
-      "force_uniform_tiles": "enable",
-      "image": [
-        "13",
-        0
-      ],
-      "model": [
-        "11",
-        0
-      ],
-      "positive": [
-        "42",
-        0
-      ],
-      "negative": [
-        "42",
-        1
-      ],
-      "vae": [
-        "21",
-        0
-      ],
-      "upscale_model": [
-        "40",
-        0
-      ]
-    },
-    "class_type": "UltimateSDUpscale"
-  },
   "40": {
     "inputs": {
       "model_name": "ESRGAN_4x.pth"
@@ -165,7 +115,7 @@
     "inputs": {
       "strength": 0.8,
       "start_percent": 0,
-      "end_percent": 1,
+      "end_percent": 0.7000000000000001,
       "positive": [
         "32",
         0
@@ -179,10 +129,90 @@
         0
       ],
       "image": [
-        "13",
+        "44",
         0
       ]
     },
     "class_type": "ControlNetApplyAdvanced"
+  },
+  "43": {
+    "inputs": {
+      "upscale_model": [
+        "40",
+        0
+      ],
+      "image": [
+        "13",
+        0
+      ]
+    },
+    "class_type": "ImageUpscaleWithModel"
+  },
+  "44": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "scale_by": 0.35000000000000003,
+      "image": [
+        "43",
+        0
+      ]
+    },
+    "class_type": "ImageScaleBy"
+  },
+  "45": {
+    "inputs": {
+      "pixels": [
+        "44",
+        0
+      ],
+      "vae": [
+        "21",
+        0
+      ]
+    },
+    "class_type": "VAEEncode"
+  },
+  "46": {
+    "inputs": {
+      "seed": [
+        "12",
+        0
+      ],
+      "steps": 20,
+      "cfg": 8,
+      "sampler_name": "dpmpp_2m_sde",
+      "scheduler": "karras",
+      "denoise": 0.6,
+      "model": [
+        "11",
+        0
+      ],
+      "positive": [
+        "42",
+        0
+      ],
+      "negative": [
+        "42",
+        1
+      ],
+      "latent_image": [
+        "45",
+        0
+      ]
+    },
+    "class_type": "KSampler"
+  },
+  "47": {
+    "inputs": {
+      "samples": [
+        "46",
+        0
+      ],
+      "vae": [
+        "21",
+        0
+      ]
+    },
+    "class_type": "VAEDecode"
   }
 }
