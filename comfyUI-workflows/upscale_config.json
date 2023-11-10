@@ -143,11 +143,11 @@
         "12",
         0
       ],
-      "steps": 20,
+      "steps": 40,
       "cfg": 8,
       "sampler_name": "dpmpp_2m_sde",
       "scheduler": "karras",
-      "denoise": 0.45,
+      "denoise": 0.2,
       "model": [
         "11",
         0
