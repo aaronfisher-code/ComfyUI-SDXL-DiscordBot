@@ -124,21 +124,10 @@
     },
     "class_type": "ImageUpscaleWithModel"
   },
-  "27": {
-    "inputs": {
-      "upscale_method": "lanczos",
-      "scale_by": 0.2,
-      "image": [
-        "24",
-        0
-      ]
-    },
-    "class_type": "ImageScaleBy"
-  },
   "28": {
     "inputs": {
       "pixels": [
-        "27",
+        "31",
         0
       ],
       "vae": [
@@ -190,5 +179,18 @@
       ]
     },
     "class_type": "VAEDecode"
+  },
+  "31": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "width": 1024,
+      "height": 1024,
+      "crop": "disabled",
+      "image": [
+        "24",
+        0
+      ]
+    },
+    "class_type": "ImageScale"
   }
 }

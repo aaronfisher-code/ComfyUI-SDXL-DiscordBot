@@ -1,6 +1,6 @@
 {
-  "last_node_id": 30,
-  "last_link_id": 62,
+  "last_node_id": 31,
+  "last_link_id": 64,
   "nodes": [
     {
       "id": 7,
@@ -449,7 +449,7 @@
         "Node name for S&R": "KSampler"
       },
       "widgets_values": [
-        473253211785920,
+        575562241936612,
         "randomize",
         20,
         8,
@@ -476,7 +476,7 @@
         {
           "name": "pixels",
           "type": "IMAGE",
-          "link": 51
+          "link": 64
         },
         {
           "name": "vae",
@@ -532,7 +532,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            50
+            63
           ],
           "shape": 3,
           "slot_index": 0
@@ -541,46 +541,6 @@
       "properties": {
         "Node name for S&R": "ImageUpscaleWithModel"
       }
-    },
-    {
-      "id": 27,
-      "type": "ImageScaleBy",
-      "pos": [
-        913,
-        -23
-      ],
-      "size": {
-        "0": 315,
-        "1": 82
-      },
-      "flags": {},
-      "order": 10,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 50
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            51
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ImageScaleBy"
-      },
-      "widgets_values": [
-        "lanczos",
-        0.2
-      ]
     },
     {
       "id": 30,
@@ -688,6 +648,49 @@
         "example.png",
         "image"
       ]
+    },
+    {
+      "id": 31,
+      "type": "ImageScale",
+      "pos": [
+        904,
+        -114
+      ],
+      "size": {
+        "0": 315,
+        "1": 130
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 63,
+          "slot_index": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            64
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageScale"
+      },
+      "widgets_values": [
+        "lanczos",
+        1024,
+        1024,
+        "disabled"
+      ]
     }
   ],
   "links": [
@@ -762,22 +765,6 @@
       24,
       0,
       "UPSCALE_MODEL"
-    ],
-    [
-      50,
-      24,
-      0,
-      27,
-      0,
-      "IMAGE"
-    ],
-    [
-      51,
-      27,
-      0,
-      28,
-      0,
-      "IMAGE"
     ],
     [
       52,
@@ -858,6 +845,22 @@
       30,
       1,
       "VAE"
+    ],
+    [
+      63,
+      24,
+      0,
+      31,
+      0,
+      "IMAGE"
+    ],
+    [
+      64,
+      31,
+      0,
+      28,
+      0,
+      "IMAGE"
     ]
   ],
   "groups": [],
