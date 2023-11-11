@@ -6,8 +6,8 @@
         0
       ],
       "vae": [
-        "37",
-        0
+        "36",
+        2
       ]
     },
     "class_type": "VAEDecode"
@@ -45,7 +45,7 @@
   },
   "12": {
     "inputs": {
-      "seed": 221691473223602
+      "seed": 60653817836735
     },
     "class_type": "Seed (rgthree)"
   },
@@ -63,15 +63,9 @@
   },
   "36": {
     "inputs": {
-      "ckpt_name": "sd_xl_base_1.0.safetensors"
+      "ckpt_name": "lcm_dreamshaperxl.safetensors"
     },
     "class_type": "CheckpointLoaderSimple"
-  },
-  "37": {
-    "inputs": {
-      "vae_name": "sdxl_vae.safetensors"
-    },
-    "class_type": "VAELoader"
   },
   "40": {
     "inputs": {
@@ -148,10 +142,10 @@
         "12",
         0
       ],
-      "steps": 15,
-      "cfg": 8,
-      "sampler_name": "uni_pc",
-      "scheduler": "simple",
+      "steps": 5,
+      "cfg": 1.8,
+      "sampler_name": "lcm",
+      "scheduler": "sgm_uniform",
       "denoise": 1,
       "model": [
         "56",

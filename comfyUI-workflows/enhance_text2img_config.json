@@ -73,7 +73,7 @@
         0
       ],
       "vae": [
-        "13",
+        "33",
         0
       ]
     },
@@ -92,7 +92,7 @@
   "11": {
     "inputs": {
       "lora_01": "None",
-      "strength_01": 0.85,
+      "strength_01": 1,
       "lora_02": "None",
       "strength_02": 1,
       "lora_03": "None",
@@ -112,15 +112,9 @@
   },
   "12": {
     "inputs": {
-      "seed": 956272201238827
+      "seed": 336005801503866
     },
     "class_type": "Seed (rgthree)"
-  },
-  "13": {
-    "inputs": {
-      "vae_name": "vae-ft-mse-840000-ema-pruned.ckpt"
-    },
-    "class_type": "VAELoader"
   },
   "14": {
     "inputs": {
@@ -169,7 +163,7 @@
   },
   "23": {
     "inputs": {
-      "prompt": "you are a stable diffusion prompt master. using the following prompt, please create more stable diffusion tags in a way that matches the original intention of the input but enhances it in ways to improve detail and composition in the image. please do your best to not change the original intention of the input. include styles and inspirations. do not mention children.\n\nINPUT: \n\n"
+      "prompt": "you are a stable diffusion prompt master. please create more stable diffusion tags for the following prompt that matches the original intention of the input but enhances it in ways to improve detail and composition in the image. please be as conservative as you can with your inclusions and do not include extra subjects or names. do not mention children.\n\nINPUT: \n\n"
     },
     "class_type": "CR Prompt Text"
   },
@@ -192,8 +186,8 @@
     "inputs": {
       "unload": false,
       "stop_on_newline": false,
-      "max_new_tokens": 128,
-      "temperature": 0.7,
+      "max_new_tokens": 64,
+      "temperature": 0.2,
       "top_k": 20,
       "top_p": 0.9,
       "typical_p": 1,
@@ -231,5 +225,11 @@
       "label": "FINAL_PROMPT"
     },
     "class_type": "Text to Console"
+  },
+  "33": {
+    "inputs": {
+      "vae_name": "vae-ft-mse-840000-ema-pruned.ckpt"
+    },
+    "class_type": "VAELoader"
   }
 }

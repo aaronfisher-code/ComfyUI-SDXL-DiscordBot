@@ -49,10 +49,10 @@
         1451,
         189
       ],
-      "size": [
-        210,
-        270
-      ],
+      "size": {
+        "0": 210,
+        "1": 270
+      },
       "flags": {},
       "order": 12,
       "mode": 0,
@@ -66,41 +66,6 @@
       "properties": {},
       "widgets_values": [
         "final_output"
-      ]
-    },
-    {
-      "id": 12,
-      "type": "Seed (rgthree)",
-      "pos": [
-        65,
-        724
-      ],
-      "size": {
-        "0": 210,
-        "1": 130
-      },
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "SEED",
-          "type": "INT",
-          "links": [
-            21
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Seed (rgthree)"
-      },
-      "widgets_values": [
-        609268786121003,
-        null,
-        null,
-        null
       ]
     },
     {
@@ -162,45 +127,6 @@
         1,
         "None",
         1
-      ]
-    },
-    {
-      "id": 13,
-      "type": "LoadImage",
-      "pos": [
-        -367,
-        -36
-      ],
-      "size": {
-        "0": 315,
-        "1": 314
-      },
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            22
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "MASK",
-          "type": "MASK",
-          "links": null,
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LoadImage"
-      },
-      "widgets_values": [
-        "example.png",
-        "image"
       ]
     },
     {
@@ -329,10 +255,10 @@
         417,
         198
       ],
-      "size": [
-        400,
-        270.0000305175781
-      ],
+      "size": {
+        "0": 400,
+        "1": 270.0000305175781
+      },
       "flags": {},
       "order": 8,
       "mode": 0,
@@ -388,6 +314,70 @@
       ]
     },
     {
+      "id": 21,
+      "type": "CR Prompt Text",
+      "pos": [
+        44,
+        108
+      ],
+      "size": {
+        "0": 210,
+        "1": 78.17271423339844
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            31
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CR Prompt Text"
+      },
+      "widgets_values": [
+        "a dog"
+      ]
+    },
+    {
+      "id": 22,
+      "type": "CR Prompt Text",
+      "pos": [
+        40,
+        250
+      ],
+      "size": {
+        "0": 210,
+        "1": 78.17271423339844
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            32
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CR Prompt Text"
+      },
+      "widgets_values": [
+        "a dog"
+      ]
+    },
+    {
       "id": 4,
       "type": "CheckpointLoaderSimple",
       "pos": [
@@ -432,7 +422,42 @@
         "Node name for S&R": "CheckpointLoaderSimple"
       },
       "widgets_values": [
-        "sd_xl_base_1.0.safetensors"
+        "lcm_dreamshaperxl.safetensors"
+      ]
+    },
+    {
+      "id": 12,
+      "type": "Seed (rgthree)",
+      "pos": [
+        65,
+        724
+      ],
+      "size": {
+        "0": 210,
+        "1": 130
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "SEED",
+          "type": "INT",
+          "links": [
+            21
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Seed (rgthree)"
+      },
+      "widgets_values": [
+        61126062341422,
+        null,
+        null,
+        null
       ]
     },
     {
@@ -442,10 +467,10 @@
         863,
         186
       ],
-      "size": [
-        326.2086401367187,
-        593.6389991455078
-      ],
+      "size": {
+        "0": 326.2086486816406,
+        "1": 593.6389770507812
+      },
       "flags": {},
       "order": 10,
       "mode": 0,
@@ -494,77 +519,52 @@
         "Node name for S&R": "KSampler"
       },
       "widgets_values": [
-        962696494332043,
+        892835532002180,
         "randomize",
-        20,
-        8,
-        "ddim",
-        "ddim_uniform",
+        5,
+        1.8,
+        "lcm",
+        "sgm_uniform",
         0.9
       ]
     },
     {
-      "id": 21,
-      "type": "CR Prompt Text",
+      "id": 13,
+      "type": "LoadImage",
       "pos": [
-        44,
-        108
-      ],
-      "size": [
-        210,
-        78.17271447753905
-      ],
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "prompt",
-          "type": "STRING",
-          "links": [
-            31
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CR Prompt Text"
-      },
-      "widgets_values": [
-        "text1"
-      ]
-    },
-    {
-      "id": 22,
-      "type": "CR Prompt Text",
-      "pos": [
-        40,
-        250
+        -367,
+        -36
       ],
       "size": {
-        "0": 210,
-        "1": 78.17271423339844
+        "0": 315,
+        "1": 314
       },
       "flags": {},
       "order": 4,
       "mode": 0,
       "outputs": [
         {
-          "name": "prompt",
-          "type": "STRING",
+          "name": "IMAGE",
+          "type": "IMAGE",
           "links": [
-            32
+            22
           ],
           "shape": 3,
           "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
         }
       ],
       "properties": {
-        "Node name for S&R": "CR Prompt Text"
+        "Node name for S&R": "LoadImage"
       },
       "widgets_values": [
-        "text2"
+        "example.png",
+        "image"
       ]
     }
   ],

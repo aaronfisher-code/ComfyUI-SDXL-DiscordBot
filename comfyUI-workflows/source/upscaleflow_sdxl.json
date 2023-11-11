@@ -1,6 +1,6 @@
 {
   "last_node_id": 47,
-  "last_link_id": 141,
+  "last_link_id": 143,
   "nodes": [
     {
       "id": 34,
@@ -69,51 +69,6 @@
       ]
     },
     {
-      "id": 4,
-      "type": "CheckpointLoaderSimple",
-      "pos": [
-        -508,
-        427
-      ],
-      "size": {
-        "0": 315,
-        "1": 98
-      },
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            66
-          ],
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            67
-          ],
-          "slot_index": 1
-        },
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": [],
-          "slot_index": 2
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CheckpointLoaderSimple"
-      },
-      "widgets_values": [
-        "sd_xl_base_1.0.safetensors"
-      ]
-    },
-    {
       "id": 41,
       "type": "ControlNetLoader",
       "pos": [
@@ -125,7 +80,7 @@
         "1": 58
       },
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
       "outputs": [
         {
@@ -157,7 +112,7 @@
         "1": 246
       },
       "flags": {},
-      "order": 8,
+      "order": 7,
       "mode": 0,
       "inputs": [
         {
@@ -206,39 +161,6 @@
       ]
     },
     {
-      "id": 21,
-      "type": "VAELoader",
-      "pos": [
-        -517,
-        646
-      ],
-      "size": {
-        "0": 315,
-        "1": 58
-      },
-      "flags": {},
-      "order": 4,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": [
-            129,
-            135
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VAELoader"
-      },
-      "widgets_values": [
-        "sdxl_vae.safetensors"
-      ]
-    },
-    {
       "id": 32,
       "type": "CR SDXL Base Prompt Encoder",
       "pos": [
@@ -250,7 +172,7 @@
         "1": 414
       },
       "flags": {},
-      "order": 10,
+      "order": 9,
       "mode": 0,
       "inputs": [
         {
@@ -330,41 +252,6 @@
       ]
     },
     {
-      "id": 12,
-      "type": "Seed (rgthree)",
-      "pos": [
-        1043,
-        687
-      ],
-      "size": {
-        "0": 210,
-        "1": 130
-      },
-      "flags": {},
-      "order": 5,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "SEED",
-          "type": "INT",
-          "links": [
-            140
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Seed (rgthree)"
-      },
-      "widgets_values": [
-        755010071711686,
-        null,
-        null,
-        null
-      ]
-    },
-    {
       "id": 40,
       "type": "Upscale Model Loader",
       "pos": [
@@ -376,7 +263,7 @@
         "1": 78
       },
       "flags": {},
-      "order": 6,
+      "order": 3,
       "mode": 0,
       "outputs": [
         {
@@ -402,74 +289,6 @@
       ]
     },
     {
-      "id": 46,
-      "type": "KSampler",
-      "pos": [
-        1480,
-        177
-      ],
-      "size": [
-        315,
-        474
-      ],
-      "flags": {},
-      "order": 14,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 130
-        },
-        {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "link": 138
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "link": 139
-        },
-        {
-          "name": "latent_image",
-          "type": "LATENT",
-          "link": 128
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": 140,
-          "widget": {
-            "name": "seed"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            133
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "KSampler"
-      },
-      "widgets_values": [
-        240862213810255,
-        "randomize",
-        20,
-        8,
-        "dpmpp_2m_sde",
-        "karras",
-        0.45
-      ]
-    },
-    {
       "id": 42,
       "type": "ControlNetApplyAdvanced",
       "pos": [
@@ -481,7 +300,7 @@
         "1": 166
       },
       "flags": {},
-      "order": 13,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
@@ -549,7 +368,7 @@
         "1": 46
       },
       "flags": {},
-      "order": 12,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
@@ -560,7 +379,7 @@
         {
           "name": "vae",
           "type": "VAE",
-          "link": 129
+          "link": 142
         }
       ],
       "outputs": [
@@ -590,7 +409,7 @@
         "1": 46
       },
       "flags": {},
-      "order": 9,
+      "order": 8,
       "mode": 0,
       "inputs": [
         {
@@ -632,7 +451,7 @@
         "1": 46
       },
       "flags": {},
-      "order": 15,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
@@ -643,7 +462,7 @@
         {
           "name": "vae",
           "type": "VAE",
-          "link": 135
+          "link": 143
         }
       ],
       "outputs": [
@@ -673,7 +492,7 @@
         "1": 270
       },
       "flags": {},
-      "order": 16,
+      "order": 15,
       "mode": 0,
       "inputs": [
         {
@@ -700,7 +519,7 @@
         "1": 82
       },
       "flags": {},
-      "order": 11,
+      "order": 10,
       "mode": 0,
       "inputs": [
         {
@@ -730,6 +549,157 @@
       ]
     },
     {
+      "id": 4,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -508,
+        427
+      ],
+      "size": {
+        "0": 315,
+        "1": 98
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            66
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            67
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            142,
+            143
+          ],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "lcm_dreamshaperxl.safetensors"
+      ]
+    },
+    {
+      "id": 12,
+      "type": "Seed (rgthree)",
+      "pos": [
+        1043,
+        687
+      ],
+      "size": {
+        "0": 210,
+        "1": 130
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "SEED",
+          "type": "INT",
+          "links": [
+            140
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Seed (rgthree)"
+      },
+      "widgets_values": [
+        921948267154621,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "id": 46,
+      "type": "KSampler",
+      "pos": [
+        1480,
+        176
+      ],
+      "size": {
+        "0": 315,
+        "1": 474
+      },
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 130
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 138
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 139
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 128
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 140,
+          "widget": {
+            "name": "seed"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            133
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        634445455893883,
+        "randomize",
+        5,
+        1.8,
+        "lcm",
+        "sgm_uniform",
+        0.3
+      ]
+    },
+    {
       "id": 13,
       "type": "LoadImage",
       "pos": [
@@ -741,7 +711,7 @@
         "1": 314
       },
       "flags": {},
-      "order": 7,
+      "order": 6,
       "mode": 0,
       "outputs": [
         {
@@ -891,14 +861,6 @@
       "LATENT"
     ],
     [
-      129,
-      21,
-      0,
-      45,
-      1,
-      "VAE"
-    ],
-    [
       130,
       11,
       0,
@@ -921,14 +883,6 @@
       9,
       0,
       "IMAGE"
-    ],
-    [
-      135,
-      21,
-      0,
-      47,
-      1,
-      "VAE"
     ],
     [
       138,
@@ -961,6 +915,22 @@
       42,
       3,
       "IMAGE"
+    ],
+    [
+      142,
+      4,
+      2,
+      45,
+      1,
+      "VAE"
+    ],
+    [
+      143,
+      4,
+      2,
+      47,
+      1,
+      "VAE"
     ]
   ],
   "groups": [],

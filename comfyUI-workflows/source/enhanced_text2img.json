@@ -1,6 +1,6 @@
 {
-  "last_node_id": 32,
-  "last_link_id": 60,
+  "last_node_id": 33,
+  "last_link_id": 70,
   "nodes": [
     {
       "id": 7,
@@ -14,7 +14,7 @@
         "1": 180.6060791015625
       },
       "flags": {},
-      "order": 11,
+      "order": 10,
       "mode": 0,
       "inputs": [
         {
@@ -39,46 +39,6 @@
       "widgets_values": [
         "children, child, kids, kid"
       ]
-    },
-    {
-      "id": 8,
-      "type": "VAEDecode",
-      "pos": [
-        1209,
-        188
-      ],
-      "size": {
-        "0": 210,
-        "1": 46
-      },
-      "flags": {},
-      "order": 17,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "samples",
-          "type": "LATENT",
-          "link": 7
-        },
-        {
-          "name": "vae",
-          "type": "VAE",
-          "link": 22
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            9
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VAEDecode"
-      }
     },
     {
       "id": 5,
@@ -114,74 +74,6 @@
       ]
     },
     {
-      "id": 3,
-      "type": "KSampler",
-      "pos": [
-        863,
-        186
-      ],
-      "size": {
-        "0": 315,
-        "1": 446
-      },
-      "flags": {},
-      "order": 16,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 18
-        },
-        {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "link": 4
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "link": 6
-        },
-        {
-          "name": "latent_image",
-          "type": "LATENT",
-          "link": 2
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": 21,
-          "widget": {
-            "name": "seed"
-          },
-          "slot_index": 4
-        }
-      ],
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            7
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "KSampler"
-      },
-      "widgets_values": [
-        789059219392503,
-        "randomize",
-        20,
-        8,
-        "ddim",
-        "ddim_uniform",
-        1
-      ]
-    },
-    {
       "id": 6,
       "type": "CLIPTextEncode",
       "pos": [
@@ -204,7 +96,7 @@
         {
           "name": "text",
           "type": "STRING",
-          "link": 60,
+          "link": 70,
           "widget": {
             "name": "text"
           },
@@ -226,67 +118,6 @@
       },
       "widgets_values": [
         "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,"
-      ]
-    },
-    {
-      "id": 11,
-      "type": "Lora Loader Stack (rgthree)",
-      "pos": [
-        3,
-        404
-      ],
-      "size": {
-        "0": 315,
-        "1": 246
-      },
-      "flags": {},
-      "order": 9,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 16
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 17
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            18
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            19,
-            20
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Lora Loader Stack (rgthree)"
-      },
-      "widgets_values": [
-        "None",
-        0.85,
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1
       ]
     },
     {
@@ -318,7 +149,7 @@
         "Node name for S&R": "CR Prompt Text"
       },
       "widgets_values": [
-        "you are a stable diffusion prompt master. using the following prompt, please create more stable diffusion tags in a way that matches the original intention of the input but enhances it in ways to improve detail and composition in the image. please do your best to not change the original intention of the input. include styles and inspirations. do not mention children.\n\nINPUT: \n\n"
+        "you are a stable diffusion prompt master. please create more stable diffusion tags for the following prompt that matches the original intention of the input but enhances it in ways to improve detail and composition in the image. please be as conservative as you can with your inclusions and do not include extra subjects or names. do not mention children.\n\nINPUT: \n\n"
       ]
     },
     {
@@ -333,7 +164,7 @@
         "1": 178
       },
       "flags": {},
-      "order": 8,
+      "order": 9,
       "mode": 0,
       "inputs": [
         {
@@ -451,6 +282,231 @@
       ]
     },
     {
+      "id": 31,
+      "type": "ZuellniTextPreview",
+      "pos": [
+        985,
+        -348
+      ],
+      "size": {
+        "0": 405.9633483886719,
+        "1": 247.46681213378906
+      },
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 57,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ZuellniTextPreview"
+      },
+      "widgets_values": [
+        "a dog, BREAK, (named \"Bella\", playfully running through fields of flowers, joyous expression on its face, golden retriever breed, fluffy coat, bright green grass beneath paws, sunlight filtering through trees above, soft focus effect, pastel colors, dreamlike ambiance., Self-lighting,:0.4)"
+      ]
+    },
+    {
+      "id": 32,
+      "type": "Text to Console",
+      "pos": [
+        995,
+        -535
+      ],
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 58,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Text to Console"
+      },
+      "widgets_values": [
+        "",
+        "FINAL_PROMPT"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -628,
+        442
+      ],
+      "size": {
+        "0": 315,
+        "1": 98
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            16
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            17
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "15\\rundiffusionFX_v10.safetensors"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "KSampler",
+      "pos": [
+        863,
+        186
+      ],
+      "size": {
+        "0": 315,
+        "1": 446
+      },
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 18
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 4
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 6
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 2
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 21,
+          "widget": {
+            "name": "seed"
+          },
+          "slot_index": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            7
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        832806925881208,
+        "randomize",
+        20,
+        8,
+        "ddim",
+        "ddim_uniform",
+        1
+      ]
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "pos": [
+        1209,
+        188
+      ],
+      "size": {
+        "0": 210,
+        "1": 46
+      },
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 62,
+          "slot_index": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
       "id": 27,
       "type": "ZuellniExLlamaGenerator",
       "pos": [
@@ -462,7 +518,7 @@
         "1": 316
       },
       "flags": {},
-      "order": 10,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
@@ -507,15 +563,76 @@
       "widgets_values": [
         false,
         false,
-        128,
-        0.7,
+        64,
+        0.2,
         20,
         0.9,
         1,
         1.15,
-        556697246632718,
+        462479363345887,
         "randomize",
         ""
+      ]
+    },
+    {
+      "id": 11,
+      "type": "Lora Loader Stack (rgthree)",
+      "pos": [
+        3,
+        404
+      ],
+      "size": {
+        "0": 315,
+        "1": 246
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 16
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 17
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            18
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            19,
+            20
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Lora Loader Stack (rgthree)"
+      },
+      "widgets_values": [
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1
       ]
     },
     {
@@ -523,7 +640,7 @@
       "type": "SaveImage",
       "pos": [
         1452,
-        191
+        189
       ],
       "size": {
         "0": 210,
@@ -542,113 +659,6 @@
       "properties": {},
       "widgets_values": [
         "final_output"
-      ]
-    },
-    {
-      "id": 12,
-      "type": "Seed (rgthree)",
-      "pos": [
-        66,
-        723
-      ],
-      "size": {
-        "0": 210,
-        "1": 130
-      },
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "SEED",
-          "type": "INT",
-          "links": [
-            21,
-            48
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Seed (rgthree)"
-      },
-      "widgets_values": [
-        563480802472251,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "id": 31,
-      "type": "ZuellniTextPreview",
-      "pos": [
-        985,
-        -348
-      ],
-      "size": [
-        405.9633508300783,
-        247.46680908203132
-      ],
-      "flags": {},
-      "order": 13,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 57,
-          "widget": {
-            "name": "text"
-          }
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ZuellniTextPreview"
-      },
-      "widgets_values": [
-        "a dog, BREAK, (named Luna, petting Luna's head as he rests contentedly, his tail wagging happily behind him. by: Jean-Honoré Fragonard, Thomas Eakins:0.4)"
-      ]
-    },
-    {
-      "id": 32,
-      "type": "Text to Console",
-      "pos": [
-        995,
-        -535
-      ],
-      "size": [
-        315,
-        82
-      ],
-      "flags": {},
-      "order": 14,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 58,
-          "widget": {
-            "name": "text"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": null,
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Text to Console"
-      },
-      "widgets_values": [
-        "",
-        "FINAL_PROMPT"
       ]
     },
     {
@@ -741,7 +751,7 @@
           "links": [
             57,
             58,
-            60
+            70
           ],
           "shape": 3,
           "slot_index": 0
@@ -760,11 +770,11 @@
       ]
     },
     {
-      "id": 13,
+      "id": 33,
       "type": "VAELoader",
       "pos": [
-        -543,
-        266
+        -650,
+        651
       ],
       "size": {
         "0": 315,
@@ -778,62 +788,52 @@
           "name": "VAE",
           "type": "VAE",
           "links": [
-            22
+            62
           ],
-          "shape": 3,
-          "slot_index": 0
+          "shape": 3
         }
       ],
       "properties": {
         "Node name for S&R": "VAELoader"
       },
       "widgets_values": [
-        "vae-ft-mse-840000-ema-pruned.ckpt"
+        "15\\vae-ft-mse-840000-ema-pruned.ckpt"
       ]
     },
     {
-      "id": 4,
-      "type": "CheckpointLoaderSimple",
+      "id": 12,
+      "type": "Seed (rgthree)",
       "pos": [
-        -628,
-        442
+        66,
+        723
       ],
       "size": {
-        "0": 315,
-        "1": 98
+        "0": 210,
+        "1": 130
       },
       "flags": {},
       "order": 6,
       "mode": 0,
       "outputs": [
         {
-          "name": "MODEL",
-          "type": "MODEL",
+          "name": "SEED",
+          "type": "INT",
           "links": [
-            16
+            21,
+            48
           ],
+          "shape": 3,
           "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            17
-          ],
-          "slot_index": 1
-        },
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": [],
-          "slot_index": 2
         }
       ],
       "properties": {
-        "Node name for S&R": "CheckpointLoaderSimple"
+        "Node name for S&R": "Seed (rgthree)"
       },
       "widgets_values": [
-        "rundiffusionFX_v10.safetensors"
+        336005801503866,
+        null,
+        null,
+        null
       ]
     },
     {
@@ -960,14 +960,6 @@
       "INT"
     ],
     [
-      22,
-      13,
-      0,
-      8,
-      1,
-      "VAE"
-    ],
-    [
       35,
       23,
       0,
@@ -1056,7 +1048,15 @@
       "STRING"
     ],
     [
-      60,
+      62,
+      33,
+      0,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      70,
       21,
       0,
       6,

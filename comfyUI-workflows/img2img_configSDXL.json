@@ -5,10 +5,10 @@
         "12",
         0
       ],
-      "steps": 20,
-      "cfg": 8,
-      "sampler_name": "ddim",
-      "scheduler": "ddim_uniform",
+      "steps": 5,
+      "cfg": 1.8,
+      "sampler_name": "lcm",
+      "scheduler": "sgm_uniform",
       "denoise": 0.9,
       "model": [
         "11",
@@ -31,7 +31,7 @@
   },
   "4": {
     "inputs": {
-      "ckpt_name": "sd_xl_base_1.0.safetensors"
+      "ckpt_name": "lcm_dreamshaperxl.safetensors"
     },
     "class_type": "CheckpointLoaderSimple"
   },
@@ -91,7 +91,7 @@
   },
   "12": {
     "inputs": {
-      "seed": 609268786121003
+      "seed": 61126062341422
     },
     "class_type": "Seed (rgthree)"
   },
@@ -150,13 +150,13 @@
   },
   "21": {
     "inputs": {
-      "prompt": "text1"
+      "prompt": "a dog"
     },
     "class_type": "CR Prompt Text"
   },
   "22": {
     "inputs": {
-      "prompt": "text2"
+      "prompt": "a dog"
     },
     "class_type": "CR Prompt Text"
   }

@@ -1,7 +1,7 @@
 {
   "4": {
     "inputs": {
-      "ckpt_name": "sd_xl_base_1.0.safetensors"
+      "ckpt_name": "lcm_dreamshaperxl.safetensors"
     },
     "class_type": "CheckpointLoaderSimple"
   },
@@ -38,7 +38,7 @@
   },
   "12": {
     "inputs": {
-      "seed": 755010071711686
+      "seed": 921948267154621
     },
     "class_type": "Seed (rgthree)"
   },
@@ -48,12 +48,6 @@
       "choose file to upload": "image"
     },
     "class_type": "LoadImage"
-  },
-  "21": {
-    "inputs": {
-      "vae_name": "sdxl_vae.safetensors"
-    },
-    "class_type": "VAELoader"
   },
   "32": {
     "inputs": {
@@ -166,8 +160,8 @@
         0
       ],
       "vae": [
-        "21",
-        0
+        "4",
+        2
       ]
     },
     "class_type": "VAEEncode"
@@ -178,11 +172,11 @@
         "12",
         0
       ],
-      "steps": 20,
-      "cfg": 8,
-      "sampler_name": "dpmpp_2m_sde",
-      "scheduler": "karras",
-      "denoise": 0.45,
+      "steps": 5,
+      "cfg": 1.8,
+      "sampler_name": "lcm",
+      "scheduler": "sgm_uniform",
+      "denoise": 0.3,
       "model": [
         "11",
         0
@@ -209,8 +203,8 @@
         0
       ],
       "vae": [
-        "21",
-        0
+        "4",
+        2
       ]
     },
     "class_type": "VAEDecode"
