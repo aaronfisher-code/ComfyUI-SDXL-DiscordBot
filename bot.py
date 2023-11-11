@@ -204,7 +204,7 @@ class Buttons(discord.ui.View):
         btn.disabled = True
         await interaction.message.edit(view=self)
         # Generate a new image with the same prompt
-        images = await generate_images(self.prompt,self.negative_prompt, self.model, self.lora, self.lora_strength, self.config)
+        images, enhanced_prompt = await generate_images(self.prompt,self.negative_prompt, self.model, self.lora, self.lora_strength, self.config)
 
         # Construct the final message with user mention
         final_message = f"{interaction.user.mention} asked me to re-imagine \"{self.prompt}\", here is what I imagined for them."
@@ -233,10 +233,14 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
     await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")
 
     # Generate the image and get progress updates
-    images = await generate_images(prompt,negative_prompt, model, lora, lora_strength, config)
+    images, enhanced_prompt = await generate_images(prompt,negative_prompt, model, lora, lora_strength, config)
 
     # Construct the final message with user mention
-    final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them."
+    if(enhanced_prompt == None):
+        final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them."
+    else:
+        final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them.\n(Prompt enhanced with _\"{enhanced_prompt}\"_)"
+        prompt = enhanced_prompt
     # send as gif or png
     await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora,lora_strength,enhance,images,config))
 
@@ -257,7 +261,10 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
     await interaction.response.send_message(f"{interaction.user.mention} asked me to create the video \"{prompt}\", this shouldn't take too long...")
 
     # Generate the video and get progress updates
-    video = await generate_images(prompt,negative_prompt, model, lora, lora_strength, "LOCAL_TEXT2VIDEO")
+    video, enhanced_prompt = await generate_images(prompt,negative_prompt, model, lora, lora_strength, "LOCAL_TEXT2VIDEO")
+
+    if(enhanced_prompt != None):
+        prompt = enhanced_prompt
 
     # Construct the final message with user mention
     final_message = f"{interaction.user.mention} asked me to create the video \"{prompt}\", here is what I created for them."
@@ -281,7 +288,10 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
     await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")
 
     # Generate the image and get progress updates
-    images = await generate_images(prompt,negative_prompt, model, lora, lora_strength, "LOCAL_SDXL_TXT2IMG_CONFIG")
+    images, enhanced_prompt = await generate_images(prompt,negative_prompt, model, lora, lora_strength, "LOCAL_SDXL_TXT2IMG_CONFIG")
+
+    if(enhanced_prompt != None):
+        prompt = enhanced_prompt
 
     # Construct the final message with user mention
     final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them."

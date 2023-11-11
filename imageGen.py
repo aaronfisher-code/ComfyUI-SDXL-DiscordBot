@@ -71,6 +71,7 @@ class ImageGenerator:
         prompt_id = queue_prompt(prompt, self.client_id)['prompt_id']
         currently_Executing_Prompt = None
         output_images = []
+        full_prompt = None
         async for out in self.ws:
             try:
                 message = json.loads(out)
@@ -87,6 +88,9 @@ class ImageGenerator:
 
         for node_id in history['outputs']:
             node_output = history['outputs'][node_id]
+            if("text" in node_output):
+                for prompt in node_output["text"]:
+                    full_prompt = prompt
             if 'images' in node_output:
                 for image in node_output['images']:
                     image_data = get_image(image['filename'], image['subfolder'], image['type'])
@@ -103,7 +107,7 @@ class ImageGenerator:
                         pil_image = Image.open(BytesIO(image_data))
                         output_images.append(pil_image)
 
-        return output_images
+        return output_images, full_prompt
 
     async def close(self):
         if self.ws:
@@ -115,9 +119,13 @@ def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora
     rand_seed_nodes = config.get(config_name, 'RAND_SEED_NODES').split(',')
     model_node = config.get(config_name, 'MODEL_NODE').split(',')
     lora_node = config.get(config_name, 'LORA_NODE').split(',')
+    llm_model_node = None
 
     if (config.has_option(config_name, 'FILE_INPUT_NODES')):
         file_input_nodes = config.get(config_name, 'FILE_INPUT_NODES').split(',')
+
+    if(config.has_option(config_name, 'LLM_MODEL_NODE')):
+        llm_model_node = config.get(config_name, 'LLM_MODEL_NODE')
 
     # Modify the prompt dictionary
     if (prompt != None and prompt_nodes[0] != ''):
@@ -142,6 +150,8 @@ def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora
         for node in lora_node:
             workflow[node]["inputs"]["lora_01"] = lora.value
             workflow[node]["inputs"]["strength_01"] = lora_strength
+    if (llm_model_node != None):
+        workflow[llm_model_node]["inputs"]["model_dir"] = config["LOCAL"]["LLM_MODEL_LOCATION"]
 
     return workflow
 
@@ -154,10 +164,10 @@ async def generate_images(prompt: str,negative_prompt: str, model: str = None, l
 
     setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name)
 
-    images = await generator.get_images(workflow)
+    images, enhanced_prompt = await generator.get_images(workflow)
     await generator.close()
 
-    return images
+    return images, enhanced_prompt
 
 async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 1.0, config_name: str = "LOCAL_IMG2IMG"):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
@@ -176,7 +186,7 @@ async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt
 
     setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name, filename)
 
-    images = await generator.get_images(workflow)
+    images, enhanced_prompt = await generator.get_images(workflow)
     await generator.close()
 
     return images
@@ -197,7 +207,7 @@ async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str, mo
 
     setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name, filename)
 
-    images = await generator.get_images(workflow)
+    images, enhanced_prompt = await generator.get_images(workflow)
     await generator.close()
 
     return images[0]
