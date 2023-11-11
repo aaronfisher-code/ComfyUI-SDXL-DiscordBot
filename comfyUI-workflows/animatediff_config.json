@@ -1,7 +1,7 @@
 {
   "2": {
     "inputs": {
-      "vae_name": "vae-ft-mse-840000-ema-pruned.ckpt"
+      "vae_name": "vae-ft-mse-840000-ema-pruned.safetensors"
     },
     "class_type": "VAELoader"
   },
@@ -107,13 +107,6 @@
     },
     "class_type": "ADE_AnimateDiffLoaderV1Advanced"
   },
-  "118": {
-    "inputs": {
-      "ckpt_name": "rundiffusionFX_v10.safetensors",
-      "beta_schedule": "linear (HotshotXL/default)"
-    },
-    "class_type": "CheckpointLoaderSimpleWithNoiseSelect"
-  },
   "123": {
     "inputs": {
       "seed": 980596870328812
@@ -146,14 +139,20 @@
       "lora_04": "None",
       "strength_04": 1,
       "model": [
-        "118",
+        "142",
         0
       ],
       "clip": [
-        "118",
+        "142",
         1
       ]
     },
     "class_type": "Lora Loader Stack (rgthree)"
+  },
+  "142": {
+    "inputs": {
+      "ckpt_name": "rundiffusionFX_v10.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple"
   }
 }

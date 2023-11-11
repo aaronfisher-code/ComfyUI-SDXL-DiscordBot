@@ -1,6 +1,6 @@
 {
-  "last_node_id": 140,
-  "last_link_id": 226,
+  "last_node_id": 142,
+  "last_link_id": 230,
   "nodes": [
     {
       "id": 6,
@@ -241,7 +241,7 @@
         26
       ],
       "flags": {},
-      "order": 5,
+      "order": 4,
       "mode": 0,
       "inputs": [
         {
@@ -486,66 +486,6 @@
       ]
     },
     {
-      "id": 140,
-      "type": "Lora Loader Stack (rgthree)",
-      "pos": [
-        398,
-        -302
-      ],
-      "size": {
-        "0": 315,
-        "1": 246
-      },
-      "flags": {},
-      "order": 4,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 221
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 222
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            223
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            225
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Lora Loader Stack (rgthree)"
-      },
-      "widgets_values": [
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1
-      ]
-    },
-    {
       "id": 4,
       "type": "CLIPSetLastLayer",
       "pos": [
@@ -585,55 +525,6 @@
       ]
     },
     {
-      "id": 118,
-      "type": "CheckpointLoaderSimpleWithNoiseSelect",
-      "pos": [
-        33,
-        -155
-      ],
-      "size": {
-        "0": 319.20001220703125,
-        "1": 122
-      },
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            221
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            222
-          ],
-          "shape": 3,
-          "slot_index": 1
-        },
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": null,
-          "shape": 3,
-          "slot_index": 2
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CheckpointLoaderSimpleWithNoiseSelect"
-      },
-      "widgets_values": [
-        "rundiffusionFX_v10.safetensors",
-        "linear (HotshotXL/default)"
-      ]
-    },
-    {
       "id": 2,
       "type": "VAELoader",
       "pos": [
@@ -645,7 +536,7 @@
         "1": 58
       },
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
       "outputs": [
         {
@@ -724,6 +615,113 @@
         "uniform",
         false,
         "sqrt_linear (AnimateDiff)"
+      ]
+    },
+    {
+      "id": 140,
+      "type": "Lora Loader Stack (rgthree)",
+      "pos": [
+        398,
+        -302
+      ],
+      "size": {
+        "0": 315,
+        "1": 246
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 229
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 230,
+          "slot_index": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            223
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            225
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Lora Loader Stack (rgthree)"
+      },
+      "widgets_values": [
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1
+      ]
+    },
+    {
+      "id": 142,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        11,
+        -139
+      ],
+      "size": {
+        "0": 315,
+        "1": 98
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            229
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            230
+          ],
+          "shape": 3
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "rundiffusionFX_v10.safetensors"
       ]
     }
   ],
@@ -849,22 +847,6 @@
       "IMAGE"
     ],
     [
-      221,
-      118,
-      0,
-      140,
-      0,
-      "MODEL"
-    ],
-    [
-      222,
-      118,
-      1,
-      140,
-      1,
-      "CLIP"
-    ],
-    [
       223,
       140,
       0,
@@ -887,6 +869,22 @@
       104,
       0,
       "*"
+    ],
+    [
+      229,
+      142,
+      0,
+      140,
+      0,
+      "MODEL"
+    ],
+    [
+      230,
+      142,
+      1,
+      140,
+      1,
+      "CLIP"
     ]
   ],
   "groups": [
