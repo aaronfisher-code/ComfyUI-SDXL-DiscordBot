@@ -113,7 +113,7 @@ class ImageGenerator:
         if self.ws:
             await self.ws.close()
 
-def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora: str, lora_strength : float, config_name: str, filename : str = None):
+def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora: str, lora_strength : float, config_name: str, filename: str = None, denoise_strength: float = None):
     prompt_nodes = config.get(config_name, 'PROMPT_NODES').split(',')
     neg_prompt_nodes = config.get(config_name, 'NEG_PROMPT_NODES').split(',')
     rand_seed_nodes = config.get(config_name, 'RAND_SEED_NODES').split(',')
@@ -152,6 +152,14 @@ def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora
             workflow[node]["inputs"]["strength_01"] = lora_strength
     if (llm_model_node != None):
         workflow[llm_model_node]["inputs"]["model_dir"] = config["LOCAL"]["LLM_MODEL_LOCATION"]
+    if (denoise_strength != None):
+        denoise_node = config.get(config_name, 'DENOISE_NODE').split(',')
+        for node in denoise_node:
+            workflow[node]["inputs"]["denoise"] = denoise_strength
+        if (config.has_option(config_name, 'LATENT_IMAGE_NODE')):
+            latent_image_node = config.get(config_name, 'LATENT_IMAGE_NODE').split(',')
+            for node in latent_image_node:
+                workflow[node]["inputs"]["amount"] = 1
 
     return workflow
 
@@ -169,7 +177,7 @@ async def generate_images(prompt: str,negative_prompt: str, model: str = None, l
 
     return images, enhanced_prompt
 
-async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 1.0, config_name: str = "LOCAL_IMG2IMG"):
+async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 1.0, config_name: str = "LOCAL_IMG2IMG", denoise_strength: float = None):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
       image.save(temp_file, format="PNG")
       temp_filepath = temp_file.name
@@ -184,14 +192,14 @@ async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt
     generator = ImageGenerator()
     await generator.connect()
 
-    setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name, filename)
+    setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name, filename, denoise_strength)
 
     images, enhanced_prompt = await generator.get_images(workflow)
     await generator.close()
 
     return images
 
-async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 1.0, config_name: str = "LOCAL_UPSCALE"):
+async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 1.0, config_name: str = "LOCAL_UPSCALE", denoise_strength: float = None):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
       image.save(temp_file, format="PNG")
       temp_filepath = temp_file.name
@@ -205,7 +213,7 @@ async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str, mo
     generator = ImageGenerator()
     await generator.connect()
 
-    setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name, filename)
+    setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name, filename, denoise_strength)
 
     images, enhanced_prompt = await generator.get_images(workflow)
     await generator.close()
