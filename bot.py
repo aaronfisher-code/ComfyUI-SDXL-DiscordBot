@@ -210,7 +210,7 @@ class Buttons(discord.ui.View):
             sdxl_config = "LOCAL_UPSCALE"
         index = int(button.label[1:]) - 1
         await interaction.response.send_message("Upscaling and increasing detail in the image, this shouldn't take too long...")
-        upscaled_image = await upscale_image(self.images[index], self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength, sdxl_config, 0.6)
+        upscaled_image = await upscale_image(self.images[index], self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength, sdxl_config, 0.5)
         timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
         upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
         upscaled_image.save(upscaled_image_path)
