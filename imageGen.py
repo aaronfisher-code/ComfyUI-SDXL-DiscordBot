@@ -48,6 +48,11 @@ def upload_image(filepath, subfolder=None, folder_type=None, overwrite=False):
     response = requests.post(url, files=files, data=data)
     return response.json()
 
+def get_loras():
+    with urllib.request.urlopen("http://{}/object_info".format(server_address)) as response:
+        object_info = json.loads(response.read())
+        return object_info['LoraLoader']['input']['required']['lora_name']
+
 class ImageGenerator:
     def __init__(self):
         self.client_id = str(uuid.uuid4())
@@ -93,7 +98,7 @@ class ImageGenerator:
         if self.ws:
             await self.ws.close()
 
-async def generate_images(prompt: str,negative_prompt: str):
+async def generate_images(prompt: str,negative_prompt: str, lora: str = None, lora_strength : float = 1.0):
     with open(text2img_config, 'r') as file:
       workflow = json.load(file)
       
@@ -102,7 +107,8 @@ async def generate_images(prompt: str,negative_prompt: str):
 
     prompt_nodes = config.get('LOCAL_TEXT2IMG', 'PROMPT_NODES').split(',')
     neg_prompt_nodes = config.get('LOCAL_TEXT2IMG', 'NEG_PROMPT_NODES').split(',')
-    rand_seed_nodes = config.get('LOCAL_TEXT2IMG', 'RAND_SEED_NODES').split(',') 
+    rand_seed_nodes = config.get('LOCAL_TEXT2IMG', 'RAND_SEED_NODES').split(',')
+    lora_node = config.get('LOCAL_TEXT2IMG', 'LORA_NODE').split(',')
 
     # Modify the prompt dictionary
     if(prompt != None and prompt_nodes[0] != ''):
@@ -114,6 +120,10 @@ async def generate_images(prompt: str,negative_prompt: str):
     if(rand_seed_nodes[0] != ''):
       for node in rand_seed_nodes:
           workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
+    if (lora_node[0] != '' and lora != None):
+      for node in lora_node:
+          workflow[node]["inputs"]["lora_01"] = lora
+          workflow[node]["inputs"]["strength_01"] = lora_strength
 
     images = await generator.get_images(workflow)
     await generator.close()

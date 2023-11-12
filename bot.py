@@ -62,9 +62,11 @@ client = discord.Client(intents=intents)
 tree = discord.app_commands.CommandTree(client)
 
 if IMAGE_SOURCE == "LOCAL":
-    from imageGen import generate_images, upscale_image, generate_alternatives
+    from imageGen import generate_images, upscale_image, generate_alternatives, get_loras
 elif IMAGE_SOURCE == "API":
     from apiImageGen import generate_images, upscale_image, generate_alternatives
+
+loras = get_loras()
 
 # sync the slash command to your server
 @client.event
@@ -140,12 +142,15 @@ class Buttons(discord.ui.View):
 @tree.command(name="imagine", description="Generate an image based on input text")
 @app_commands.describe(prompt='Prompt for the image being generated')
 @app_commands.describe(negative_prompt='Prompt for what you want to steer the AI away from')
-async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None):
+@app_commands.describe(lora='LoRA to apply')
+@app_commands.describe(lora_strength='How strong the LoRA affects the image. (default: 1.0)')
+@app_commands.choices(lora=[app_commands.Choice(name=l, value=l) for l in loras[0]][0:25])
+async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, lora: str = None, lora_strength: float = 1.0):
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")
 
     # Generate the image and get progress updates
-    images = await generate_images(prompt,negative_prompt)
+    images = await generate_images(prompt,negative_prompt, lora, lora_strength)
 
     # Construct the final message with user mention
     final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them."
