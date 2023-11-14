@@ -263,11 +263,10 @@ class AddDetailButtons(discord.ui.View):
 @app_commands.describe(prompt='Prompt for the image being generated')
 @app_commands.describe(negative_prompt='Prompt for what you want to steer the AI away from')
 @app_commands.describe(model='Model checkpoint to use')
-@app_commands.describe(width='Width of the image to generate')
-@app_commands.describe(height='Height of the image to generate')
 @app_commands.describe(lora='LoRA to apply')
 @app_commands.describe(lora_strength='Strength of LoRA')
 @app_commands.describe(enhance='Enhance the image using a language model')
+@app_commands.describe(aspect_ratio='Aspect ratio of the generated image')
 @app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0]][0:25], 
                     aspect_ratio =  [app_commands.Choice(name='1:1', value='1024 x 1024  (square)'),
                                     app_commands.Choice(name='7:9 portrait', value=' 896 x 1152  (portrait)'),
@@ -333,6 +332,7 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
 @app_commands.describe(model='Model checkpoint to use')
 @app_commands.describe(lora='LoRA to apply')
 @app_commands.describe(lora_strength='Strength of LoRA')
+@app_commands.describe(aspect_ratio='Aspect ratio of the generated image')
 @app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0] if "xl" in m.lower()][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][0:25],
                     aspect_ratio =  [app_commands.Choice(name='1:1', value='1024 x 1024  (square)'),
                                     app_commands.Choice(name='7:9 portrait', value=' 896 x 1152  (portrait)'),
