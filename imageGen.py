@@ -113,12 +113,13 @@ class ImageGenerator:
         if self.ws:
             await self.ws.close()
 
-def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora: str, lora_strength : float, config_name: str, filename: str = None, denoise_strength: float = None):
+def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora: str, lora_strength : float, config_name: str, aspect_ratio: str, filename: str = None, denoise_strength: float = None):
     prompt_nodes = config.get(config_name, 'PROMPT_NODES').split(',')
     neg_prompt_nodes = config.get(config_name, 'NEG_PROMPT_NODES').split(',')
     rand_seed_nodes = config.get(config_name, 'RAND_SEED_NODES').split(',')
     model_node = config.get(config_name, 'MODEL_NODE').split(',')
     lora_node = config.get(config_name, 'LORA_NODE').split(',')
+    empty_image_node = config.get(config_name, 'EMPTY_IMAGE_NODE').split(',')
     llm_model_node = None
 
     if (config.has_option(config_name, 'FILE_INPUT_NODES')):
@@ -152,6 +153,8 @@ def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora
             workflow[node]["inputs"]["strength_01"] = lora_strength
     if (llm_model_node != None):
         workflow[llm_model_node]["inputs"]["model_dir"] = config["LOCAL"]["LLM_MODEL_LOCATION"]
+    if(aspect_ratio != None and empty_image_node != None):
+        workflow[node]["inputs"]["dimensions"] = aspect_ratio
     if (denoise_strength != None):
         denoise_node = config.get(config_name, 'DENOISE_NODE').split(',')
         for node in denoise_node:
@@ -163,14 +166,14 @@ def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora
 
     return workflow
 
-async def generate_images(prompt: str,negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 1.0, config_name: str = 'LOCAL_TEXT2IMG'):
+async def generate_images(prompt: str,negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 1.0, config_name: str = 'LOCAL_TEXT2IMG', aspect_ratio: str = None):
     with open(config[config_name]['CONFIG'], 'r') as file:
         workflow = json.load(file)
 
     generator = ImageGenerator()
     await generator.connect()
 
-    setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name)
+    setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name, aspect_ratio)
 
     images, enhanced_prompt = await generator.get_images(workflow)
     await generator.close()

@@ -263,11 +263,18 @@ class AddDetailButtons(discord.ui.View):
 @app_commands.describe(prompt='Prompt for the image being generated')
 @app_commands.describe(negative_prompt='Prompt for what you want to steer the AI away from')
 @app_commands.describe(model='Model checkpoint to use')
+@app_commands.describe(width='Width of the image to generate')
+@app_commands.describe(height='Height of the image to generate')
 @app_commands.describe(lora='LoRA to apply')
 @app_commands.describe(lora_strength='Strength of LoRA')
 @app_commands.describe(enhance='Enhance the image using a language model')
-@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0]][0:25])
-async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0, enhance: bool = True):
+@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0]][0:25], 
+                    aspect_ratio =  [app_commands.Choice(name='1:1', value='1024 x 1024  (square)'),
+                                    app_commands.Choice(name='7:9 portrait', value=' 896 x 1152  (portrait)'),
+                                    app_commands.Choice(name='4:7 portrait', value=' 768 x 1344  (portrait)'),
+                                    app_commands.Choice(name='9:7 landscape', value='1152 x 896   (landscape)'),
+                                    app_commands.Choice(name='4:7 landscape', value='1344 x 768   (landscape)')])
+async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0, aspect_ratio: str = None, enhance: bool = True):
     if should_filter(prompt, negative_prompt):
         print(f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {prompt}, Negative Prompt: {negative_prompt}")
         await interaction.response.send_message(f"The prompt {prompt} or negative prompt {negative_prompt} contains a blocked word, not generating image.", ephemeral=True)
@@ -282,7 +289,7 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
     await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")
 
     # Generate the image and get progress updates
-    images, enhanced_prompt = await generate_images(prompt,negative_prompt, model, lora, lora_strength, config)
+    images, enhanced_prompt = await generate_images(prompt,negative_prompt, model, lora, lora_strength, config, aspect_ratio)
 
     # Construct the final message with user mention
     if(enhanced_prompt == None):
@@ -326,8 +333,13 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
 @app_commands.describe(model='Model checkpoint to use')
 @app_commands.describe(lora='LoRA to apply')
 @app_commands.describe(lora_strength='Strength of LoRA')
-@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0] if "xl" in m.lower()][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][0:25])
-async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0):
+@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0] if "xl" in m.lower()][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][0:25],
+                    aspect_ratio =  [app_commands.Choice(name='1:1', value='1024 x 1024  (square)'),
+                                    app_commands.Choice(name='7:9 portrait', value=' 896 x 1152  (portrait)'),
+                                    app_commands.Choice(name='4:7 portrait', value=' 768 x 1344  (portrait)'),
+                                    app_commands.Choice(name='9:7 landscape', value='1152 x 896   (landscape)'),
+                                    app_commands.Choice(name='4:7 landscape', value='1344 x 768   (landscape)')])
+async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0, aspect_ratio: str = None):
     if should_filter(prompt, negative_prompt):
         print(f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {prompt}, Negative Prompt: {negative_prompt}")
         await interaction.response.send_message(f"The prompt {prompt} or negative prompt {negative_prompt} contains a blocked word, not generating image.", ephemeral=True)
