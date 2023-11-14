@@ -338,7 +338,7 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
                                     app_commands.Choice(name='7:9 portrait', value=' 896 x 1152  (portrait)'),
                                     app_commands.Choice(name='4:7 portrait', value=' 768 x 1344  (portrait)'),
                                     app_commands.Choice(name='9:7 landscape', value='1152 x 896   (landscape)'),
-                                    app_commands.Choice(name='4:7 landscape', value='1344 x 768   (landscape)')])
+                                    app_commands.Choice(name='7:4 landscape', value='1344 x 768   (landscape)')])
 async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0, aspect_ratio: str = None):
     if should_filter(prompt, negative_prompt):
         print(f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {prompt}, Negative Prompt: {negative_prompt}")
