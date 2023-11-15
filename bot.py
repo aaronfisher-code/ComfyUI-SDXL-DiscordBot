@@ -122,7 +122,7 @@ class Buttons(discord.ui.View):
     async def upscale_and_send(self, interaction, button):
         index = int(button.label[1:]) - 1  # Extract index from label
         await interaction.response.send_message("Upscaling the image, this shouldn't take too long...")
-        upscaled_image = await upscale_image(self.images[index], self.prompt, self.negative_prompt, self.lora, self.lora_strength)
+        upscaled_image = await upscale_image(self.images[index], self.prompt, self.negative_prompt)
         timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
         upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
         upscaled_image.save(upscaled_image_path)

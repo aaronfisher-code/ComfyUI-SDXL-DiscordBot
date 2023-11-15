@@ -204,7 +204,7 @@ async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt
 
     return images
 
-async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str, lora: str = None, lora_strength : float = 1.0):
+async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
       image.save(temp_file, format="PNG")
       temp_filepath = temp_file.name
