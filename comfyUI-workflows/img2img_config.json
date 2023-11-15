@@ -104,5 +104,21 @@
         ]
       },
       "class_type": "RepeatLatentBatch"
+    },
+    "11": {
+      "inputs": {
+        "lora_name": null,
+        "strength_model": 1,
+        "strength_clip": 1,
+        "model": [
+          "1",
+          0
+        ],
+        "clip": [
+          "1",
+          1
+        ]
+      },
+      "class_type": "LoraLoader"
     }
   }
