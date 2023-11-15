@@ -113,7 +113,7 @@ async def generate_images(prompt: str,negative_prompt: str, lora: str = None, lo
     # Modify the prompt dictionary
     if(prompt != None and prompt_nodes[0] != ''):
         for node in prompt_nodes:
-                workflow[node]["inputs"]["text"] = prompt
+            workflow[node]["inputs"]["text"] = prompt
     if(negative_prompt != None and neg_prompt_nodes[0] != ''):
       for node in neg_prompt_nodes:
           workflow[node]["inputs"]["text"] = negative_prompt
@@ -121,9 +121,24 @@ async def generate_images(prompt: str,negative_prompt: str, lora: str = None, lo
       for node in rand_seed_nodes:
           workflow[node]["inputs"]["seed"] = random.randint(0,999999999999999)
     if (lora_node[0] != '' and lora != None):
+      base_output_node = config.get('LOCAL_TEXT2IMG', 'BASE_OUTPUT_NODE')
+
+      for node in prompt_nodes:
+        workflow[node]["inputs"]["clip"] = [lora_node[0], 1]
+
+      for node in neg_prompt_nodes:
+        workflow[node]["inputs"]["clip"] = [lora_node[0], 1]
+
+      workflow[rand_seed_nodes[0]]["inputs"]["model"] = [lora_node[0], 0]
+      # remove "latent_image" from inputs
+      workflow[rand_seed_nodes[1]]["inputs"].pop("latent_image", None)
+
       for node in lora_node:
-          workflow[node]["inputs"]["lora_01"] = lora
-          workflow[node]["inputs"]["strength_01"] = lora_strength
+          workflow[node]["inputs"]["lora_name"] = lora
+          workflow[node]["inputs"]["strength_model"] = lora_strength
+          workflow[node]["inputs"]["strength_clip"] = lora_strength
+
+      workflow[base_output_node]["inputs"]["filename_prefix"] = "final_output"
 
     images = await generator.get_images(workflow)
     await generator.close()
@@ -148,7 +163,7 @@ async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt
     neg_prompt_nodes = config.get('LOCAL_IMG2IMG', 'NEG_PROMPT_NODES').split(',')
     rand_seed_nodes = config.get('LOCAL_IMG2IMG', 'RAND_SEED_NODES').split(',') 
     file_input_nodes = config.get('LOCAL_IMG2IMG', 'FILE_INPUT_NODES').split(',')
-    lora_node = config.get('LOCAL_TEXT2IMG', 'LORA_NODE').split(',')
+    lora_node = config.get('LOCAL_UPSCALE', 'LORA_NODE').split(',')
 
     if(prompt != None and prompt_nodes[0] != ''):
         for node in prompt_nodes:
@@ -190,7 +205,7 @@ async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str, lo
     neg_prompt_nodes = config.get('LOCAL_UPSCALE', 'NEG_PROMPT_NODES').split(',')
     rand_seed_nodes = config.get('LOCAL_UPSCALE', 'RAND_SEED_NODES').split(',') 
     file_input_nodes = config.get('LOCAL_UPSCALE', 'FILE_INPUT_NODES').split(',')
-    lora_node = config.get('LOCAL_TEXT2IMG', 'LORA_NODE').split(',')
+    lora_node = config.get('LOCAL_UPSCALE', 'LORA_NODE').split(',')
 
     # Modify the prompt dictionary
     if(prompt != None and prompt_nodes[0] != ''):
