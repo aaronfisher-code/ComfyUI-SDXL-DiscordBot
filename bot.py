@@ -190,13 +190,9 @@ class Buttons(discord.ui.View):
             await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage.png'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength, self.enhance, images, self.config, is_sdxl=self.is_sdxl))
 
     async def upscale_and_send(self, interaction, button):
-        if self.is_sdxl:
-            sdxl_config = "LOCAL_UPSCALE_SDXL"
-        else:
-            sdxl_config = "LOCAL_UPSCALE"
         index = int(button.label[1:]) - 1  # Extract index from label
         await interaction.response.send_message("Upscaling the image, this shouldn't take too long...")
-        upscaled_image = await upscale_image(self.images[index], self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength, sdxl_config)
+        upscaled_image = await upscale_image(self.images[index], self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength)
         timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
         upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
         upscaled_image.save(upscaled_image_path)
