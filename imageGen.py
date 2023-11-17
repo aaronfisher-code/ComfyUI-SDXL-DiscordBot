@@ -216,7 +216,10 @@ async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str, mo
     generator = ImageGenerator()
     await generator.connect()
 
-    setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name, filename, denoise_strength)
+    file_input_nodes = config.get(config_name, 'FILE_INPUT_NODES').split(',')
+
+    for node in file_input_nodes:
+        workflow[node]["inputs"]["image"] = filename
 
     images, enhanced_prompt = await generator.get_images(workflow)
     await generator.close()

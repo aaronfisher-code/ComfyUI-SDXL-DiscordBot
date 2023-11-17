@@ -1,66 +1,13 @@
 {
-  "4": {
-    "inputs": {
-      "ckpt_name": "rundiffusionFX_v10.safetensors"
-    },
-    "class_type": "CheckpointLoaderSimple"
-  },
-  "6": {
-    "inputs": {
-      "text": "a dog",
-      "clip": [
-        "11",
-        1
-      ]
-    },
-    "class_type": "CLIPTextEncode"
-  },
-  "7": {
-    "inputs": {
-      "text": "text, watermark",
-      "clip": [
-        "11",
-        1
-      ]
-    },
-    "class_type": "CLIPTextEncode"
-  },
   "9": {
     "inputs": {
       "filename_prefix": "final_output",
       "images": [
-        "30",
+        "31",
         0
       ]
     },
     "class_type": "SaveImage"
-  },
-  "11": {
-    "inputs": {
-      "lora_01": "None",
-      "strength_01": 1,
-      "lora_02": "None",
-      "strength_02": 1,
-      "lora_03": "None",
-      "strength_03": 1,
-      "lora_04": "None",
-      "strength_04": 1,
-      "model": [
-        "4",
-        0
-      ],
-      "clip": [
-        "4",
-        1
-      ]
-    },
-    "class_type": "Lora Loader Stack (rgthree)"
-  },
-  "12": {
-    "inputs": {
-      "seed": 698974145474093
-    },
-    "class_type": "Seed (rgthree)"
   },
   "13": {
     "inputs": {
@@ -68,42 +15,6 @@
       "choose file to upload": "image"
     },
     "class_type": "LoadImage"
-  },
-  "18": {
-    "inputs": {
-      "control_net_name": "control_v11f1e_sd15_tile.pth"
-    },
-    "class_type": "ControlNetLoader"
-  },
-  "19": {
-    "inputs": {
-      "strength": 0.8,
-      "start_percent": 0,
-      "end_percent": 0.7000000000000001,
-      "positive": [
-        "6",
-        0
-      ],
-      "negative": [
-        "7",
-        0
-      ],
-      "control_net": [
-        "18",
-        0
-      ],
-      "image": [
-        "13",
-        0
-      ]
-    },
-    "class_type": "ControlNetApplyAdvanced"
-  },
-  "21": {
-    "inputs": {
-      "vae_name": "vae-ft-mse-840000-ema-pruned.ckpt"
-    },
-    "class_type": "VAELoader"
   },
   "23": {
     "inputs": {
@@ -123,62 +34,6 @@
       ]
     },
     "class_type": "ImageUpscaleWithModel"
-  },
-  "28": {
-    "inputs": {
-      "pixels": [
-        "31",
-        0
-      ],
-      "vae": [
-        "21",
-        0
-      ]
-    },
-    "class_type": "VAEEncode"
-  },
-  "29": {
-    "inputs": {
-      "seed": [
-        "12",
-        0
-      ],
-      "steps": 40,
-      "cfg": 8,
-      "sampler_name": "dpmpp_2m_sde",
-      "scheduler": "karras",
-      "denoise": 0.2,
-      "model": [
-        "11",
-        0
-      ],
-      "positive": [
-        "19",
-        0
-      ],
-      "negative": [
-        "19",
-        1
-      ],
-      "latent_image": [
-        "28",
-        0
-      ]
-    },
-    "class_type": "KSampler"
-  },
-  "30": {
-    "inputs": {
-      "samples": [
-        "29",
-        0
-      ],
-      "vae": [
-        "21",
-        0
-      ]
-    },
-    "class_type": "VAEDecode"
   },
   "31": {
     "inputs": {
