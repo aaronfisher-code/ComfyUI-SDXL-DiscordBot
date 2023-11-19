@@ -141,7 +141,7 @@
         "Node name for S&R": "Upscale Model Loader"
       },
       "widgets_values": [
-        "8x_NMKD-Superscale_150000_G.pth"
+        "4xNMKDSuperscale_4xNMKDSuperscale.pt"
       ]
     },
     {
@@ -181,8 +181,8 @@
         "Node name for S&R": "ImageScaleBy"
       },
       "widgets_values": [
-        "lanczos",
-        0.25
+        "bilinear",
+        0.5
       ]
     }
   ],

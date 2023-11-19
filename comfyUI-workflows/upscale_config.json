@@ -18,7 +18,7 @@
   },
   "23": {
     "inputs": {
-      "model_name": "8x_NMKD-Superscale_150000_G.pth"
+      "model_name": "4xNMKDSuperscale_4xNMKDSuperscale.pt"
     },
     "class_type": "Upscale Model Loader"
   },
@@ -37,8 +37,8 @@
   },
   "33": {
     "inputs": {
-      "upscale_method": "lanczos",
-      "scale_by": 0.25,
+      "upscale_method": "bilinear",
+      "scale_by": 0.5,
       "image": [
         "24",
         0
