@@ -1,6 +1,6 @@
 {
-  "last_node_id": 33,
-  "last_link_id": 25,
+  "last_node_id": 34,
+  "last_link_id": 27,
   "nodes": [
     {
       "id": 9,
@@ -14,59 +14,19 @@
         "1": 58
       },
       "flags": {},
-      "order": 4,
+      "order": 3,
       "mode": 0,
       "inputs": [
         {
           "name": "images",
           "type": "IMAGE",
-          "link": 25
+          "link": 27
         }
       ],
       "properties": {},
       "widgets_values": [
         "final_output"
       ]
-    },
-    {
-      "id": 24,
-      "type": "ImageUpscaleWithModel",
-      "pos": [
-        564,
-        777
-      ],
-      "size": {
-        "0": 241.79998779296875,
-        "1": 46
-      },
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "upscale_model",
-          "type": "UPSCALE_MODEL",
-          "link": 10
-        },
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 11
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            24
-          ],
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ImageUpscaleWithModel"
-      }
     },
     {
       "id": 13,
@@ -87,7 +47,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            11
+            26
           ],
           "shape": 3,
           "slot_index": 0
@@ -125,9 +85,7 @@
         {
           "name": "UPSCALE_MODEL",
           "type": "UPSCALE_MODEL",
-          "links": [
-            10
-          ],
+          "links": [],
           "shape": 3
         },
         {
@@ -145,24 +103,24 @@
       ]
     },
     {
-      "id": 33,
-      "type": "ImageScaleBy",
+      "id": 34,
+      "type": "CR Upscale Image",
       "pos": [
-        894,
-        773
+        745,
+        761
       ],
       "size": {
         "0": 315,
-        "1": 82
+        "1": 202
       },
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
       "inputs": [
         {
           "name": "image",
           "type": "IMAGE",
-          "link": 24,
+          "link": 26,
           "slot_index": 0
         }
       ],
@@ -171,49 +129,38 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            25
+            27
           ],
           "shape": 3,
           "slot_index": 0
         }
       ],
       "properties": {
-        "Node name for S&R": "ImageScaleBy"
+        "Node name for S&R": "CR Upscale Image"
       },
       "widgets_values": [
-        "bilinear",
-        0.5
+        "4xNMKDSuperscale_4xNMKDSuperscale.pt",
+        "rescale",
+        2,
+        1024,
+        "lanczos",
+        "true",
+        8
       ]
     }
   ],
   "links": [
     [
-      10,
-      23,
-      0,
-      24,
-      0,
-      "UPSCALE_MODEL"
-    ],
-    [
-      11,
+      26,
       13,
       0,
-      24,
-      1,
-      "IMAGE"
-    ],
-    [
-      24,
-      24,
-      0,
-      33,
+      34,
       0,
       "IMAGE"
     ],
     [
-      25,
-      33,
+      27,
+      34,
       0,
       9,
       0,

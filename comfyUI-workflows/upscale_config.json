@@ -3,7 +3,7 @@
     "inputs": {
       "filename_prefix": "final_output",
       "images": [
-        "33",
+        "34",
         0
       ]
     },
@@ -22,28 +22,20 @@
     },
     "class_type": "Upscale Model Loader"
   },
-  "24": {
+  "34": {
     "inputs": {
-      "upscale_model": [
-        "23",
-        0
-      ],
+      "upscale_model": "4xNMKDSuperscale_4xNMKDSuperscale.pt",
+      "mode": "rescale",
+      "rescale_factor": 2,
+      "resize_width": 1024,
+      "resampling_method": "lanczos",
+      "supersample": "true",
+      "rounding_modulus": 8,
       "image": [
         "13",
         0
       ]
     },
-    "class_type": "ImageUpscaleWithModel"
-  },
-  "33": {
-    "inputs": {
-      "upscale_method": "bilinear",
-      "scale_by": 0.5,
-      "image": [
-        "24",
-        0
-      ]
-    },
-    "class_type": "ImageScaleBy"
+    "class_type": "CR Upscale Image"
   }
 }
