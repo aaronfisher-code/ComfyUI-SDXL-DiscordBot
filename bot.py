@@ -136,7 +136,7 @@ class ImageButton(discord.ui.Button):
         await self._callback(interaction, self)
 
 class Buttons(discord.ui.View):
-    def __init__(self, prompt, negative_prompt, model, lora, lora_strength, enhance, images, config=None, *, timeout=None, is_sdxl=False):
+    def __init__(self, prompt, negative_prompt, model, lora, lora_strength, enhance, images, author, config=None, *, timeout=None, is_sdxl=False):
         super().__init__(timeout=timeout)
         self.prompt = prompt
         self.negative_prompt = negative_prompt
@@ -147,6 +147,7 @@ class Buttons(discord.ui.View):
         self.images = images
         self.config = config
         self.is_sdxl = is_sdxl
+        self.author = author
 
         total_buttons = len(images) * 2 + 1  # For both alternative and upscale buttons + re-roll button
         if total_buttons > 25:  # Limit to 25 buttons
@@ -167,11 +168,12 @@ class Buttons(discord.ui.View):
             btn = ImageButton(f"U{idx + 1}", "⬆️", row, self.upscale_and_send)
             self.add_item(btn)
 
+        # removed until the upscale flow is fixed
         # Add upscale with added detail buttons
-        for idx, _ in enumerate(images):
-            row = (idx + (len(images) * 2) + 2) // 5 + reroll_row
-            btn = ImageButton(f"U{idx + 1}", "🔎", row, self.upscale_and_send_with_detail)
-            self.add_item(btn)
+        #for idx, _ in enumerate(images):
+        #    row = (idx + (len(images) * 2) + 2) // 5 + reroll_row
+        #    btn = ImageButton(f"U{idx + 1}", "🔎", row, self.upscale_and_send_with_detail)
+        #    self.add_item(btn)
 
     async def generate_alternatives_and_send(self, interaction, button):
         if self.is_sdxl:
@@ -185,9 +187,9 @@ class Buttons(discord.ui.View):
         final_message = f"{interaction.user.mention} here are your alternative images"
         # if a gif, set filename as gif, otherwise png
         if(images[0].format == 'GIF'):
-            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage' + '.gif'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength, self.enhance, images, self.config, is_sdxl=self.is_sdxl))
+            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage' + '.gif'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength, self.enhance, images, self.author, self.config, is_sdxl=self.is_sdxl))
         else:
-            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage.png'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength, self.enhance, images, self.config, is_sdxl=self.is_sdxl))
+            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage.png'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength, self.enhance, images, self.author, self.config, is_sdxl=self.is_sdxl))
 
     async def upscale_and_send(self, interaction, button):
         index = int(button.label[1:]) - 1  # Extract index from label
@@ -223,7 +225,15 @@ class Buttons(discord.ui.View):
 
         # Construct the final message with user mention
         final_message = f"{interaction.user.mention} asked me to re-imagine \"{self.prompt}\", here is what I imagined for them."
-        await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view = Buttons(self.prompt,self.negative_prompt, self.model, self.lora, self.lora_strength, self.enhance, images, self.config))
+        await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view = Buttons(self.prompt,self.negative_prompt, self.model, self.lora, self.lora_strength, self.enhance, images, self.author, self.config))
+
+    @discord.ui.button(label="Delete", style=discord.ButtonStyle.red, emoji="🗑️", row=0)
+    async def delete_image_post(self, interaction, button):
+        # make sure the user is the one who posted the image
+        if interaction.user.id != self.author.id:
+            return
+
+        await interaction.message.delete()
 
 class AddDetailButtons(discord.ui.View):
     def __init__(self, prompt, negative_prompt, model, lora, lora_strength, enhance, images, config=None, *, timeout=None, is_sdxl=False):
@@ -287,7 +297,7 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
         final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them.\n(Prompt enhanced with _\"{enhanced_prompt}\"_)"
         prompt = enhanced_prompt
     # send as gif or png
-    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora,lora_strength,enhance,images,config))
+    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora,lora_strength,enhance,images,interaction.user,config))
 
 @tree.command(name="video", description="Generate a video based on input text")
 @app_commands.describe(prompt='Prompt for the video being generated')
@@ -341,7 +351,7 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
     # Construct the final message with user mention
     final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them."
     # send as gif or png
-    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora,lora_strength,False,images,"LOCAL_SDXL_TXT2IMG_CONFIG", is_sdxl=True))
+    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora,lora_strength,False,images, interaction.user,"LOCAL_SDXL_TXT2IMG_CONFIG", is_sdxl=True))
 
 # run the bot
 client.run(TOKEN)
