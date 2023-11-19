@@ -1,6 +1,6 @@
 {
-  "last_node_id": 31,
-  "last_link_id": 21,
+  "last_node_id": 33,
+  "last_link_id": 25,
   "nodes": [
     {
       "id": 9,
@@ -20,54 +20,12 @@
         {
           "name": "images",
           "type": "IMAGE",
-          "link": 21
+          "link": 25
         }
       ],
       "properties": {},
       "widgets_values": [
         "final_output"
-      ]
-    },
-    {
-      "id": 31,
-      "type": "ImageScale",
-      "pos": [
-        930,
-        790
-      ],
-      "size": {
-        "0": 315,
-        "1": 130
-      },
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 20
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            21
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ImageScale"
-      },
-      "widgets_values": [
-        "lanczos",
-        1024,
-        1024,
-        "disabled"
       ]
     },
     {
@@ -101,7 +59,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            20
+            24
           ],
           "shape": 3
         }
@@ -109,6 +67,45 @@
       "properties": {
         "Node name for S&R": "ImageUpscaleWithModel"
       }
+    },
+    {
+      "id": 13,
+      "type": "LoadImage",
+      "pos": [
+        118,
+        831
+      ],
+      "size": {
+        "0": 315,
+        "1": 314
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            11
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ]
     },
     {
       "id": 23,
@@ -122,7 +119,7 @@
         "1": 78
       },
       "flags": {},
-      "order": 0,
+      "order": 1,
       "mode": 0,
       "outputs": [
         {
@@ -144,45 +141,48 @@
         "Node name for S&R": "Upscale Model Loader"
       },
       "widgets_values": [
-        "ESRGAN_4x.pth"
+        "8x_NMKD-Superscale_150000_G.pth"
       ]
     },
     {
-      "id": 13,
-      "type": "LoadImage",
+      "id": 33,
+      "type": "ImageScaleBy",
       "pos": [
-        118,
-        831
+        894,
+        773
       ],
-      "size": [
-        315,
-        314
-      ],
+      "size": {
+        "0": 315,
+        "1": 82
+      },
       "flags": {},
-      "order": 1,
+      "order": 3,
       "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 24,
+          "slot_index": 0
+        }
+      ],
       "outputs": [
         {
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            11
+            25
           ],
-          "shape": 3
-        },
-        {
-          "name": "MASK",
-          "type": "MASK",
-          "links": null,
-          "shape": 3
+          "shape": 3,
+          "slot_index": 0
         }
       ],
       "properties": {
-        "Node name for S&R": "LoadImage"
+        "Node name for S&R": "ImageScaleBy"
       },
       "widgets_values": [
-        "example.png",
-        "image"
+        "lanczos",
+        0.25
       ]
     }
   ],
@@ -204,16 +204,16 @@
       "IMAGE"
     ],
     [
-      20,
+      24,
       24,
       0,
-      31,
+      33,
       0,
       "IMAGE"
     ],
     [
-      21,
-      31,
+      25,
+      33,
       0,
       9,
       0,

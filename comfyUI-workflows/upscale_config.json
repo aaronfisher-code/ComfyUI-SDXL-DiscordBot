@@ -3,7 +3,7 @@
     "inputs": {
       "filename_prefix": "final_output",
       "images": [
-        "31",
+        "33",
         0
       ]
     },
@@ -18,7 +18,7 @@
   },
   "23": {
     "inputs": {
-      "model_name": "ESRGAN_4x.pth"
+      "model_name": "8x_NMKD-Superscale_150000_G.pth"
     },
     "class_type": "Upscale Model Loader"
   },
@@ -35,17 +35,15 @@
     },
     "class_type": "ImageUpscaleWithModel"
   },
-  "31": {
+  "33": {
     "inputs": {
       "upscale_method": "lanczos",
-      "width": 1024,
-      "height": 1024,
-      "crop": "disabled",
+      "scale_by": 0.25,
       "image": [
         "24",
         0
       ]
     },
-    "class_type": "ImageScale"
+    "class_type": "ImageScaleBy"
   }
 }
