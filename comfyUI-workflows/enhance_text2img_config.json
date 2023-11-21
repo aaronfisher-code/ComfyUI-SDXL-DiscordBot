@@ -31,7 +31,7 @@
   },
   "4": {
     "inputs": {
-      "ckpt_name": "rundiffusionFX_v10.safetensors"
+      "ckpt_name": "15\\rundiffusionFX_v10.safetensors"
     },
     "class_type": "CheckpointLoaderSimple"
   },
@@ -228,7 +228,7 @@
   },
   "33": {
     "inputs": {
-      "vae_name": "vae-ft-mse-840000-ema-pruned.ckpt"
+      "vae_name": "vae-ft-mse-840000-ema-pruned.safetensors"
     },
     "class_type": "VAELoader"
   }

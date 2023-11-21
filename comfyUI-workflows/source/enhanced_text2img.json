@@ -770,37 +770,6 @@
       ]
     },
     {
-      "id": 33,
-      "type": "VAELoader",
-      "pos": [
-        -650,
-        651
-      ],
-      "size": {
-        "0": 315,
-        "1": 58
-      },
-      "flags": {},
-      "order": 5,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": [
-            62
-          ],
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VAELoader"
-      },
-      "widgets_values": [
-        "15\\vae-ft-mse-840000-ema-pruned.ckpt"
-      ]
-    },
-    {
       "id": 12,
       "type": "Seed (rgthree)",
       "pos": [
@@ -812,7 +781,7 @@
         "1": 130
       },
       "flags": {},
-      "order": 6,
+      "order": 5,
       "mode": 0,
       "outputs": [
         {
@@ -848,7 +817,7 @@
         "1": 82
       },
       "flags": {},
-      "order": 7,
+      "order": 6,
       "mode": 0,
       "outputs": [
         {
@@ -867,6 +836,37 @@
       "widgets_values": [
         "/home/occlusion/ai/llm/PromptMKR",
         512
+      ]
+    },
+    {
+      "id": 33,
+      "type": "VAELoader",
+      "pos": [
+        -650,
+        651
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            62
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "vae-ft-mse-840000-ema-pruned.safetensors"
       ]
     }
   ],
