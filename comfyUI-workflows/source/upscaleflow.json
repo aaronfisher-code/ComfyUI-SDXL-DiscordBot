@@ -14,7 +14,7 @@
         "1": 58
       },
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
       "inputs": [
         {
@@ -68,41 +68,6 @@
       ]
     },
     {
-      "id": 23,
-      "type": "Upscale Model Loader",
-      "pos": [
-        127,
-        698
-      ],
-      "size": {
-        "0": 315,
-        "1": 78
-      },
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "UPSCALE_MODEL",
-          "type": "UPSCALE_MODEL",
-          "links": [],
-          "shape": 3
-        },
-        {
-          "name": "MODEL_NAME_TEXT",
-          "type": "STRING",
-          "links": null,
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Upscale Model Loader"
-      },
-      "widgets_values": [
-        "4xNMKDSuperscale_4xNMKDSuperscale.pt"
-      ]
-    },
-    {
       "id": 34,
       "type": "CR Upscale Image",
       "pos": [
@@ -114,7 +79,7 @@
         "1": 202
       },
       "flags": {},
-      "order": 2,
+      "order": 1,
       "mode": 0,
       "inputs": [
         {
@@ -139,7 +104,7 @@
         "Node name for S&R": "CR Upscale Image"
       },
       "widgets_values": [
-        "4xNMKDSuperscale_4xNMKDSuperscale.pt",
+        "ESRGAN_4x.pth",
         "rescale",
         2,
         1024,

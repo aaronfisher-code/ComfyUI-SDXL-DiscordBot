@@ -16,15 +16,9 @@
     },
     "class_type": "LoadImage"
   },
-  "23": {
-    "inputs": {
-      "model_name": "4xNMKDSuperscale_4xNMKDSuperscale.pt"
-    },
-    "class_type": "Upscale Model Loader"
-  },
   "34": {
     "inputs": {
-      "upscale_model": "4xNMKDSuperscale_4xNMKDSuperscale.pt",
+      "upscale_model": "ESRGAN_4x.pth",
       "mode": "rescale",
       "rescale_factor": 2,
       "resize_width": 1024,
