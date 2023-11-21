@@ -14,7 +14,7 @@
         "1": 180.6060791015625
       },
       "flags": {},
-      "order": 10,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
@@ -74,53 +74,6 @@
       ]
     },
     {
-      "id": 6,
-      "type": "CLIPTextEncode",
-      "pos": [
-        415,
-        186
-      ],
-      "size": {
-        "0": 422.84503173828125,
-        "1": 164.31304931640625
-      },
-      "flags": {},
-      "order": 15,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 19
-        },
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 70,
-          "widget": {
-            "name": "text"
-          },
-          "slot_index": 1
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            4
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CLIPTextEncode"
-      },
-      "widgets_values": [
-        "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,"
-      ]
-    },
-    {
       "id": 23,
       "type": "CR Prompt Text",
       "pos": [
@@ -164,7 +117,7 @@
         "1": 178
       },
       "flags": {},
-      "order": 9,
+      "order": 8,
       "mode": 0,
       "inputs": [
         {
@@ -353,48 +306,340 @@
       ]
     },
     {
-      "id": 4,
-      "type": "CheckpointLoaderSimple",
+      "id": 27,
+      "type": "ZuellniExLlamaGenerator",
       "pos": [
-        -628,
-        442
+        5,
+        -396
+      ],
+      "size": {
+        "0": 400,
+        "1": 316
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "EXL_MODEL",
+          "link": 43,
+          "slot_index": 0
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 44,
+          "widget": {
+            "name": "text"
+          },
+          "slot_index": 1
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 48,
+          "widget": {
+            "name": "seed"
+          },
+          "slot_index": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "TEXT",
+          "type": "STRING",
+          "links": [
+            46
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ZuellniExLlamaGenerator"
+      },
+      "widgets_values": [
+        false,
+        false,
+        64,
+        0.2,
+        20,
+        0.9,
+        1,
+        1.15,
+        462479363345887,
+        "randomize",
+        ""
+      ]
+    },
+    {
+      "id": 11,
+      "type": "Lora Loader Stack (rgthree)",
+      "pos": [
+        3,
+        404
       ],
       "size": {
         "0": 315,
-        "1": 98
+        "1": 246
       },
       "flags": {},
-      "order": 3,
+      "order": 9,
       "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 16
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 17
+        }
+      ],
       "outputs": [
         {
           "name": "MODEL",
           "type": "MODEL",
           "links": [
-            16
+            18
           ],
+          "shape": 3,
           "slot_index": 0
         },
         {
           "name": "CLIP",
           "type": "CLIP",
           "links": [
-            17
+            19,
+            20
           ],
+          "shape": 3,
           "slot_index": 1
-        },
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": [],
-          "slot_index": 2
         }
       ],
       "properties": {
-        "Node name for S&R": "CheckpointLoaderSimple"
+        "Node name for S&R": "Lora Loader Stack (rgthree)"
       },
       "widgets_values": [
-        "15\\rundiffusionFX_v10.safetensors"
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1
+      ]
+    },
+    {
+      "id": 24,
+      "type": "CR Prompt Text",
+      "pos": [
+        -971,
+        -237
+      ],
+      "size": {
+        "0": 210,
+        "1": 78.17271423339844
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            36,
+            47
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CR Prompt Text"
+      },
+      "widgets_values": [
+        "a dog"
+      ]
+    },
+    {
+      "id": 21,
+      "type": "Text Concatenate",
+      "pos": [
+        544,
+        -530
+      ],
+      "size": {
+        "0": 315,
+        "1": 178
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text_a",
+          "type": "STRING",
+          "link": 47,
+          "widget": {
+            "name": "text_a"
+          },
+          "slot_index": 0
+        },
+        {
+          "name": "text_b",
+          "type": "STRING",
+          "link": 39,
+          "widget": {
+            "name": "text_b"
+          },
+          "slot_index": 1
+        },
+        {
+          "name": "text_c",
+          "type": "STRING",
+          "link": 46,
+          "widget": {
+            "name": "text_c"
+          }
+        },
+        {
+          "name": "text_d",
+          "type": "STRING",
+          "link": 40,
+          "widget": {
+            "name": "text_d"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            57,
+            58,
+            70
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Text Concatenate"
+      },
+      "widgets_values": [
+        "",
+        "",
+        "false",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "id": 12,
+      "type": "Seed (rgthree)",
+      "pos": [
+        66,
+        723
+      ],
+      "size": {
+        "0": 210,
+        "1": 130
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "SEED",
+          "type": "INT",
+          "links": [
+            21,
+            48
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Seed (rgthree)"
+      },
+      "widgets_values": [
+        336005801503866,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "id": 14,
+      "type": "ZuellniExLlamaLoader",
+      "pos": [
+        -685,
+        47
+      ],
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "EXL_MODEL",
+          "links": [
+            43
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ZuellniExLlamaLoader"
+      },
+      "widgets_values": [
+        "/home/occlusion/ai/llm/PromptMKR",
+        512
+      ]
+    },
+    {
+      "id": 33,
+      "type": "VAELoader",
+      "pos": [
+        -650,
+        651
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            62
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "vae-ft-mse-840000-ema-pruned.safetensors"
       ]
     },
     {
@@ -507,135 +752,6 @@
       }
     },
     {
-      "id": 27,
-      "type": "ZuellniExLlamaGenerator",
-      "pos": [
-        5,
-        -396
-      ],
-      "size": {
-        "0": 400,
-        "1": 316
-      },
-      "flags": {},
-      "order": 11,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "EXL_MODEL",
-          "link": 43,
-          "slot_index": 0
-        },
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 44,
-          "widget": {
-            "name": "text"
-          },
-          "slot_index": 1
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": 48,
-          "widget": {
-            "name": "seed"
-          },
-          "slot_index": 2
-        }
-      ],
-      "outputs": [
-        {
-          "name": "TEXT",
-          "type": "STRING",
-          "links": [
-            46
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ZuellniExLlamaGenerator"
-      },
-      "widgets_values": [
-        false,
-        false,
-        64,
-        0.2,
-        20,
-        0.9,
-        1,
-        1.15,
-        462479363345887,
-        "randomize",
-        ""
-      ]
-    },
-    {
-      "id": 11,
-      "type": "Lora Loader Stack (rgthree)",
-      "pos": [
-        3,
-        404
-      ],
-      "size": {
-        "0": 315,
-        "1": 246
-      },
-      "flags": {},
-      "order": 8,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 16
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 17
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            18
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            19,
-            20
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Lora Loader Stack (rgthree)"
-      },
-      "widgets_values": [
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1
-      ]
-    },
-    {
       "id": 9,
       "type": "SaveImage",
       "pos": [
@@ -662,211 +778,95 @@
       ]
     },
     {
-      "id": 24,
-      "type": "CR Prompt Text",
+      "id": 6,
+      "type": "CLIPTextEncode",
       "pos": [
-        -971,
-        -237
+        415,
+        186
       ],
       "size": {
-        "0": 210,
-        "1": 78.17271423339844
+        "0": 422.84503173828125,
+        "1": 164.31304931640625
       },
       "flags": {},
-      "order": 4,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "prompt",
-          "type": "STRING",
-          "links": [
-            36,
-            47
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CR Prompt Text"
-      },
-      "widgets_values": [
-        "a dog"
-      ]
-    },
-    {
-      "id": 21,
-      "type": "Text Concatenate",
-      "pos": [
-        544,
-        -530
-      ],
-      "size": {
-        "0": 315,
-        "1": 178
-      },
-      "flags": {},
-      "order": 12,
+      "order": 15,
       "mode": 0,
       "inputs": [
         {
-          "name": "text_a",
-          "type": "STRING",
-          "link": 47,
-          "widget": {
-            "name": "text_a"
-          },
-          "slot_index": 0
+          "name": "clip",
+          "type": "CLIP",
+          "link": 19
         },
         {
-          "name": "text_b",
+          "name": "text",
           "type": "STRING",
-          "link": 39,
+          "link": 70,
           "widget": {
-            "name": "text_b"
+            "name": "text"
           },
           "slot_index": 1
-        },
-        {
-          "name": "text_c",
-          "type": "STRING",
-          "link": 46,
-          "widget": {
-            "name": "text_c"
-          }
-        },
-        {
-          "name": "text_d",
-          "type": "STRING",
-          "link": 40,
-          "widget": {
-            "name": "text_d"
-          }
         }
       ],
       "outputs": [
         {
-          "name": "STRING",
-          "type": "STRING",
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
           "links": [
-            57,
-            58,
-            70
+            4
           ],
-          "shape": 3,
           "slot_index": 0
         }
       ],
       "properties": {
-        "Node name for S&R": "Text Concatenate"
+        "Node name for S&R": "CLIPTextEncode"
       },
       "widgets_values": [
-        "",
-        "",
-        "false",
-        "",
-        "",
-        ""
+        "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,"
       ]
     },
     {
-      "id": 12,
-      "type": "Seed (rgthree)",
+      "id": 4,
+      "type": "CheckpointLoaderSimple",
       "pos": [
-        66,
-        723
-      ],
-      "size": {
-        "0": 210,
-        "1": 130
-      },
-      "flags": {},
-      "order": 5,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "SEED",
-          "type": "INT",
-          "links": [
-            21,
-            48
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Seed (rgthree)"
-      },
-      "widgets_values": [
-        336005801503866,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "id": 14,
-      "type": "ZuellniExLlamaLoader",
-      "pos": [
-        -685,
-        47
+        -628,
+        442
       ],
       "size": {
         "0": 315,
-        "1": 82
-      },
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "EXL_MODEL",
-          "links": [
-            43
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ZuellniExLlamaLoader"
-      },
-      "widgets_values": [
-        "/home/occlusion/ai/llm/PromptMKR",
-        512
-      ]
-    },
-    {
-      "id": 33,
-      "type": "VAELoader",
-      "pos": [
-        -650,
-        651
-      ],
-      "size": {
-        "0": 315,
-        "1": 58
+        "1": 98
       },
       "flags": {},
       "order": 7,
       "mode": 0,
       "outputs": [
         {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            16
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            17
+          ],
+          "slot_index": 1
+        },
+        {
           "name": "VAE",
           "type": "VAE",
-          "links": [
-            62
-          ],
-          "shape": 3
+          "links": [],
+          "slot_index": 2
         }
       ],
       "properties": {
-        "Node name for S&R": "VAELoader"
+        "Node name for S&R": "CheckpointLoaderSimple"
       },
       "widgets_values": [
-        "vae-ft-mse-840000-ema-pruned.safetensors"
+        "rundiffusionFX_v10.safetensors"
       ]
     }
   ],
