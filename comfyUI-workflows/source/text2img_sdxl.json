@@ -1,45 +1,62 @@
 {
-  "last_node_id": 62,
-  "last_link_id": 113,
+  "last_node_id": 67,
+  "last_link_id": 124,
   "nodes": [
     {
-      "id": 21,
-      "type": "CR Prompt Text",
+      "id": 67,
+      "type": "CR LoRA Stack",
       "pos": [
-        -695,
-        -105
+        -430,
+        -170
       ],
       "size": {
-        "0": 210,
-        "1": 78.17271423339844
+        "0": 315,
+        "1": 322
       },
       "flags": {},
       "order": 0,
       "mode": 0,
+      "inputs": [
+        {
+          "name": "lora_stack",
+          "type": "LORA_STACK",
+          "link": null
+        }
+      ],
       "outputs": [
         {
-          "name": "prompt",
-          "type": "STRING",
+          "name": "LORA_STACK",
+          "type": "LORA_STACK",
           "links": [
-            81
+            123
           ],
-          "shape": 3,
-          "slot_index": 0
+          "shape": 3
         }
       ],
       "properties": {
-        "Node name for S&R": "CR Prompt Text"
+        "Node name for S&R": "CR LoRA Stack"
       },
       "widgets_values": [
-        "a dog"
+        "On",
+        "None",
+        1,
+        1,
+        "Off",
+        "None",
+        1,
+        1,
+        "Off",
+        "None",
+        1,
+        1
       ]
     },
     {
-      "id": 22,
+      "id": 21,
       "type": "CR Prompt Text",
       "pos": [
-        -692,
-        19
+        -350,
+        240
       ],
       "size": {
         "0": 210,
@@ -53,7 +70,7 @@
           "name": "prompt",
           "type": "STRING",
           "links": [
-            82
+            116
           ],
           "shape": 3,
           "slot_index": 0
@@ -70,8 +87,8 @@
       "id": 40,
       "type": "CR Prompt Text",
       "pos": [
-        -688,
-        148
+        -360,
+        380
       ],
       "size": {
         "0": 210,
@@ -85,8 +102,7 @@
           "name": "prompt",
           "type": "STRING",
           "links": [
-            100,
-            101
+            124
           ],
           "shape": 3,
           "slot_index": 0
@@ -100,431 +116,25 @@
       ]
     },
     {
-      "id": 57,
-      "type": "SDXL Power Prompt - Simple / Negative (rgthree)",
-      "pos": [
-        -170,
-        192
-      ],
-      "size": {
-        "0": 394.79998779296875,
-        "1": 126.0501708984375
-      },
-      "flags": {},
-      "order": 8,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "opt_clip",
-          "type": "CLIP",
-          "link": 94,
-          "dir": 3
-        },
-        {
-          "name": "opt_clip_width",
-          "type": "INT",
-          "link": 95,
-          "widget": {
-            "name": "opt_clip_width"
-          },
-          "dir": 3,
-          "slot_index": 1
-        },
-        {
-          "name": "opt_clip_height",
-          "type": "INT",
-          "link": 96,
-          "widget": {
-            "name": "opt_clip_height"
-          },
-          "dir": 3,
-          "slot_index": 2
-        },
-        {
-          "name": "prompt_g",
-          "type": "STRING",
-          "link": 100,
-          "widget": {
-            "name": "prompt_g"
-          },
-          "dir": 3,
-          "slot_index": 3
-        },
-        {
-          "name": "prompt_l",
-          "type": "STRING",
-          "link": 101,
-          "widget": {
-            "name": "prompt_l"
-          },
-          "dir": 3
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            109
-          ],
-          "shape": 3,
-          "dir": 4,
-          "disabled": false,
-          "slot_index": 0
-        },
-        {
-          "name": "TEXT_G",
-          "type": "STRING",
-          "links": null,
-          "shape": 3,
-          "dir": 4,
-          "color_off": "#7F7",
-          "color_on": "#7F7"
-        },
-        {
-          "name": "TEXT_L",
-          "type": "STRING",
-          "links": null,
-          "shape": 3,
-          "dir": 4,
-          "color_off": "#7F7",
-          "color_on": "#7F7"
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "SDXL Power Prompt - Simple / Negative (rgthree)",
-        "combos_filter": ""
-      },
-      "widgets_values": [
-        "",
-        "",
-        1024,
-        1024
-      ]
-    },
-    {
-      "id": 56,
-      "type": "SDXL Power Prompt - Positive (rgthree)",
-      "pos": [
-        -172,
-        -42
-      ],
-      "size": {
-        "0": 407.8853759765625,
-        "1": 182.96826171875
-      },
-      "flags": {},
-      "order": 7,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "opt_model",
-          "type": "MODEL",
-          "link": 92,
-          "dir": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "opt_clip",
-          "type": "CLIP",
-          "link": 93,
-          "dir": 3,
-          "slot_index": 1
-        },
-        {
-          "name": "opt_clip_width",
-          "type": "INT",
-          "link": 75,
-          "widget": {
-            "name": "opt_clip_width"
-          },
-          "dir": 3
-        },
-        {
-          "name": "opt_clip_height",
-          "type": "INT",
-          "link": 76,
-          "widget": {
-            "name": "opt_clip_height"
-          },
-          "dir": 3
-        },
-        {
-          "name": "prompt_g",
-          "type": "STRING",
-          "link": 81,
-          "widget": {
-            "name": "prompt_g"
-          },
-          "dir": 3
-        },
-        {
-          "name": "prompt_l",
-          "type": "STRING",
-          "link": 82,
-          "widget": {
-            "name": "prompt_l"
-          },
-          "dir": 3
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            108
-          ],
-          "shape": 3,
-          "dir": 4,
-          "disabled": false,
-          "slot_index": 0
-        },
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            107
-          ],
-          "shape": 3,
-          "dir": 4,
-          "disabled": false,
-          "slot_index": 1
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [],
-          "shape": 3,
-          "dir": 4,
-          "disabled": false,
-          "slot_index": 2
-        },
-        {
-          "name": "TEXT_G",
-          "type": "STRING",
-          "links": [],
-          "shape": 3,
-          "dir": 4,
-          "color_off": "#7F7",
-          "color_on": "#7F7",
-          "slot_index": 3
-        },
-        {
-          "name": "TEXT_L",
-          "type": "STRING",
-          "links": [],
-          "shape": 3,
-          "dir": 4,
-          "color_off": "#7F7",
-          "color_on": "#7F7",
-          "slot_index": 4
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "SDXL Power Prompt - Positive (rgthree)",
-        "combos_filter": ""
-      },
-      "widgets_values": [
-        "",
-        "",
-        1024,
-        1024,
-        "CHOOSE"
-      ]
-    },
-    {
-      "id": 8,
-      "type": "VAEDecode",
-      "pos": [
-        774,
-        -19
-      ],
-      "size": {
-        "0": 210,
-        "1": 46
-      },
-      "flags": {},
-      "order": 10,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "samples",
-          "type": "LATENT",
-          "link": 111,
-          "slot_index": 0
-        },
-        {
-          "name": "vae",
-          "type": "VAE",
-          "link": 113,
-          "slot_index": 1
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            9
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VAEDecode"
-      }
-    },
-    {
-      "id": 9,
-      "type": "SaveImage",
-      "pos": [
-        1096,
-        -27
-      ],
-      "size": {
-        "0": 210,
-        "1": 270
-      },
-      "flags": {},
-      "order": 11,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 9
-        }
-      ],
-      "properties": {},
-      "widgets_values": [
-        "final_output"
-      ]
-    },
-    {
-      "id": 55,
-      "type": "SDXL Empty Latent Image (rgthree)",
-      "pos": [
-        -110,
-        395
-      ],
-      "size": {
-        "0": 315,
-        "1": 146
-      },
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            110
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP_WIDTH",
-          "type": "INT",
-          "links": [
-            75,
-            95
-          ],
-          "shape": 3,
-          "slot_index": 1
-        },
-        {
-          "name": "CLIP_HEIGHT",
-          "type": "INT",
-          "links": [
-            76,
-            96
-          ],
-          "shape": 3,
-          "slot_index": 2
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "SDXL Empty Latent Image (rgthree)"
-      },
-      "widgets_values": [
-        "1024 x 1024  (square)",
-        4,
-        4
-      ]
-    },
-    {
-      "id": 36,
-      "type": "CheckpointLoaderSimple",
-      "pos": [
-        -1170,
-        406
-      ],
-      "size": {
-        "0": 315,
-        "1": 98
-      },
-      "flags": {},
-      "order": 4,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            91
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            90
-          ],
-          "shape": 3,
-          "slot_index": 1
-        },
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": [
-            113
-          ],
-          "shape": 3,
-          "slot_index": 2
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CheckpointLoaderSimple"
-      },
-      "widgets_values": [
-        "lcm_dreamshaperxl.safetensors"
-      ]
-    },
-    {
       "id": 12,
       "type": "Seed (rgthree)",
       "pos": [
-        -1084,
-        699
+        -340,
+        560
       ],
       "size": {
         "0": 210,
         "1": 130
       },
       "flags": {},
-      "order": 5,
+      "order": 3,
       "mode": 0,
       "outputs": [
         {
           "name": "SEED",
           "type": "INT",
           "links": [
-            112
+            122
           ],
           "shape": 3,
           "slot_index": 0
@@ -541,308 +151,290 @@
       ]
     },
     {
-      "id": 62,
-      "type": "KSampler",
+      "id": 65,
+      "type": "Eff. Loader SDXL",
       "pos": [
-        373,
-        -35
+        130,
+        -100
       ],
-      "size": {
-        "0": 315,
-        "1": 446
-      },
+      "size": [
+        400,
+        402
+      ],
       "flags": {},
-      "order": 9,
+      "order": 4,
       "mode": 0,
       "inputs": [
         {
-          "name": "model",
-          "type": "MODEL",
-          "link": 107,
+          "name": "lora_stack",
+          "type": "LORA_STACK",
+          "link": 123,
           "slot_index": 0
         },
         {
+          "name": "cnet_stack",
+          "type": "CONTROL_NET_STACK",
+          "link": null
+        },
+        {
           "name": "positive",
-          "type": "CONDITIONING",
-          "link": 108
+          "type": "STRING",
+          "link": 116,
+          "widget": {
+            "name": "positive"
+          }
         },
         {
           "name": "negative",
-          "type": "CONDITIONING",
-          "link": 109,
-          "slot_index": 2
-        },
-        {
-          "name": "latent_image",
-          "type": "LATENT",
-          "link": 110,
-          "slot_index": 3
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": 112,
+          "type": "STRING",
+          "link": 124,
           "widget": {
-            "name": "seed"
-          },
-          "slot_index": 4
+            "name": "negative"
+          }
         }
       ],
       "outputs": [
         {
+          "name": "SDXL_TUPLE",
+          "type": "SDXL_TUPLE",
+          "links": [
+            115
+          ],
+          "shape": 3
+        },
+        {
           "name": "LATENT",
           "type": "LATENT",
           "links": [
-            111
+            118
           ],
           "shape": 3,
-          "slot_index": 0
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            119
+          ],
+          "shape": 3,
+          "slot_index": 2
+        },
+        {
+          "name": "DEPENDENCIES",
+          "type": "DEPENDENCIES",
+          "links": null,
+          "shape": 3
         }
       ],
       "properties": {
-        "Node name for S&R": "KSampler"
+        "Node name for S&R": "Eff. Loader SDXL"
       },
       "widgets_values": [
-        588706854596584,
-        "randomize",
+        "lcm_dreamshaperxl.safetensors",
+        -1,
+        "None",
+        -2,
+        6,
+        2,
+        "sdxl_vae.safetensors",
+        "CLIP_POSITIVE",
+        "CLIP_NEGATIVE",
+        "none",
+        "comfy",
+        1024,
+        1024,
+        4
+      ],
+      "color": "#222233",
+      "bgcolor": "#333355",
+      "shape": 1
+    },
+    {
+      "id": 63,
+      "type": "KSampler SDXL (Eff.)",
+      "pos": [
+        650,
+        -90
+      ],
+      "size": [
+        325,
+        542
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "sdxl_tuple",
+          "type": "SDXL_TUPLE",
+          "link": 115,
+          "slot_index": 0
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 118
+        },
+        {
+          "name": "optional_vae",
+          "type": "VAE",
+          "link": 119
+        },
+        {
+          "name": "script",
+          "type": "SCRIPT",
+          "link": null
+        },
+        {
+          "name": "noise_seed",
+          "type": "INT",
+          "link": 122,
+          "widget": {
+            "name": "noise_seed"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SDXL_TUPLE",
+          "type": "SDXL_TUPLE",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": null,
+          "shape": 3,
+          "slot_index": 2
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            121
+          ],
+          "shape": 3,
+          "slot_index": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler SDXL (Eff.)"
+      },
+      "widgets_values": [
+        -1,
+        null,
         8,
         1.8,
         "lcm",
-        "sgm_uniform",
-        1
-      ]
+        "normal",
+        0,
+        -1,
+        "none",
+        "true"
+      ],
+      "color": "#223333",
+      "bgcolor": "#335555",
+      "shape": 1
     },
     {
-      "id": 11,
-      "type": "Lora Loader Stack (rgthree)",
+      "id": 9,
+      "type": "SaveImage",
       "pos": [
-        -798,
-        406
+        1103,
+        -32
       ],
       "size": {
-        "0": 315,
-        "1": 246
+        "0": 210,
+        "1": 270
       },
       "flags": {},
       "order": 6,
       "mode": 0,
       "inputs": [
         {
-          "name": "model",
-          "type": "MODEL",
-          "link": 91,
-          "slot_index": 0
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 90
+          "name": "images",
+          "type": "IMAGE",
+          "link": 121
         }
       ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            92
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            93,
-            94
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Lora Loader Stack (rgthree)"
-      },
+      "properties": {},
       "widgets_values": [
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1
+        "final_output"
       ]
     }
   ],
   "links": [
     [
-      9,
-      8,
+      115,
+      65,
       0,
+      63,
+      0,
+      "SDXL_TUPLE"
+    ],
+    [
+      116,
+      21,
+      0,
+      65,
+      2,
+      "STRING"
+    ],
+    [
+      118,
+      65,
+      1,
+      63,
+      1,
+      "LATENT"
+    ],
+    [
+      119,
+      65,
+      2,
+      63,
+      2,
+      "VAE"
+    ],
+    [
+      121,
+      63,
+      3,
       9,
       0,
       "IMAGE"
     ],
     [
-      75,
-      55,
-      1,
-      56,
-      2,
-      "INT"
-    ],
-    [
-      76,
-      55,
-      2,
-      56,
-      3,
-      "INT"
-    ],
-    [
-      81,
-      21,
-      0,
-      56,
-      4,
-      "STRING"
-    ],
-    [
-      82,
-      22,
-      0,
-      56,
-      5,
-      "STRING"
-    ],
-    [
-      90,
-      36,
-      1,
-      11,
-      1,
-      "CLIP"
-    ],
-    [
-      91,
-      36,
-      0,
-      11,
-      0,
-      "MODEL"
-    ],
-    [
-      92,
-      11,
-      0,
-      56,
-      0,
-      "MODEL"
-    ],
-    [
-      93,
-      11,
-      1,
-      56,
-      1,
-      "CLIP"
-    ],
-    [
-      94,
-      11,
-      1,
-      57,
-      0,
-      "CLIP"
-    ],
-    [
-      95,
-      55,
-      1,
-      57,
-      1,
-      "INT"
-    ],
-    [
-      96,
-      55,
-      2,
-      57,
-      2,
-      "INT"
-    ],
-    [
-      100,
-      40,
-      0,
-      57,
-      3,
-      "STRING"
-    ],
-    [
-      101,
-      40,
-      0,
-      57,
-      4,
-      "STRING"
-    ],
-    [
-      107,
-      56,
-      1,
-      62,
-      0,
-      "MODEL"
-    ],
-    [
-      108,
-      56,
-      0,
-      62,
-      1,
-      "CONDITIONING"
-    ],
-    [
-      109,
-      57,
-      0,
-      62,
-      2,
-      "CONDITIONING"
-    ],
-    [
-      110,
-      55,
-      0,
-      62,
-      3,
-      "LATENT"
-    ],
-    [
-      111,
-      62,
-      0,
-      8,
-      0,
-      "LATENT"
-    ],
-    [
-      112,
+      122,
       12,
       0,
-      62,
+      63,
       4,
       "INT"
     ],
     [
-      113,
-      36,
-      2,
-      8,
-      1,
-      "VAE"
+      123,
+      67,
+      0,
+      65,
+      0,
+      "LORA_STACK"
+    ],
+    [
+      124,
+      40,
+      0,
+      65,
+      3,
+      "STRING"
     ]
   ],
   "groups": [],
