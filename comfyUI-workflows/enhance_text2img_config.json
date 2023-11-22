@@ -184,7 +184,7 @@
   },
   "27": {
     "inputs": {
-      "unload": false,
+      "unload": true,
       "stop_on_newline": false,
       "max_new_tokens": 64,
       "temperature": 0.2,

@@ -306,74 +306,6 @@
       ]
     },
     {
-      "id": 27,
-      "type": "ZuellniExLlamaGenerator",
-      "pos": [
-        5,
-        -396
-      ],
-      "size": {
-        "0": 400,
-        "1": 316
-      },
-      "flags": {},
-      "order": 10,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "EXL_MODEL",
-          "link": 43,
-          "slot_index": 0
-        },
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 44,
-          "widget": {
-            "name": "text"
-          },
-          "slot_index": 1
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": 48,
-          "widget": {
-            "name": "seed"
-          },
-          "slot_index": 2
-        }
-      ],
-      "outputs": [
-        {
-          "name": "TEXT",
-          "type": "STRING",
-          "links": [
-            46
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ZuellniExLlamaGenerator"
-      },
-      "widgets_values": [
-        false,
-        false,
-        64,
-        0.2,
-        20,
-        0.9,
-        1,
-        1.15,
-        462479363345887,
-        "randomize",
-        ""
-      ]
-    },
-    {
       "id": 11,
       "type": "Lora Loader Stack (rgthree)",
       "pos": [
@@ -867,6 +799,74 @@
       },
       "widgets_values": [
         "rundiffusionFX_v10.safetensors"
+      ]
+    },
+    {
+      "id": 27,
+      "type": "ZuellniExLlamaGenerator",
+      "pos": [
+        5,
+        -396
+      ],
+      "size": {
+        "0": 400,
+        "1": 316
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "EXL_MODEL",
+          "link": 43,
+          "slot_index": 0
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 44,
+          "widget": {
+            "name": "text"
+          },
+          "slot_index": 1
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 48,
+          "widget": {
+            "name": "seed"
+          },
+          "slot_index": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "TEXT",
+          "type": "STRING",
+          "links": [
+            46
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ZuellniExLlamaGenerator"
+      },
+      "widgets_values": [
+        true,
+        false,
+        64,
+        0.2,
+        20,
+        0.9,
+        1,
+        1.15,
+        462479363345887,
+        "randomize",
+        ""
       ]
     }
   ],
