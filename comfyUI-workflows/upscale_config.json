@@ -3,7 +3,7 @@
     "inputs": {
       "filename_prefix": "final_output",
       "images": [
-        "31",
+        "32",
         0
       ]
     },
@@ -35,17 +35,15 @@
     },
     "class_type": "ImageUpscaleWithModel"
   },
-  "31": {
+  "32": {
     "inputs": {
       "upscale_method": "lanczos",
-      "width": 1024,
-      "height": 1024,
-      "crop": "disabled",
+      "scale_by": 0.35000000000000003,
       "image": [
         "24",
         0
       ]
     },
-    "class_type": "ImageScale"
+    "class_type": "ImageScaleBy"
   }
 }

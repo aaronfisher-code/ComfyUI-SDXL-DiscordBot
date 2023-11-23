@@ -120,7 +120,7 @@
     "inputs": {
       "mode": "area",
       "factor": 0.5,
-      "align": "false",
+      "align": "true",
       "samples": [
         "20",
         0
