@@ -149,8 +149,13 @@ def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora
             workflow[node]["inputs"]["ckpt_name"] = model
     if (lora_node[0] != '' and lora != None):
         for node in lora_node:
-            workflow[node]["inputs"]["lora_01"] = lora.value
-            workflow[node]["inputs"]["strength_01"] = lora_strength
+            if "lora_name_1" in workflow[node]["inputs"]:
+                workflow[node]["inputs"]["lora_name_1"] = lora.value
+                workflow[node]["inputs"]["model_weight_1"] = lora_strength
+                workflow[node]["inputs"]["clip_weight_1"] = lora_strength
+            else:
+                workflow[node]["inputs"]["lora_01"] = lora.value
+                workflow[node]["inputs"]["strength_01"] = lora_strength
     if (llm_model_node != None):
         workflow[llm_model_node]["inputs"]["model_dir"] = config["LOCAL"]["LLM_MODEL_LOCATION"]
     if(aspect_ratio != None and empty_image_node != None):
@@ -216,7 +221,10 @@ async def upscale_image(image: Image.Image, prompt: str,negative_prompt: str, mo
     generator = ImageGenerator()
     await generator.connect()
 
-    setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name, filename, denoise_strength)
+    file_input_nodes = config.get(config_name, 'FILE_INPUT_NODES').split(',')
+
+    for node in file_input_nodes:
+        workflow[node]["inputs"]["image"] = filename
 
     images, enhanced_prompt = await generator.get_images(workflow)
     await generator.close()

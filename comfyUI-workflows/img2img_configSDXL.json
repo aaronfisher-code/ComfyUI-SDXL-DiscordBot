@@ -5,11 +5,11 @@
         "12",
         0
       ],
-      "steps": 5,
+      "steps": 8,
       "cfg": 1.8,
       "sampler_name": "lcm",
       "scheduler": "sgm_uniform",
-      "denoise": 0.9,
+      "denoise": 0.8,
       "model": [
         "11",
         0
