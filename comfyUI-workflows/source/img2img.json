@@ -1,143 +1,139 @@
 {
-  "last_node_id": 17,
-  "last_link_id": 29,
+  "last_node_id": 16,
+  "last_link_id": 15,
   "nodes": [
     {
-      "id": 7,
-      "type": "CLIPTextEncode",
+      "id": 3,
+      "type": "KSampler",
       "pos": [
-        413,
-        389
+        1430,
+        130
       ],
-      "size": {
-        "0": 425.27801513671875,
-        "1": 180.6060791015625
-      },
+      "size": [
+        315,
+        262
+      ],
       "flags": {},
-      "order": 8,
+      "order": 10,
       "mode": 0,
       "inputs": [
         {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 20
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            6
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CLIPTextEncode"
-      },
-      "widgets_values": [
-        "text, watermark"
-      ]
-    },
-    {
-      "id": 6,
-      "type": "CLIPTextEncode",
-      "pos": [
-        415,
-        186
-      ],
-      "size": {
-        "0": 422.84503173828125,
-        "1": 164.31304931640625
-      },
-      "flags": {},
-      "order": 7,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 19
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            4
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CLIPTextEncode"
-      },
-      "widgets_values": [
-        "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,"
-      ]
-    },
-    {
-      "id": 8,
-      "type": "VAEDecode",
-      "pos": [
-        1209,
-        188
-      ],
-      "size": {
-        "0": 210,
-        "1": 46
-      },
-      "flags": {},
-      "order": 12,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "samples",
-          "type": "LATENT",
-          "link": 7
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
         },
         {
-          "name": "vae",
-          "type": "VAE",
-          "link": 29
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 2
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 3
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 4
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 15,
+          "widget": {
+            "name": "seed"
+          }
         }
       ],
       "outputs": [
         {
-          "name": "IMAGE",
-          "type": "IMAGE",
+          "name": "LATENT",
+          "type": "LATENT",
           "links": [
-            9
+            7
           ],
-          "slot_index": 0
+          "shape": 3
         }
       ],
       "properties": {
-        "Node name for S&R": "VAEDecode"
-      }
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        0,
+        "randomize",
+        20,
+        8,
+        "ddim",
+        "ddim_uniform",
+        0.8
+      ]
     },
     {
-      "id": 5,
-      "type": "EmptyLatentImage",
+      "id": 4,
+      "type": "CheckpointLoaderSimple",
       "pos": [
-        473,
-        609
+        100,
+        130
       ],
       "size": {
         "0": 315,
-        "1": 106
+        "1": 98
       },
       "flags": {},
       "order": 0,
       "mode": 0,
       "outputs": [
         {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            10
+          ],
+          "shape": 3
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            11
+          ],
+          "shape": 3
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "rundiffusionFX_v10.safetensors"
+      ]
+    },
+    {
+      "id": 5,
+      "type": "EmptyLatentImage",
+      "pos": [
+        100,
+        358
+      ],
+      "size": {
+        "0": 315,
+        "1": 106
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
           "name": "LATENT",
           "type": "LATENT",
-          "links": [],
-          "slot_index": 0
+          "links": null,
+          "shape": 3
         }
       ],
       "properties": {
@@ -150,18 +146,134 @@
       ]
     },
     {
-      "id": 9,
-      "type": "SaveImage",
+      "id": 6,
+      "type": "CLIPTextEncode",
       "pos": [
-        1451,
-        189
+        930,
+        130
+      ],
+      "size": {
+        "0": 400,
+        "1": 200
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            2
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,"
+      ]
+    },
+    {
+      "id": 7,
+      "type": "CLIPTextEncode",
+      "pos": [
+        930,
+        460
+      ],
+      "size": {
+        "0": 400,
+        "1": 200
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 6
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            3
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "text, watermark"
+      ]
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "pos": [
+        1845,
+        130
       ],
       "size": {
         "0": 210,
+        "1": 46
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "pos": [
+        2155,
+        130
+      ],
+      "size": {
+        "0": 315,
         "1": 58
       },
       "flags": {},
-      "order": 13,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
@@ -179,8 +291,8 @@
       "id": 11,
       "type": "Lora Loader Stack (rgthree)",
       "pos": [
-        3,
-        404
+        515,
+        130
       ],
       "size": {
         "0": 315,
@@ -193,12 +305,12 @@
         {
           "name": "model",
           "type": "MODEL",
-          "link": 16
+          "link": 10
         },
         {
           "name": "clip",
           "type": "CLIP",
-          "link": 17
+          "link": 11
         }
       ],
       "outputs": [
@@ -206,20 +318,18 @@
           "name": "MODEL",
           "type": "MODEL",
           "links": [
-            18
+            1
           ],
-          "shape": 3,
-          "slot_index": 0
+          "shape": 3
         },
         {
           "name": "CLIP",
           "type": "CLIP",
           "links": [
-            19,
-            20
+            5,
+            6
           ],
-          "shape": 3,
-          "slot_index": 1
+          "shape": 3
         }
       ],
       "properties": {
@@ -237,51 +347,16 @@
       ]
     },
     {
-      "id": 12,
-      "type": "Seed (rgthree)",
-      "pos": [
-        65,
-        724
-      ],
-      "size": {
-        "0": 210,
-        "1": 130
-      },
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "SEED",
-          "type": "INT",
-          "links": [
-            21
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Seed (rgthree)"
-      },
-      "widgets_values": [
-        609268786121003,
-        null,
-        null,
-        null
-      ]
-    },
-    {
       "id": 13,
       "type": "LoadImage",
       "pos": [
-        -350,
-        -25
+        100,
+        854
       ],
-      "size": {
-        "0": 315,
-        "1": 314
-      },
+      "size": [
+        315,
+        314
+      ],
       "flags": {},
       "order": 2,
       "mode": 0,
@@ -290,10 +365,9 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            22
+            12
           ],
-          "shape": 3,
-          "slot_index": 0
+          "shape": 3
         },
         {
           "name": "MASK",
@@ -311,98 +385,29 @@
       ]
     },
     {
-      "id": 3,
-      "type": "KSampler",
-      "pos": [
-        863,
-        186
-      ],
-      "size": {
-        "0": 315,
-        "1": 262
-      },
-      "flags": {},
-      "order": 11,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 18
-        },
-        {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "link": 4
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "link": 6
-        },
-        {
-          "name": "latent_image",
-          "type": "LATENT",
-          "link": 26
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": 21,
-          "widget": {
-            "name": "seed"
-          },
-          "slot_index": 4
-        }
-      ],
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            7
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "KSampler"
-      },
-      "widgets_values": [
-        716515720319944,
-        "randomize",
-        20,
-        8,
-        "ddim",
-        "ddim_uniform",
-        0.8
-      ]
-    },
-    {
       "id": 14,
       "type": "VAEEncode",
       "pos": [
-        128.48994208984368,
-        10.755559350585884
+        515,
+        506
       ],
       "size": {
         "0": 210,
         "1": 46
       },
       "flags": {},
-      "order": 9,
+      "order": 6,
       "mode": 0,
       "inputs": [
         {
           "name": "pixels",
           "type": "IMAGE",
-          "link": 22
+          "link": 12
         },
         {
           "name": "vae",
           "type": "VAE",
-          "link": 28,
-          "slot_index": 1
+          "link": 13
         }
       ],
       "outputs": [
@@ -410,10 +415,9 @@
           "name": "LATENT",
           "type": "LATENT",
           "links": [
-            25
+            14
           ],
-          "shape": 3,
-          "slot_index": 0
+          "shape": 3
         }
       ],
       "properties": {
@@ -424,22 +428,21 @@
       "id": 15,
       "type": "RepeatLatentBatch",
       "pos": [
-        429,
-        14
+        930,
+        790
       ],
       "size": {
         "0": 315,
         "1": 58
       },
       "flags": {},
-      "order": 10,
+      "order": 9,
       "mode": 0,
       "inputs": [
         {
           "name": "samples",
           "type": "LATENT",
-          "link": 25,
-          "slot_index": 0
+          "link": 14
         }
       ],
       "outputs": [
@@ -447,10 +450,9 @@
           "name": "LATENT",
           "type": "LATENT",
           "links": [
-            26
+            4
           ],
-          "shape": 3,
-          "slot_index": 0
+          "shape": 3
         }
       ],
       "properties": {
@@ -461,73 +463,28 @@
       ]
     },
     {
-      "id": 4,
-      "type": "CheckpointLoaderSimple",
-      "pos": [
-        -635,
-        460
-      ],
-      "size": {
-        "0": 315,
-        "1": 98
-      },
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            16
-          ],
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            17
-          ],
-          "slot_index": 1
-        },
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": [],
-          "slot_index": 2
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CheckpointLoaderSimple"
-      },
-      "widgets_values": [
-        "rundiffusionFX_v10.safetensors"
-      ]
-    },
-    {
       "id": 16,
       "type": "VAELoader",
       "pos": [
-        -588,
-        657
+        100,
+        1086
       ],
       "size": {
         "0": 315,
         "1": 58
       },
       "flags": {},
-      "order": 4,
+      "order": 3,
       "mode": 0,
       "outputs": [
         {
           "name": "VAE",
           "type": "VAE",
           "links": [
-            27
+            8,
+            13
           ],
-          "shape": 3,
-          "slot_index": 0
+          "shape": 3
         }
       ],
       "properties": {
@@ -538,46 +495,52 @@
       ]
     },
     {
-      "id": 17,
-      "type": "Reroute",
+      "id": 12,
+      "type": "Seed (rgthree)",
       "pos": [
-        -198,
-        514
+        100,
+        594
       ],
-      "size": [
-        75,
-        26
-      ],
+      "size": {
+        "0": 210,
+        "1": 130
+      },
       "flags": {},
-      "order": 6,
+      "order": 4,
       "mode": 0,
-      "inputs": [
-        {
-          "name": "",
-          "type": "*",
-          "link": 27
-        }
-      ],
       "outputs": [
         {
-          "name": "",
-          "type": "VAE",
+          "name": "SEED",
+          "type": "INT",
           "links": [
-            28,
-            29
+            15
           ],
+          "shape": 3,
           "slot_index": 0
         }
       ],
       "properties": {
-        "showOutputText": false,
-        "horizontal": false
-      }
+        "Node name for S&R": "Seed (rgthree)"
+      },
+      "widgets_values": [
+        609268786121003,
+        null,
+        null,
+        null
+      ]
     }
   ],
   "links": [
     [
-      4,
+      1,
+      11,
+      0,
+      3,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
       6,
       0,
       3,
@@ -585,7 +548,7 @@
       "CONDITIONING"
     ],
     [
-      6,
+      3,
       7,
       0,
       3,
@@ -593,47 +556,15 @@
       "CONDITIONING"
     ],
     [
-      7,
+      4,
+      15,
+      0,
       3,
-      0,
-      8,
-      0,
+      3,
       "LATENT"
     ],
     [
-      9,
-      8,
-      0,
-      9,
-      0,
-      "IMAGE"
-    ],
-    [
-      16,
-      4,
-      0,
-      11,
-      0,
-      "MODEL"
-    ],
-    [
-      17,
-      4,
-      1,
-      11,
-      1,
-      "CLIP"
-    ],
-    [
-      18,
-      11,
-      0,
-      3,
-      0,
-      "MODEL"
-    ],
-    [
-      19,
+      5,
       11,
       1,
       6,
@@ -641,7 +572,7 @@
       "CLIP"
     ],
     [
-      20,
+      6,
       11,
       1,
       7,
@@ -649,15 +580,47 @@
       "CLIP"
     ],
     [
-      21,
-      12,
-      0,
+      7,
       3,
-      4,
-      "INT"
+      0,
+      8,
+      0,
+      "LATENT"
     ],
     [
-      22,
+      8,
+      16,
+      0,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      9,
+      8,
+      0,
+      9,
+      0,
+      "IMAGE"
+    ],
+    [
+      10,
+      4,
+      0,
+      11,
+      0,
+      "MODEL"
+    ],
+    [
+      11,
+      4,
+      1,
+      11,
+      1,
+      "CLIP"
+    ],
+    [
+      12,
       13,
       0,
       14,
@@ -665,44 +628,28 @@
       "IMAGE"
     ],
     [
-      25,
-      14,
-      0,
-      15,
-      0,
-      "LATENT"
-    ],
-    [
-      26,
-      15,
-      0,
-      3,
-      3,
-      "LATENT"
-    ],
-    [
-      27,
+      13,
       16,
       0,
-      17,
-      0,
-      "*"
-    ],
-    [
-      28,
-      17,
-      0,
       14,
       1,
       "VAE"
     ],
     [
-      29,
-      17,
+      14,
+      14,
       0,
-      8,
-      1,
-      "VAE"
+      15,
+      0,
+      "LATENT"
+    ],
+    [
+      15,
+      12,
+      0,
+      3,
+      4,
+      "INT"
     ]
   ],
   "groups": [],

@@ -9,10 +9,10 @@
         1430,
         130
       ],
-      "size": {
-        "0": 315,
-        "1": 262
-      },
+      "size": [
+        315,
+        262
+      ],
       "flags": {},
       "order": 8,
       "mode": 0,
@@ -35,7 +35,15 @@
         {
           "name": "latent_image",
           "type": "LATENT",
-          "link": 13
+          "link": 4
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 13,
+          "widget": {
+            "name": "seed"
+          }
         }
       ],
       "outputs": [
@@ -229,10 +237,10 @@
         2155,
         130
       ],
-      "size": [
-        315,
-        270
-      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
       "flags": {},
       "order": 10,
       "mode": 0,
@@ -308,50 +316,18 @@
       ]
     },
     {
-      "id": 12,
-      "type": "Seed (rgthree)",
-      "pos": [
-        100,
-        594
-      ],
-      "size": {
-        "0": 210,
-        "1": 130
-      },
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "SEED",
-          "type": "INT",
-          "links": null,
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Seed (rgthree)"
-      },
-      "widgets_values": [
-        609268786121003,
-        null,
-        null,
-        null
-      ]
-    },
-    {
       "id": 13,
       "type": "VAELoader",
       "pos": [
         100,
-        854
+        618
       ],
       "size": {
         "0": 315,
         "1": 58
       },
       "flags": {},
-      "order": 2,
+      "order": 1,
       "mode": 0,
       "outputs": [
         {
@@ -371,59 +347,18 @@
       ]
     },
     {
-      "id": 21,
-      "type": "Latent Upscale by Factor (WAS)",
-      "pos": [
-        403,
-        450
-      ],
-      "size": {
-        "0": 315,
-        "1": 106
-      },
-      "flags": {},
-      "order": 5,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "samples",
-          "type": "LATENT",
-          "link": 12
-        }
-      ],
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            13
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Latent Upscale by Factor (WAS)"
-      },
-      "widgets_values": [
-        "area",
-        0.5,
-        "false"
-      ]
-    },
-    {
       "id": 20,
       "type": "SDXL Empty Latent Image (rgthree)",
       "pos": [
-        7,
-        361
+        100,
+        806
       ],
       "size": {
         "0": 315,
         "1": 146
       },
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
       "outputs": [
         {
@@ -432,8 +367,7 @@
           "links": [
             12
           ],
-          "shape": 3,
-          "slot_index": 0
+          "shape": 3
         },
         {
           "name": "CLIP_WIDTH",
@@ -455,6 +389,81 @@
         "1024 x 1024  (square)",
         1,
         4
+      ]
+    },
+    {
+      "id": 21,
+      "type": "Latent Upscale by Factor (WAS)",
+      "pos": [
+        457,
+        442
+      ],
+      "size": {
+        "0": 315,
+        "1": 106
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 12
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            4
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Latent Upscale by Factor (WAS)"
+      },
+      "widgets_values": [
+        "area",
+        0.5,
+        "true"
+      ]
+    },
+    {
+      "id": 12,
+      "type": "Seed (rgthree)",
+      "pos": [
+        100,
+        358
+      ],
+      "size": {
+        "0": 210,
+        "1": 130
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "SEED",
+          "type": "INT",
+          "links": [
+            13
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Seed (rgthree)"
+      },
+      "widgets_values": [
+        609268786121003,
+        null,
+        null,
+        null
       ]
     }
   ],
@@ -482,6 +491,14 @@
       3,
       2,
       "CONDITIONING"
+    ],
+    [
+      4,
+      21,
+      0,
+      3,
+      3,
+      "LATENT"
     ],
     [
       5,
@@ -549,11 +566,11 @@
     ],
     [
       13,
-      21,
+      12,
       0,
       3,
-      3,
-      "LATENT"
+      4,
+      "INT"
     ]
   ],
   "groups": [],

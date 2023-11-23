@@ -23,7 +23,7 @@
         0
       ],
       "latent_image": [
-        "5",
+        "36",
         0
       ]
     },
@@ -34,14 +34,6 @@
       "ckpt_name": "rundiffusionFX_v10.safetensors"
     },
     "class_type": "CheckpointLoaderSimple"
-  },
-  "5": {
-    "inputs": {
-      "width": 512,
-      "height": 512,
-      "batch_size": 4
-    },
-    "class_type": "EmptyLatentImage"
   },
   "6": {
     "inputs": {
@@ -228,8 +220,28 @@
   },
   "33": {
     "inputs": {
-      "vae_name": "vae-ft-mse-840000-ema-pruned.ckpt"
+      "vae_name": "15\\vae-ft-mse-840000-ema-pruned.ckpt"
     },
     "class_type": "VAELoader"
+  },
+  "34": {
+    "inputs": {
+      "dimensions": "1024 x 1024  (square)",
+      "clip_scale": 1,
+      "batch_size": 4
+    },
+    "class_type": "SDXL Empty Latent Image (rgthree)"
+  },
+  "36": {
+    "inputs": {
+      "mode": "area",
+      "factor": 0.25,
+      "align": "false",
+      "samples": [
+        "34",
+        0
+      ]
+    },
+    "class_type": "Latent Upscale by Factor (WAS)"
   }
 }

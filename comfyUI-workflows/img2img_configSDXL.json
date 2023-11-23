@@ -133,14 +133,8 @@
       "crop_h": 0,
       "target_width": 4096,
       "target_height": 4096,
-      "text_g": [
-        "21",
-        0
-      ],
-      "text_l": [
-        "22",
-        0
-      ],
+      "text_g": "CLIP_G",
+      "text_l": "CLIP_L",
       "clip": [
         "11",
         1

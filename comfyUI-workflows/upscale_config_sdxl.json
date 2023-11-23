@@ -51,22 +51,10 @@
   },
   "32": {
     "inputs": {
-      "pos_g": [
-        "33",
-        0
-      ],
-      "pos_l": [
-        "33",
-        0
-      ],
-      "neg_g": [
-        "34",
-        0
-      ],
-      "neg_l": [
-        "34",
-        0
-      ],
+      "pos_g": "POS_G",
+      "pos_l": "POS_L",
+      "neg_g": "NEG_G",
+      "neg_l": "NEG_L",
       "preset": "preset A",
       "base_width": 4096,
       "base_height": 4096,
