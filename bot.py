@@ -136,7 +136,7 @@ class ImageButton(discord.ui.Button):
         await self._callback(interaction, self)
 
 class Buttons(discord.ui.View):
-    def __init__(self, prompt, negative_prompt, model, lora, lora_strength, enhance, images, config=None ,*, aspect_ratio=None, timeout=None, is_sdxl=False):
+    def __init__(self, prompt, negative_prompt, model, lora, lora_strength, enhance, images, author, config=None ,*, aspect_ratio=None, timeout=None, is_sdxl=False):
         super().__init__(timeout=timeout)
         self.prompt = prompt
         self.negative_prompt = negative_prompt
@@ -277,6 +277,7 @@ class AddDetailButtons(discord.ui.View):
 @app_commands.describe(enhance='Enhance the image using a language model')
 @app_commands.describe(aspect_ratio='Aspect ratio of the generated image')
 @app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0]][0:25],
+                    #   These aspect ratio resolution values correspond to the SDXL Empty Latent Image node. A latent modification node in the workflow converts it to the equivalent SD 1.5 resolution values.
                       aspect_ratio=[app_commands.Choice(name='1:1', value='1024 x 1024  (square)'),
                                     app_commands.Choice(name='7:9 portrait', value=' 896 x 1152  (portrait)'),
                                     app_commands.Choice(name='4:7 portrait', value=' 768 x 1344  (portrait)'),
