@@ -45,61 +45,6 @@
         "65",
         0
       ],
-      "insert_lora": "CHOOSE",
-      "insert_embedding": "CHOOSE",
-      "opt_model": [
-        "11",
-        0
-      ],
-      "latent_image": [
-        "65",
-        1
-      ],
-      "optional_vae": [
-        "65",
-        2
-      ]
-    },
-    "class_type": "KSampler SDXL (Eff.)"
-  },
-  "57": {
-    "inputs": {
-      "prompt_g": "",
-      "prompt_l": "",
-      "opt_clip_width": [
-        "55",
-        1
-      ],
-      "opt_clip_height": [
-        "55",
-        2
-      ],
-      "insert_embedding": "CHOOSE",
-      "opt_clip": [
-        "11",
-        1
-      ]
-    },
-    "class_type": "SDXL Power Prompt - Simple / Negative (rgthree)"
-  },
-  "62": {
-    "inputs": {
-      "noise_seed": [
-        "12",
-        0
-      ],
-      "steps": 8,
-      "cfg": 1.8,
-      "sampler_name": "lcm",
-      "scheduler": "normal",
-      "start_at_step": 0,
-      "refine_at_step": -1,
-      "preview_method": "none",
-      "vae_decode": "true",
-      "sdxl_tuple": [
-        "65",
-        0
-      ],
       "latent_image": [
         "65",
         1
