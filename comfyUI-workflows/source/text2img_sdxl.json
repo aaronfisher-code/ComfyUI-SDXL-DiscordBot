@@ -151,16 +151,42 @@
       ]
     },
     {
+      "id": 9,
+      "type": "SaveImage",
+      "pos": [
+        1103,
+        -32
+      ],
+      "size": {
+        "0": 210,
+        "1": 270
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 121
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "final_output"
+      ]
+    },
+    {
       "id": 65,
       "type": "Eff. Loader SDXL",
       "pos": [
         130,
         -100
       ],
-      "size": [
-        400,
-        402
-      ],
+      "size": {
+        "0": 400,
+        "1": 402
+      },
       "flags": {},
       "order": 4,
       "mode": 0,
@@ -231,7 +257,7 @@
         "Node name for S&R": "Eff. Loader SDXL"
       },
       "widgets_values": [
-        "lcm_dreamshaperxl.safetensors",
+        "xl/juggernautXL_version6Rundiffusion.safetensors",
         -1,
         "None",
         -2,
@@ -257,10 +283,10 @@
         650,
         -90
       ],
-      "size": [
-        325,
-        542
-      ],
+      "size": {
+        "0": 325,
+        "1": 542
+      },
       "flags": {},
       "order": 5,
       "mode": 0,
@@ -329,12 +355,12 @@
         "Node name for S&R": "KSampler SDXL (Eff.)"
       },
       "widgets_values": [
-        -1,
+        840704117820961,
         null,
-        8,
-        1.8,
-        "lcm",
-        "normal",
+        13,
+        3.2,
+        "lms",
+        "karras",
         0,
         -1,
         "none",
@@ -343,32 +369,6 @@
       "color": "#223333",
       "bgcolor": "#335555",
       "shape": 1
-    },
-    {
-      "id": 9,
-      "type": "SaveImage",
-      "pos": [
-        1103,
-        -32
-      ],
-      "size": {
-        "0": 210,
-        "1": 270
-      },
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 121
-        }
-      ],
-      "properties": {},
-      "widgets_values": [
-        "final_output"
-      ]
     }
   ],
   "links": [

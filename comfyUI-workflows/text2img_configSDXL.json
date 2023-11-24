@@ -11,7 +11,7 @@
   },
   "12": {
     "inputs": {
-      "seed": 402488767508227
+      "seed": 60653817836735
     },
     "class_type": "Seed (rgthree)"
   },
@@ -33,10 +33,10 @@
         "12",
         0
       ],
-      "steps": 8,
-      "cfg": 1.8,
-      "sampler_name": "lcm",
-      "scheduler": "normal",
+      "steps": 13,
+      "cfg": 3.2,
+      "sampler_name": "lms",
+      "scheduler": "karras",
       "start_at_step": 0,
       "refine_at_step": -1,
       "preview_method": "none",
@@ -58,7 +58,7 @@
   },
   "65": {
     "inputs": {
-      "base_ckpt_name": "lcm_dreamshaperxl.safetensors",
+      "base_ckpt_name": "xl/juggernautXL_version6Rundiffusion.safetensors",
       "base_clip_skip": -1,
       "refiner_ckpt_name": "None",
       "refiner_clip_skip": -2,
