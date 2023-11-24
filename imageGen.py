@@ -113,7 +113,7 @@ class ImageGenerator:
         if self.ws:
             await self.ws.close()
 
-def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora: str, lora_strength : float, config_name: str, filename: str = None, denoise_strength: float = None):
+def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora: str, lora_strength : float, config_name: str, aspect_ratio: str = None, filename: str = None, denoise_strength: float = None):
     prompt_nodes = config.get(config_name, 'PROMPT_NODES').split(',')
     neg_prompt_nodes = config.get(config_name, 'NEG_PROMPT_NODES').split(',')
     rand_seed_nodes = config.get(config_name, 'RAND_SEED_NODES').split(',')
@@ -123,7 +123,6 @@ def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora
 
     if (config.has_option(config_name, 'FILE_INPUT_NODES')):
         file_input_nodes = config.get(config_name, 'FILE_INPUT_NODES').split(',')
-
     if(config.has_option(config_name, 'LLM_MODEL_NODE')):
         llm_model_node = config.get(config_name, 'LLM_MODEL_NODE')
 
@@ -157,6 +156,14 @@ def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora
                 workflow[node]["inputs"]["strength_01"] = lora_strength
     if (llm_model_node != None):
         workflow[llm_model_node]["inputs"]["model_dir"] = config["LOCAL"]["LLM_MODEL_LOCATION"]
+    if(aspect_ratio != None):
+        empty_image_node = config.get(config_name, 'EMPTY_IMAGE_NODE').split(',')
+        for node in empty_image_node:
+            if ("dimensions" in workflow[node]["inputs"]):
+                workflow[node]["inputs"]["dimensions"] = aspect_ratio
+            else:
+                workflow[node]["inputs"]["empty_latent_width"] = int(aspect_ratio.split('x')[0])
+                workflow[node]["inputs"]["empty_latent_height"] = int(aspect_ratio.split('x')[1].lstrip().split(' ')[0])
     if (denoise_strength != None):
         denoise_node = config.get(config_name, 'DENOISE_NODE').split(',')
         for node in denoise_node:
@@ -168,14 +175,14 @@ def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora
 
     return workflow
 
-async def generate_images(prompt: str,negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 1.0, config_name: str = 'LOCAL_TEXT2IMG'):
+async def generate_images(prompt: str,negative_prompt: str, model: str = None, lora: str = None, lora_strength : float = 1.0, aspect_ratio: str = None, config_name: str = 'LOCAL_TEXT2IMG'):
     with open(config[config_name]['CONFIG'], 'r') as file:
         workflow = json.load(file)
 
     generator = ImageGenerator()
     await generator.connect()
 
-    setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name)
+    setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name, aspect_ratio)
 
     images, enhanced_prompt = await generator.get_images(workflow)
     await generator.close()
@@ -197,7 +204,7 @@ async def generate_alternatives(image: Image.Image, prompt: str, negative_prompt
     generator = ImageGenerator()
     await generator.connect()
 
-    setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name, filename, denoise_strength)
+    setup_workflow(workflow, prompt, negative_prompt, model, lora, lora_strength, config_name, None, filename, denoise_strength)
 
     images, enhanced_prompt = await generator.get_images(workflow)
     await generator.close()

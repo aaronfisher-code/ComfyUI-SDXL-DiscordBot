@@ -1,6 +1,6 @@
 {
-  "last_node_id": 33,
-  "last_link_id": 70,
+  "last_node_id": 36,
+  "last_link_id": 75,
   "nodes": [
     {
       "id": 7,
@@ -85,7 +85,7 @@
         "1": 214.7830810546875
       },
       "flags": {},
-      "order": 1,
+      "order": 0,
       "mode": 0,
       "outputs": [
         {
@@ -189,7 +189,7 @@
         "1": 190
       },
       "flags": {},
-      "order": 2,
+      "order": 1,
       "mode": 0,
       "outputs": [
         {
@@ -277,7 +277,7 @@
         "1": 82
       },
       "flags": {},
-      "order": 14,
+      "order": 15,
       "mode": 0,
       "inputs": [
         {
@@ -586,7 +586,7 @@
         "1": 446
       },
       "flags": {},
-      "order": 16,
+      "order": 17,
       "mode": 0,
       "inputs": [
         {
@@ -607,7 +607,7 @@
         {
           "name": "latent_image",
           "type": "LATENT",
-          "link": 2
+          "link": 75
         },
         {
           "name": "seed",
@@ -654,7 +654,7 @@
         "1": 46
       },
       "flags": {},
-      "order": 17,
+      "order": 18,
       "mode": 0,
       "inputs": [
         {
@@ -872,14 +872,6 @@
   ],
   "links": [
     [
-      2,
-      5,
-      0,
-      3,
-      3,
-      "LATENT"
-    ],
-    [
       4,
       6,
       0,
@@ -1062,6 +1054,22 @@
       6,
       1,
       "STRING"
+    ],
+    [
+      74,
+      34,
+      0,
+      36,
+      0,
+      "LATENT"
+    ],
+    [
+      75,
+      36,
+      0,
+      3,
+      3,
+      "LATENT"
     ]
   ],
   "groups": [],

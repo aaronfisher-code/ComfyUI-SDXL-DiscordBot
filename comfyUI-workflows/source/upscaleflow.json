@@ -37,7 +37,7 @@
       ],
       "size": {
         "0": 315,
-        "1": 314
+        "1": 82
       },
       "flags": {},
       "order": 0,
@@ -96,8 +96,7 @@
           "links": [
             27
           ],
-          "shape": 3,
-          "slot_index": 0
+          "shape": 3
         }
       ],
       "properties": {
