@@ -159,7 +159,11 @@ def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora
     if(aspect_ratio != None):
         empty_image_node = config.get(config_name, 'EMPTY_IMAGE_NODE').split(',')
         for node in empty_image_node:
-            workflow[node]["inputs"]["dimensions"] = aspect_ratio
+            if ("dimensions" in workflow[node]["inputs"]):
+                workflow[node]["inputs"]["dimensions"] = aspect_ratio
+            else:
+                workflow[node]["inputs"]["empty_latent_width"] = int(aspect_ratio.split('x')[0])
+                workflow[node]["inputs"]["empty_latent_height"] = int(aspect_ratio.split('x')[1].lstrip().split(' ')[0])
     if (denoise_strength != None):
         denoise_node = config.get(config_name, 'DENOISE_NODE').split(',')
         for node in denoise_node:
