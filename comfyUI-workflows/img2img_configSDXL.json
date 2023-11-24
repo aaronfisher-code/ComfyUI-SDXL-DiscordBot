@@ -5,9 +5,9 @@
         "12",
         0
       ],
-      "steps": 20,
+      "steps": 12,
       "cfg": 6,
-      "sampler_name": "dpm_adaptive",
+      "sampler_name": "dpm_2",
       "scheduler": "karras",
       "denoise": 0.8,
       "model": [
@@ -31,7 +31,7 @@
   },
   "4": {
     "inputs": {
-      "ckpt_name": "xl/juggernautXL_version6Rundiffusion.safetensors"
+      "ckpt_name": "dreamshaperXL10_alpha2Xl10.safetensors"
     },
     "class_type": "CheckpointLoaderSimple"
   },
@@ -133,8 +133,14 @@
       "crop_h": 0,
       "target_width": 4096,
       "target_height": 4096,
-      "text_g": "CLIP_G",
-      "text_l": "CLIP_L",
+      "text_g": [
+        "21",
+        0
+      ],
+      "text_l": [
+        "22",
+        0
+      ],
       "clip": [
         "11",
         1
