@@ -200,7 +200,6 @@ class Buttons(discord.ui.View):
         index = int(button.label[1:]) - 1  # Extract index from label
         await interaction.response.send_message("Upscaling the image, this shouldn't take too long...")
         upscaled_image = await upscale_image(self.images[index])
-        upscaled_image = await upscale_image(self.images[index])
         timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
         upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
         upscaled_image.save(upscaled_image_path)
@@ -268,7 +267,9 @@ class AddDetailButtons(discord.ui.View):
 
         await interaction.response.send_message("Increasing detail in the image, this shouldn't take too long...")
 
-        images = await generate_alternatives(self.images, self.prompt, self.negative_prompt, self.model, self.lora_list, self.lora_strengths, sdxl_config, 0.5)
+        seed = random.randint(0, 999999999999999)
+
+        images = await generate_alternatives(self.images, self.prompt, self.negative_prompt, self.model, self.lora_list, self.lora_strengths, sdxl_config, 0.5, seed)
         collage_path = create_collage(images)
         final_message = f"{interaction.user.mention} here is your image with more detail"
 
