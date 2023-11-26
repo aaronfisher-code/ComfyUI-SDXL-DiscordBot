@@ -143,7 +143,10 @@ def setup_workflow(workflow, prompt: str, negative_prompt: str, model: str, lora
             workflow[node]["inputs"]["seed"] = seed
     if (model_node[0] != '' and model != None):
         for node in model_node:
-            workflow[node]["inputs"]["ckpt_name"] = model
+            if "ckpt_name" in workflow[node]["inputs"]:
+                workflow[node]["inputs"]["ckpt_name"] = model
+            elif "base_ckpt_name" in workflow[node]["inputs"]:
+                workflow[node]["inputs"]["base_ckpt_name"] = model
     if (lora_node[0] != '' and loras != None):
         for i, lora in enumerate(loras):
             if lora is None:
