@@ -351,7 +351,7 @@
         "Node name for S&R": "Eff. Loader SDXL"
       },
       "widgets_values": [
-        "dreamshaperXL10_alpha2Xl10.safetensors",
+        "xl/dreamshaperXL10_alpha2Xl10.safetensors",
         -1,
         "None",
         -2,

@@ -58,7 +58,7 @@
   },
   "65": {
     "inputs": {
-      "base_ckpt_name": "dreamshaperXL10_alpha2Xl10.safetensors",
+      "base_ckpt_name": "xl/dreamshaperXL10_alpha2Xl10.safetensors",
       "base_clip_skip": -1,
       "refiner_ckpt_name": "None",
       "refiner_clip_skip": -2,
