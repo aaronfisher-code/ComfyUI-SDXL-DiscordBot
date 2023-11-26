@@ -298,10 +298,10 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
         await interaction.response.send_message(f"The prompt {prompt} or negative prompt {negative_prompt} contains a blocked word, not generating image.", ephemeral=True)
         return
 
-    if enhance:
-        config = "ENHANCE_TEXT2IMG_CONFIG"
-    else:
-        config = "LOCAL_TEXT2IMG"
+    #if enhance:
+    #    config = "ENHANCE_TEXT2IMG_CONFIG"
+    #else:
+    config = "LOCAL_TEXT2IMG"
 
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")
