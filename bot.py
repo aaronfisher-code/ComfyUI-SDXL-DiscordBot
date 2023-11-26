@@ -367,7 +367,7 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
 @app_commands.describe(lora='LoRA to apply')
 @app_commands.describe(lora_strength='Strength of LoRA')
 @app_commands.describe(aspect_ratio='Aspect ratio of the generated image')
-@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0] if "xl" in m.lower()][0:25],
+@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0] if "xl" in m.lower() and "refiner" not in m.lower()][0:25],
                       lora=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][0:25],
                       lora2=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][0:25],
                       lora3=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][0:25],
