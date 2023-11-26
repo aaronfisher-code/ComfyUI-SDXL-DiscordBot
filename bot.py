@@ -6,7 +6,7 @@ import os
 from PIL import Image
 from datetime import datetime
 from math import ceil, sqrt
-from typing import List
+import random
 
 from discord.app_commands import Choice
 
@@ -136,13 +136,13 @@ class ImageButton(discord.ui.Button):
         await self._callback(interaction, self)
 
 class Buttons(discord.ui.View):
-    def __init__(self, prompt, negative_prompt, model, lora, lora_strength, enhance, images, author, config=None ,*, aspect_ratio=None, timeout=None, is_sdxl=False):
+    def __init__(self, prompt, negative_prompt, model, lora_list, lora_strengths, enhance, images, author, config=None ,*, aspect_ratio=None, timeout=None, is_sdxl=False):
         super().__init__(timeout=timeout)
         self.prompt = prompt
         self.negative_prompt = negative_prompt
         self.model = model
-        self.lora = lora
-        self.lora_strength = lora_strength
+        self.lora_list = lora_list
+        self.lora_strengths = lora_strengths
         self.enhance = enhance
         self.images = images
         self.config = config
@@ -184,25 +184,28 @@ class Buttons(discord.ui.View):
             sdxl_config = "LOCAL_IMG2IMG"
         index = int(button.label[1:]) - 1  # Extract index from label
         await interaction.response.send_message("Creating some alternatives, this shouldn't take too long...")
-        images = await generate_alternatives(self.images[index], self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength, sdxl_config)
+
+        seed = random.randint(0, 999999999999999)
+
+        images = await generate_alternatives(self.images[index], self.prompt, self.negative_prompt, self.model, self.lora_list, self.lora_strengths, sdxl_config, seed=seed)
         collage_path = create_collage(images)
         final_message = f"{interaction.user.mention} here are your alternative images"
         # if a gif, set filename as gif, otherwise png
         if(images[0].format == 'GIF'):
-            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage' + '.gif'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength, self.enhance, images, self.author, self.config, is_sdxl=self.is_sdxl))
+            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage' + '.gif'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora_list, self.lora_strengths, self.enhance, images, self.author, self.config, is_sdxl=self.is_sdxl))
         else:
-            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage.png'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength, self.enhance, images, self.author, self.config, is_sdxl=self.is_sdxl))
+            await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage.png'), view=Buttons(self.prompt, self.negative_prompt, self.model, self.lora_list, self.lora_strengths, self.enhance, images, self.author, self.config, is_sdxl=self.is_sdxl))
 
     async def upscale_and_send(self, interaction, button):
         index = int(button.label[1:]) - 1  # Extract index from label
         await interaction.response.send_message("Upscaling the image, this shouldn't take too long...")
-        upscaled_image = await upscale_image(self.images[index], self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength)
-        upscaled_image = await upscale_image(self.images[index], self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength)
+        upscaled_image = await upscale_image(self.images[index])
+        upscaled_image = await upscale_image(self.images[index])
         timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
         upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
         upscaled_image.save(upscaled_image_path)
         final_message = f"{interaction.user.mention} here is your upscaled image"
-        await interaction.channel.send(content=final_message, file=discord.File(fp=upscaled_image_path, filename='upscaled_image.png'), view=AddDetailButtons(self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength, self.enhance, upscaled_image, self.config, is_sdxl=self.is_sdxl))
+        await interaction.channel.send(content=final_message, file=discord.File(fp=upscaled_image_path, filename='upscaled_image.png'), view=AddDetailButtons(self.prompt, self.negative_prompt, self.model, self.lora_list, self.lora_strengths, self.enhance, upscaled_image, self.config, is_sdxl=self.is_sdxl))
 
     async def upscale_and_send_with_detail(self, interaction, button):
         if self.is_sdxl:
@@ -211,7 +214,7 @@ class Buttons(discord.ui.View):
             sdxl_config = "LOCAL_UPSCALE"
         index = int(button.label[1:]) - 1
         await interaction.response.send_message("Upscaling and increasing detail in the image, this shouldn't take too long...")
-        upscaled_image = await upscale_image(self.images[index], self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength, sdxl_config, 0.5)
+        upscaled_image = await upscale_image(self.images[index])
         timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
         upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
         upscaled_image.save(upscaled_image_path)
@@ -223,12 +226,15 @@ class Buttons(discord.ui.View):
         await interaction.response.send_message(f"{interaction.user.mention} asked me to re-imagine \"{self.prompt}\", this shouldn't take too long...")
         btn.disabled = True
         await interaction.message.edit(view=self)
+
+        seed = random.randint(0, 999999999999999)
+
         # Generate a new image with the same prompt
-        images, enhanced_prompt = await generate_images(self.prompt,self.negative_prompt, self.model, self.lora, self.lora_strength, self.aspect_ratio, self.config)
+        images, enhanced_prompt = await generate_images(self.prompt,self.negative_prompt, self.model, self.lora_list, self.lora_strengths, self.aspect_ratio, seed, self.config)
 
         # Construct the final message with user mention
-        final_message = f"{interaction.user.mention} asked me to re-imagine \"{self.prompt}\", here is what I imagined for them."
-        await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view = Buttons(self.prompt,self.negative_prompt, self.model, self.lora, self.lora_strength, self.enhance, images, self.author, self.config, aspect_ratio=self.aspect_ratio))
+        final_message = f"{interaction.user.mention} asked me to re-imagine \"{self.prompt}\", here is what I imagined for them. Seed: {seed}"
+        await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view = Buttons(self.prompt,self.negative_prompt, self.model, self.lora_list, self.lora_strengths, self.enhance, images, self.author, self.config, aspect_ratio=self.aspect_ratio))
 
     @discord.ui.button(label="Delete", style=discord.ButtonStyle.red, emoji="🗑️", row=0)
     async def delete_image_post(self, interaction, button):
@@ -239,13 +245,13 @@ class Buttons(discord.ui.View):
         await interaction.message.delete()
 
 class AddDetailButtons(discord.ui.View):
-    def __init__(self, prompt, negative_prompt, model, lora, lora_strength, enhance, images, config=None, *, timeout=None, is_sdxl=False):
+    def __init__(self, prompt, negative_prompt, model, lora_list, lora_strengths, enhance, images, config=None, *, timeout=None, is_sdxl=False):
         super().__init__(timeout=timeout)
         self.prompt = prompt
         self.negative_prompt = negative_prompt
         self.model = model
-        self.lora = lora
-        self.lora_strength = lora_strength
+        self.lora_list = lora_list
+        self.lora_strengths = lora_strengths
         self.enhance = enhance
         self.images = images
         self.config = config
@@ -262,7 +268,7 @@ class AddDetailButtons(discord.ui.View):
 
         await interaction.response.send_message("Increasing detail in the image, this shouldn't take too long...")
 
-        images = await generate_alternatives(self.images, self.prompt, self.negative_prompt, self.model, self.lora, self.lora_strength, sdxl_config, 0.5)
+        images = await generate_alternatives(self.images, self.prompt, self.negative_prompt, self.model, self.lora_list, self.lora_strengths, sdxl_config, 0.5)
         collage_path = create_collage(images)
         final_message = f"{interaction.user.mention} here is your image with more detail"
 
@@ -276,14 +282,17 @@ class AddDetailButtons(discord.ui.View):
 @app_commands.describe(lora_strength='Strength of LoRA')
 @app_commands.describe(enhance='Enhance the image using a language model')
 @app_commands.describe(aspect_ratio='Aspect ratio of the generated image')
-@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0]][0:25],
+@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]][0:25],
+                      lora=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" not in l.lower()][0:25],
+                      lora2=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" not in l.lower()][0:25],
+                      lora3=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" not in l.lower()][0:25],
                     #   These aspect ratio resolution values correspond to the SDXL Empty Latent Image node. A latent modification node in the workflow converts it to the equivalent SD 1.5 resolution values.
                       aspect_ratio=[app_commands.Choice(name='1:1', value='1024 x 1024  (square)'),
                                     app_commands.Choice(name='7:9 portrait', value=' 896 x 1152  (portrait)'),
                                     app_commands.Choice(name='4:7 portrait', value=' 768 x 1344  (portrait)'),
                                     app_commands.Choice(name='9:7 landscape', value='1152 x 896   (landscape)'),
                                     app_commands.Choice(name='7:4 landscape', value='1344 x 768   (landscape)')])
-async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0, enhance: bool = False, aspect_ratio: str = None):
+async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0, lora2: Choice[str] = None, lora_strength2: float = 1.0, lora3: Choice[str] = None, lora_strength3: float = 1.0, enhance: bool = False, aspect_ratio: str = None, seed: int = None):
     if should_filter(prompt, negative_prompt):
         print(f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {prompt}, Negative Prompt: {negative_prompt}")
         await interaction.response.send_message(f"The prompt {prompt} or negative prompt {negative_prompt} contains a blocked word, not generating image.", ephemeral=True)
@@ -297,17 +306,24 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")
 
+    lora_list = [lora != None and lora.value or None, lora2 != None and lora2.value or None, lora3 != None and lora3.value or None]
+
+    lora_strengths = [lora_strength, lora_strength2, lora_strength3]
+
+    if seed is None:
+        seed = random.randint(0, 999999999999999)
+
     # Generate the image and get progress updates
-    images, enhanced_prompt = await generate_images(prompt,negative_prompt, model, lora, lora_strength, aspect_ratio, config)
+    images, enhanced_prompt = await generate_images(prompt,negative_prompt, model, lora_list, lora_strengths, aspect_ratio, seed, config)
 
     # Construct the final message with user mention
     if(enhanced_prompt == None):
-        final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them."
+        final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them. Seed: {seed}"
     else:
-        final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them.\n(Prompt enhanced with _\"{enhanced_prompt}\"_)"
+        final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them.\n(Prompt enhanced with _\"{enhanced_prompt}\"_ Seed: {seed})"
         prompt = enhanced_prompt
     # send as gif or png
-    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora,lora_strength,enhance,images,interaction.user,config, aspect_ratio=aspect_ratio))
+    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora_list,lora_strengths,enhance,images,interaction.user,config, aspect_ratio=aspect_ratio))
 
 @tree.command(name="video", description="Generate a video based on input text")
 @app_commands.describe(prompt='Prompt for the video being generated')
@@ -315,8 +331,9 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
 @app_commands.describe(model='Model checkpoint to use')
 @app_commands.describe(lora='LoRA to apply')
 @app_commands.describe(lora_strength='Strength of LoRA')
-@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0]][0:25])
-async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0):
+@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]][0:25],
+                      lora=[app_commands.Choice(name=l, value=l) for l in loras[0]][0:25])
+async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0, lora2: Choice[str] = None, lora_strength2: float = 1.0, lora3: Choice[str] = None, lora_strength3: float = 1.0, seed: int = None):
     if should_filter(prompt, negative_prompt):
         print(f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {prompt}, Negative Prompt: {negative_prompt}")
         await interaction.response.send_message(f"The prompt {prompt} or negative prompt {negative_prompt} contains a blocked word, not generating image.", ephemeral=True)
@@ -325,14 +342,21 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to create the video \"{prompt}\", this shouldn't take too long...")
 
+    lora_list = [lora != None and lora.value or None, lora2 != None and lora2.value or None, lora3 != None and lora3.value or None]
+
+    lora_strengths = [lora_strength, lora_strength2, lora_strength3]
+
+    if seed is None:
+        seed = random.randint(0, 999999999999999)
+
     # Generate the video and get progress updates
-    video, enhanced_prompt = await generate_images(prompt,negative_prompt, model, lora, lora_strength, "LOCAL_TEXT2VIDEO")
+    video, enhanced_prompt = await generate_images(prompt,negative_prompt, model, lora_list, lora_strengths, None, seed, "LOCAL_TEXT2VIDEO")
 
     if(enhanced_prompt != None):
         prompt = enhanced_prompt
 
     # Construct the final message with user mention
-    final_message = f"{interaction.user.mention} asked me to create the video \"{prompt}\", here is what I created for them."
+    final_message = f"{interaction.user.mention} asked me to create the video \"{prompt}\", here is what I created for them. Seed: {seed}"
 
     await interaction.channel.send(content=final_message, file=discord.File(fp=create_gif_collage(video), filename='collage.gif'))
 
@@ -343,13 +367,16 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
 @app_commands.describe(lora='LoRA to apply')
 @app_commands.describe(lora_strength='Strength of LoRA')
 @app_commands.describe(aspect_ratio='Aspect ratio of the generated image')
-@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0] if "xl" in m.lower()][0:25], lora=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][0:25],
+@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0] if "xl" in m.lower()][0:25],
+                      lora=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][0:25],
+                      lora2=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][0:25],
+                      lora3=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][0:25],
                       aspect_ratio=[app_commands.Choice(name='1:1', value='1024 x 1024  (square)'),
                                     app_commands.Choice(name='7:9 portrait', value=' 896 x 1152  (portrait)'),
                                     app_commands.Choice(name='4:7 portrait', value=' 768 x 1344  (portrait)'),
                                     app_commands.Choice(name='9:7 landscape', value='1152 x 896   (landscape)'),
                                     app_commands.Choice(name='7:4 landscape', value='1344 x 768   (landscape)')])
-async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0, aspect_ratio: str = None):
+async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0, lora2: Choice[str] = None, lora_strength2: float = 1.0, lora3: Choice[str] = None, lora_strength3: float = 1.0, aspect_ratio: str = None, seed: int = None):
     if should_filter(prompt, negative_prompt):
         print(f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {prompt}, Negative Prompt: {negative_prompt}")
         await interaction.response.send_message(f"The prompt {prompt} or negative prompt {negative_prompt} contains a blocked word, not generating image.", ephemeral=True)
@@ -358,16 +385,23 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")
 
+    lora_list = [lora != None and lora.value or None, lora2 != None and lora2.value or None, lora3 != None and lora3.value or None]
+
+    lora_strengths = [lora_strength, lora_strength2, lora_strength3]
+
+    if seed is None:
+        seed = random.randint(0, 999999999999999)
+
     # Generate the image and get progress updates
-    images, enhanced_prompt = await generate_images(prompt,negative_prompt, model, lora, lora_strength,  aspect_ratio, "LOCAL_SDXL_TXT2IMG_CONFIG")
+    images, enhanced_prompt = await generate_images(prompt,negative_prompt, model, lora_list, lora_strengths, aspect_ratio, seed, "LOCAL_SDXL_TXT2IMG_CONFIG")
 
     if(enhanced_prompt != None):
         prompt = enhanced_prompt
 
     # Construct the final message with user mention
-    final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them."
+    final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them. Seed: {seed}"
     # send as gif or png
-    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora,lora_strength,False,images, interaction.user,"LOCAL_SDXL_TXT2IMG_CONFIG", aspect_ratio=aspect_ratio, is_sdxl=True))
+    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,model,lora_list,lora_strengths,False,images, interaction.user,"LOCAL_SDXL_TXT2IMG_CONFIG", aspect_ratio=aspect_ratio, is_sdxl=True))
 
 # run the bot
 client.run(TOKEN)
