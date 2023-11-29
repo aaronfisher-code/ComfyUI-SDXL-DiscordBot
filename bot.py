@@ -121,17 +121,21 @@ class Buttons(discord.ui.View):
 
     async def generate_alternatives_and_send(self, interaction, button):
         index = int(button.label[1:]) - 1  # Extract index from label
-        await interaction.response.send_message("Creating some alternatives, this shouldn't take too long...")
+        await interaction.response.send_message(
+            f"{interaction.user.mention}Creating some alternatives, this shouldn't take too long...")
         images = await generate_alternatives(self.images[index], self.prompt, self.negative_prompt)
         collage_path = create_collage(images)
         final_message = f"{interaction.user.mention} here are your alternative images"
-        await interaction.channel.send(content=final_message,
-                                       file=discord.File(fp=collage_path, filename='collage.png'),
-                                       view=Buttons(self.prompt, self.negative_prompt, images))
+        alternatives_view = Buttons(self.prompt, self.negative_prompt, images)
+        alternatives_view.message = await interaction.channel.send(content=final_message,
+                                                                   file=discord.File(fp=collage_path,
+                                                                                     filename='collage.png'),
+                                                                   view=alternatives_view)
 
     async def upscale_and_send(self, interaction, button):
         index = int(button.label[1:]) - 1  # Extract index from label
-        await interaction.response.send_message("Upscaling the image, this shouldn't take too long...")
+        await interaction.response.send_message(
+            f"{interaction.user.mention}Upscaling the image, this shouldn't take too long...")
         upscaled_image = await upscale_image(self.images[index], self.prompt, self.negative_prompt)
         timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
         upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
@@ -151,9 +155,11 @@ class Buttons(discord.ui.View):
 
         # Construct the final message with user mention
         final_message = f"{interaction.user.mention} asked me to re-imagine \"{self.prompt}\", here is what I imagined for them."
-        await interaction.channel.send(content=final_message,
-                                       file=discord.File(fp=create_collage(images), filename='collage.png'),
-                                       view=Buttons(self.prompt, self.negative_prompt, images))
+        reroll_view = Buttons(self.prompt, self.negative_prompt, images)
+        reroll_view.message = await interaction.channel.send(content=final_message,
+                                                             file=discord.File(fp=create_collage(images),
+                                                                               filename='collage.png'),
+                                                             view=reroll_view)
 
 
 @tree.command(name="imagine", description="Generate an image based on input text")
