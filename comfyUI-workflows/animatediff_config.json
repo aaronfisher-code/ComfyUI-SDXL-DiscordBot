@@ -7,7 +7,7 @@
   },
   "3": {
     "inputs": {
-      "text": "best quality, masterpiece,\na full shot of erikhelwig kicking music instruments around in front of a solid color background, simple background, greenscreen",
+      "text": "a dog",
       "clip": [
         "4",
         0
@@ -27,7 +27,7 @@
   },
   "6": {
     "inputs": {
-      "text": "(worst quality, low quality: 1.4), door, outdoors",
+      "text": "(worst quality, low quality: 1.4), child, children, kid, kids",
       "clip": [
         "4",
         0
@@ -47,7 +47,7 @@
       "scheduler": "normal",
       "denoise": 1,
       "model": [
-        "39",
+        "144",
         0
       ],
       "positive": [
@@ -59,8 +59,8 @@
         0
       ],
       "latent_image": [
-        "39",
-        1
+        "28",
+        0
       ]
     },
     "class_type": "KSampler"
@@ -86,47 +86,11 @@
     },
     "class_type": "ADE_EmptyLatentImageLarge"
   },
-  "39": {
-    "inputs": {
-      "model_name": "mm-Stabilized_mid.pth",
-      "unlimited_area_hack": false,
-      "context_length": 16,
-      "context_stride": 2,
-      "context_overlap": 4,
-      "context_schedule": "uniform",
-      "closed_loop": false,
-      "beta_schedule": "sqrt_linear (AnimateDiff)",
-      "model": [
-        "140",
-        0
-      ],
-      "latents": [
-        "28",
-        0
-      ]
-    },
-    "class_type": "ADE_AnimateDiffLoaderV1Advanced"
-  },
   "123": {
     "inputs": {
-      "seed": 980596870328812
+      "seed": 905034741803303
     },
     "class_type": "Seed (rgthree)"
-  },
-  "139": {
-    "inputs": {
-      "frame_rate": 8,
-      "loop_count": 0,
-      "filename_prefix": "final_output",
-      "format": "image/gif",
-      "pingpong": false,
-      "save_image": false,
-      "images": [
-        "10",
-        0
-      ]
-    },
-    "class_type": "ADE_AnimateDiffCombine"
   },
   "140": {
     "inputs": {
@@ -154,5 +118,64 @@
       "ckpt_name": "rundiffusionFX_v10.safetensors"
     },
     "class_type": "CheckpointLoaderSimple"
+  },
+  "144": {
+    "inputs": {
+      "model_name": "mm-Stabilized_mid.pth",
+      "beta_schedule": "sqrt_linear (AnimateDiff)",
+      "motion_scale": 1,
+      "apply_v2_models_properly": false,
+      "model": [
+        "140",
+        0
+      ],
+      "context_options": [
+        "145",
+        0
+      ],
+      "motion_model_settings": [
+        "147",
+        0
+      ]
+    },
+    "class_type": "ADE_AnimateDiffLoaderWithContext"
+  },
+  "145": {
+    "inputs": {
+      "context_length": 16,
+      "context_stride": 2,
+      "context_overlap": 4,
+      "context_schedule": "uniform",
+      "closed_loop": false
+    },
+    "class_type": "ADE_AnimateDiffUniformContextOptions"
+  },
+  "147": {
+    "inputs": {
+      "motion_pe_stretch": 0,
+      "min_motion_scale": 1,
+      "max_motion_scale": 1
+    },
+    "class_type": "ADE_AnimateDiffModelSettingsSimple"
+  },
+  "148": {
+    "inputs": {
+      "frame_rate": 8,
+      "loop_count": 0,
+      "filename_prefix": "AnimateDiff",
+      "format": "image/gif",
+      "pingpong": false,
+      "save_image": true,
+      "crf": 20,
+      "videopreview": {
+        "hidden": false,
+        "paused": false
+      },
+      "images": [
+        "10",
+        0
+      ]
+    },
+    "class_type": "VHS_VideoCombine"
   }
 }
