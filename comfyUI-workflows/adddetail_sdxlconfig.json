@@ -1,0 +1,142 @@
+{
+  "4": {
+    "inputs": {
+      "ckpt_name": "xl/dreamshaperXL10_alpha2Xl10.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple"
+  },
+  "7": {
+    "inputs": {
+      "text": "text, watermark",
+      "clip": [
+        "11",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "9": {
+    "inputs": {
+      "filename_prefix": "final_output",
+      "images": [
+        "31",
+        0
+      ]
+    },
+    "class_type": "SaveImage"
+  },
+  "11": {
+    "inputs": {
+      "lora_01": "None",
+      "strength_01": 1,
+      "lora_02": "None",
+      "strength_02": 1,
+      "lora_03": "None",
+      "strength_03": 1,
+      "lora_04": "xl/add-detail-xl.safetensors",
+      "strength_04": 1,
+      "model": [
+        "4",
+        0
+      ],
+      "clip": [
+        "4",
+        1
+      ]
+    },
+    "class_type": "Lora Loader Stack (rgthree)"
+  },
+  "12": {
+    "inputs": {
+      "seed": 99308035530011
+    },
+    "class_type": "Seed (rgthree)"
+  },
+  "13": {
+    "inputs": {
+      "image": "example.png",
+      "choose file to upload": "image"
+    },
+    "class_type": "LoadImage"
+  },
+  "17": {
+    "inputs": {
+      "width": 4096,
+      "height": 4096,
+      "crop_w": 0,
+      "crop_h": 0,
+      "target_width": 4096,
+      "target_height": 4096,
+      "text_g": [
+        "21",
+        0
+      ],
+      "text_l": [
+        "23",
+        0
+      ],
+      "clip": [
+        "11",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncodeSDXL"
+  },
+  "21": {
+    "inputs": {
+      "prompt": "a dog"
+    },
+    "class_type": "CR Prompt Text"
+  },
+  "23": {
+    "inputs": {
+      "prompt": "a dog"
+    },
+    "class_type": "CR Prompt Text"
+  },
+  "31": {
+    "inputs": {
+      "seed": [
+        "12",
+        0
+      ],
+      "steps": 15,
+      "cfg": 7,
+      "sampler_name": "dpmpp_2s_ancestral",
+      "scheduler": "karras",
+      "denoise": 0.3,
+      "mode_type": "Linear",
+      "tile_width": 1024,
+      "tile_height": 1024,
+      "mask_blur": 8,
+      "tile_padding": 32,
+      "seam_fix_mode": "None",
+      "seam_fix_denoise": 1,
+      "seam_fix_width": 64,
+      "seam_fix_mask_blur": 8,
+      "seam_fix_padding": 16,
+      "force_uniform_tiles": "enable",
+      "upscaled_image": [
+        "13",
+        0
+      ],
+      "model": [
+        "11",
+        0
+      ],
+      "positive": [
+        "17",
+        0
+      ],
+      "negative": [
+        "7",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
+    },
+    "class_type": "UltimateSDUpscaleNoUpscale"
+  }
+}

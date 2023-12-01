@@ -261,7 +261,7 @@ class AddDetailButtons(discord.ui.View):
     async def add_detail(self, interaction, button):
         # do img2img
         if self.is_sdxl:
-            sdxl_config = "LOCAL_SDXL_IMG2IMG_CONFIG"
+            sdxl_config = "LOCAL_SDXL_ADD_DETAIL_CONFIG"
         else:
             sdxl_config = "LOCAL_IMG2IMG"
 
@@ -269,7 +269,7 @@ class AddDetailButtons(discord.ui.View):
 
         seed = random.randint(0, 999999999999999)
 
-        images = await generate_alternatives(self.images, self.prompt, self.negative_prompt, self.model, self.lora_list, self.lora_strengths, sdxl_config, 0.5, seed)
+        images = await generate_alternatives(self.images, self.prompt, self.negative_prompt, self.model, self.lora_list, self.lora_strengths, sdxl_config, 0.3, seed)
         collage_path = create_collage(images)
         final_message = f"{interaction.user.mention} here is your image with more detail"
 
@@ -283,7 +283,7 @@ class AddDetailButtons(discord.ui.View):
 @app_commands.describe(lora_strength='Strength of LoRA')
 @app_commands.describe(enhance='Enhance the image using a language model')
 @app_commands.describe(aspect_ratio='Aspect ratio of the generated image')
-@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]][0:25],
+@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0] if "xl" not in m.lower()][0:25],
                       lora=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" not in l.lower()][0:25],
                       lora2=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" not in l.lower()][0:25],
                       lora3=[app_commands.Choice(name=l, value=l) for l in loras[0] if "xl" not in l.lower()][0:25],
