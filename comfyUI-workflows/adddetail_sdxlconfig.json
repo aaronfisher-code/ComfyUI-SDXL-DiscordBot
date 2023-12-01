@@ -19,7 +19,7 @@
     "inputs": {
       "filename_prefix": "final_output",
       "images": [
-        "31",
+        "33",
         0
       ]
     },
@@ -48,7 +48,7 @@
   },
   "12": {
     "inputs": {
-      "seed": 99308035530011
+      "seed": 611553317310193
     },
     "class_type": "Seed (rgthree)"
   },
@@ -94,30 +94,42 @@
     },
     "class_type": "CR Prompt Text"
   },
-  "31": {
+  "32": {
     "inputs": {
+      "upscale_method": "lanczos",
+      "scale_by": 0.5,
+      "image": [
+        "13",
+        0
+      ]
+    },
+    "class_type": "ImageScaleBy"
+  },
+  "33": {
+    "inputs": {
+      "upscale_by": 2,
       "seed": [
         "12",
         0
       ],
       "steps": 15,
-      "cfg": 7,
-      "sampler_name": "dpmpp_2s_ancestral",
+      "cfg": 8,
+      "sampler_name": "dpmpp_2m_sde",
       "scheduler": "karras",
-      "denoise": 0.3,
+      "denoise": 0.45,
       "mode_type": "Linear",
       "tile_width": 1024,
       "tile_height": 1024,
       "mask_blur": 8,
       "tile_padding": 32,
-      "seam_fix_mode": "None",
-      "seam_fix_denoise": 1,
+      "seam_fix_mode": "Half Tile",
+      "seam_fix_denoise": 0.05,
       "seam_fix_width": 64,
       "seam_fix_mask_blur": 8,
       "seam_fix_padding": 16,
       "force_uniform_tiles": "enable",
-      "upscaled_image": [
-        "13",
+      "image": [
+        "32",
         0
       ],
       "model": [
@@ -135,8 +147,18 @@
       "vae": [
         "4",
         2
+      ],
+      "upscale_model": [
+        "34",
+        0
       ]
     },
-    "class_type": "UltimateSDUpscaleNoUpscale"
+    "class_type": "UltimateSDUpscale"
+  },
+  "34": {
+    "inputs": {
+      "model_name": "ESRGAN_4x.pth"
+    },
+    "class_type": "Upscale Model Loader"
   }
 }
