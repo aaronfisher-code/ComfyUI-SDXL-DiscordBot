@@ -162,7 +162,7 @@
     "inputs": {
       "frame_rate": 8,
       "loop_count": 0,
-      "filename_prefix": "AnimateDiff",
+      "filename_prefix": "final_output",
       "format": "image/gif",
       "pingpong": false,
       "save_image": true,
