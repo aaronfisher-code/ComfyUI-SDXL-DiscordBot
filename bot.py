@@ -269,7 +269,7 @@ class AddDetailButtons(discord.ui.View):
 
         seed = random.randint(0, 999999999999999)
 
-        images = await generate_alternatives(self.images, self.prompt, self.negative_prompt, self.model, self.lora_list, self.lora_strengths, sdxl_config, 0.3, seed)
+        images = await generate_alternatives(self.images, self.prompt, self.negative_prompt, self.model, self.lora_list, self.lora_strengths, sdxl_config, 0.45, seed)
         collage_path = create_collage(images)
         final_message = f"{interaction.user.mention} here is your image with more detail"
 
