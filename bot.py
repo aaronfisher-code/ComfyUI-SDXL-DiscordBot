@@ -332,8 +332,8 @@ async def slash_command(interaction: discord.Interaction, prompt: str, negative_
 @app_commands.describe(model='Model checkpoint to use')
 @app_commands.describe(lora='LoRA to apply')
 @app_commands.describe(lora_strength='Strength of LoRA')
-@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0]][0:25],
-                      lora=[app_commands.Choice(name=l, value=l) for l in loras[0]][0:25])
+@app_commands.choices(model=[app_commands.Choice(name=m, value=m) for m in models[0] if "xl" not in m.lower()][0:25],
+                      lora=[app_commands.Choice(name=l, value=l) for l in loras[0]if "xl" not in l.lower()][0:25])
 async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, model: str = None, lora: Choice[str] = None, lora_strength: float = 1.0, lora2: Choice[str] = None, lora_strength2: float = 1.0, lora3: Choice[str] = None, lora_strength3: float = 1.0, seed: int = None):
     if should_filter(prompt, negative_prompt):
         print(f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {prompt}, Negative Prompt: {negative_prompt}")
