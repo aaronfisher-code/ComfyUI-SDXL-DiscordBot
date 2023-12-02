@@ -1,6 +1,6 @@
 {
-  "last_node_id": 151,
-  "last_link_id": 246,
+  "last_node_id": 148,
+  "last_link_id": 241,
   "nodes": [
     {
       "id": 6,
@@ -14,7 +14,7 @@
         "1": 78.14339447021484
       },
       "flags": {},
-      "order": 15,
+      "order": 13,
       "mode": 0,
       "inputs": [
         {
@@ -44,6 +44,47 @@
       "bgcolor": "#533"
     },
     {
+      "id": 3,
+      "type": "CLIPTextEncode",
+      "pos": [
+        710,
+        -830
+      ],
+      "size": {
+        "0": 377.7811279296875,
+        "1": 124.52955627441406
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 181
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            183
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "a dog"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
       "id": 104,
       "type": "Reroute",
       "pos": [
@@ -55,7 +96,7 @@
         26
       ],
       "flags": {},
-      "order": 13,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
@@ -92,7 +133,7 @@
         26
       ],
       "flags": {},
-      "order": 17,
+      "order": 15,
       "mode": 0,
       "inputs": [
         {
@@ -128,7 +169,7 @@
         26
       ],
       "flags": {},
-      "order": 16,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
@@ -189,248 +230,18 @@
       }
     },
     {
-      "id": 53,
-      "type": "Reroute",
-      "pos": [
-        1209,
-        -229
-      ],
-      "size": [
-        75,
-        26
-      ],
-      "flags": {},
-      "order": 12,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "",
-          "type": "*",
-          "link": 238
-        }
-      ],
-      "outputs": [
-        {
-          "name": "",
-          "type": "MODEL",
-          "links": [
-            239
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "showOutputText": false,
-        "horizontal": false
-      }
-    },
-    {
-      "id": 10,
-      "type": "VAEDecode",
-      "pos": [
-        1801.0124248671877,
-        32.67178574609394
-      ],
-      "size": {
-        "0": 210,
-        "1": 46
-      },
-      "flags": {},
-      "order": 19,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "samples",
-          "type": "LATENT",
-          "link": 9
-        },
-        {
-          "name": "vae",
-          "type": "VAE",
-          "link": 104
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            241
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VAEDecode"
-      }
-    },
-    {
-      "id": 148,
-      "type": "VHS_VideoCombine",
-      "pos": [
-        2074,
-        -480
-      ],
-      "size": [
-        315,
-        491
-      ],
-      "flags": {},
-      "order": 20,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 241
-        }
-      ],
-      "outputs": [],
-      "properties": {
-        "Node name for S&R": "VHS_VideoCombine"
-      },
-      "widgets_values": {
-        "frame_rate": 8,
-        "loop_count": 0,
-        "filename_prefix": "final_output",
-        "format": "image/gif",
-        "pingpong": false,
-        "save_image": true,
-        "crf": 20,
-        "videopreview": {
-          "hidden": false,
-          "paused": false,
-          "params": {
-            "filename": "final_output_53767.gif",
-            "subfolder": "",
-            "type": "output",
-            "format": "image/gif"
-          }
-        }
-      }
-    },
-    {
-      "id": 3,
-      "type": "CLIPTextEncode",
-      "pos": [
-        710,
-        -830
-      ],
-      "size": {
-        "0": 377.7811279296875,
-        "1": 124.52955627441406
-      },
-      "flags": {},
-      "order": 14,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 181
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            183
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CLIPTextEncode"
-      },
-      "widgets_values": [
-        "a dog"
-      ],
-      "color": "#232",
-      "bgcolor": "#353"
-    },
-    {
-      "id": 28,
-      "type": "ADE_EmptyLatentImageLarge",
-      "pos": [
-        727,
-        -219
-      ],
-      "size": {
-        "0": 315,
-        "1": 106
-      },
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            240
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ADE_EmptyLatentImageLarge"
-      },
-      "widgets_values": [
-        512,
-        512,
-        32
-      ]
-    },
-    {
-      "id": 2,
-      "type": "VAELoader",
-      "pos": [
-        -71,
-        134
-      ],
-      "size": {
-        "0": 385.8948669433594,
-        "1": 58
-      },
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": [
-            102
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VAELoader"
-      },
-      "widgets_values": [
-        "vae-ft-mse-840000-ema-pruned.safetensors"
-      ]
-    },
-    {
       "id": 4,
       "type": "CLIPSetLastLayer",
       "pos": [
-        12,
-        25
+        383.85703265674994,
+        16.219761554882773
       ],
       "size": {
         "0": 315,
         "1": 58
       },
       "flags": {},
-      "order": 11,
+      "order": 9,
       "mode": 0,
       "inputs": [
         {
@@ -458,81 +269,57 @@
       ]
     },
     {
-      "id": 151,
-      "type": "LoraLoader",
+      "id": 2,
+      "type": "VAELoader",
       "pos": [
-        -333,
-        -200
+        313.8570326567498,
+        138.21976155488264
       ],
       "size": {
-        "0": 315,
-        "1": 126
+        "0": 385.8948669433594,
+        "1": 58
       },
       "flags": {},
-      "order": 7,
+      "order": 0,
       "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 242
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 245,
-          "slot_index": 1
-        }
-      ],
       "outputs": [
         {
-          "name": "MODEL",
-          "type": "MODEL",
+          "name": "VAE",
+          "type": "VAE",
           "links": [
-            243
+            102
           ],
           "shape": 3,
           "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            246
-          ],
-          "shape": 3,
-          "slot_index": 1
         }
       ],
       "properties": {
-        "Node name for S&R": "LoraLoader"
+        "Node name for S&R": "VAELoader"
       },
       "widgets_values": [
-        "LCM_LoRA_Weights_SD15.safetensors",
-        1,
-        1
+        "vae-ft-mse-840000-ema-pruned.safetensors"
       ]
     },
     {
       "id": 142,
       "type": "CheckpointLoaderSimple",
       "pos": [
-        -768,
-        -194
+        11,
+        -139
       ],
       "size": {
         "0": 315,
         "1": 98
       },
       "flags": {},
-      "order": 2,
+      "order": 1,
       "mode": 0,
       "outputs": [
         {
           "name": "MODEL",
           "type": "MODEL",
           "links": [
-            242
+            229
           ],
           "shape": 3,
           "slot_index": 0
@@ -541,7 +328,7 @@
           "name": "CLIP",
           "type": "CLIP",
           "links": [
-            245
+            230
           ],
           "shape": 3
         },
@@ -560,24 +347,30 @@
       ]
     },
     {
-      "id": 150,
-      "type": "ModelSamplingDiscrete",
+      "id": 140,
+      "type": "Lora Loader Stack (rgthree)",
       "pos": [
-        32,
-        -170
+        398,
+        -302
       ],
       "size": {
         "0": 315,
-        "1": 82
+        "1": 246
       },
       "flags": {},
-      "order": 8,
+      "order": 7,
       "mode": 0,
       "inputs": [
         {
           "name": "model",
           "type": "MODEL",
-          "link": 243
+          "link": 229
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 230,
+          "slot_index": 1
         }
       ],
       "outputs": [
@@ -585,33 +378,116 @@
           "name": "MODEL",
           "type": "MODEL",
           "links": [
-            244
+            232
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            225
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Lora Loader Stack (rgthree)"
+      },
+      "widgets_values": [
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1
+      ]
+    },
+    {
+      "id": 7,
+      "type": "KSampler",
+      "pos": [
+        1705,
+        -478
+      ],
+      "size": {
+        "0": 315,
+        "1": 446
+      },
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 239
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 167
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 110
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 240
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 207,
+          "widget": {
+            "name": "seed"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            9
           ],
           "shape": 3,
           "slot_index": 0
         }
       ],
       "properties": {
-        "Node name for S&R": "ModelSamplingDiscrete"
+        "Node name for S&R": "KSampler"
       },
       "widgets_values": [
-        "lcm",
-        false
+        876910326168369,
+        "fixed",
+        20,
+        8,
+        "euler_ancestral",
+        "normal",
+        1
       ]
     },
     {
       "id": 144,
       "type": "ADE_AnimateDiffLoaderWithContext",
       "pos": [
-        734,
-        -34
+        765,
+        1
       ],
       "size": {
         "0": 342.5999755859375,
         "1": 190
       },
       "flags": {},
-      "order": 10,
+      "order": 8,
       "mode": 0,
       "inputs": [
         {
@@ -659,11 +535,123 @@
       ]
     },
     {
+      "id": 53,
+      "type": "Reroute",
+      "pos": [
+        1209,
+        -229
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 238
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "MODEL",
+          "links": [
+            239
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 28,
+      "type": "ADE_EmptyLatentImageLarge",
+      "pos": [
+        745,
+        -172
+      ],
+      "size": {
+        "0": 315,
+        "1": 106
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            240
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ADE_EmptyLatentImageLarge"
+      },
+      "widgets_values": [
+        512,
+        512,
+        32
+      ]
+    },
+    {
+      "id": 10,
+      "type": "VAEDecode",
+      "pos": [
+        1801.0124248671877,
+        32.67178574609394
+      ],
+      "size": {
+        "0": 210,
+        "1": 46
+      },
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 9
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 104
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            241
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
       "id": 145,
       "type": "ADE_AnimateDiffUniformContextOptions",
       "pos": [
-        357,
-        271
+        758,
+        298
       ],
       "size": {
         "0": 315,
@@ -697,8 +685,8 @@
       "id": 147,
       "type": "ADE_AnimateDiffModelSettingsSimple",
       "pos": [
-        719,
-        300
+        740,
+        535
       ],
       "size": {
         "0": 344.3999938964844,
@@ -762,140 +750,50 @@
         "Node name for S&R": "Seed (rgthree)"
       },
       "widgets_values": [
-        205762577467947,
+        905034741803303,
         null,
         null,
         null
       ]
     },
     {
-      "id": 7,
-      "type": "KSampler",
+      "id": 148,
+      "type": "VHS_VideoCombine",
       "pos": [
-        1705,
-        -478
+        2074,
+        -480
       ],
       "size": {
         "0": 315,
-        "1": 446
+        "1": 202
       },
       "flags": {},
       "order": 18,
       "mode": 0,
       "inputs": [
         {
-          "name": "model",
-          "type": "MODEL",
-          "link": 239
-        },
-        {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "link": 167
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "link": 110
-        },
-        {
-          "name": "latent_image",
-          "type": "LATENT",
-          "link": 240
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": 207,
-          "widget": {
-            "name": "seed"
-          }
+          "name": "images",
+          "type": "IMAGE",
+          "link": 241
         }
       ],
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            9
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
+      "outputs": [],
       "properties": {
-        "Node name for S&R": "KSampler"
+        "Node name for S&R": "VHS_VideoCombine"
       },
-      "widgets_values": [
-        876910326168369,
-        "fixed",
-        6,
-        2.5,
-        "lcm",
-        "simple",
-        1
-      ]
-    },
-    {
-      "id": 140,
-      "type": "Lora Loader Stack (rgthree)",
-      "pos": [
-        378,
-        -108
-      ],
-      "size": {
-        "0": 315,
-        "1": 246
-      },
-      "flags": {},
-      "order": 9,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 244
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 246,
-          "slot_index": 1
+      "widgets_values": {
+        "frame_rate": 8,
+        "loop_count": 0,
+        "filename_prefix": "final_output",
+        "format": "image/gif",
+        "pingpong": false,
+        "save_image": true,
+        "crf": 20,
+        "videopreview": {
+          "hidden": false,
+          "paused": false
         }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            232
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            225
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Lora Loader Stack (rgthree)"
-      },
-      "widgets_values": [
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1
-      ]
+      }
     }
   ],
   "links": [
@@ -996,6 +894,22 @@
       "*"
     ],
     [
+      229,
+      142,
+      0,
+      140,
+      0,
+      "MODEL"
+    ],
+    [
+      230,
+      142,
+      1,
+      140,
+      1,
+      "CLIP"
+    ],
+    [
       232,
       140,
       0,
@@ -1050,56 +964,16 @@
       148,
       0,
       "IMAGE"
-    ],
-    [
-      242,
-      142,
-      0,
-      151,
-      0,
-      "MODEL"
-    ],
-    [
-      243,
-      151,
-      0,
-      150,
-      0,
-      "MODEL"
-    ],
-    [
-      244,
-      150,
-      0,
-      140,
-      0,
-      "MODEL"
-    ],
-    [
-      245,
-      142,
-      1,
-      151,
-      1,
-      "CLIP"
-    ],
-    [
-      246,
-      151,
-      1,
-      140,
-      1,
-      "CLIP"
     ]
   ],
   "groups": [
     {
       "title": "Model",
       "bounding": [
-        -829,
-        -287,
-        1961,
-        743
+        14,
+        -253,
+        1080,
+        495
       ],
       "color": "#3f789e",
       "font_size": 24
