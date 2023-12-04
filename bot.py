@@ -62,9 +62,11 @@ client = discord.Client(intents=intents)
 tree = discord.app_commands.CommandTree(client)
 
 if IMAGE_SOURCE == "LOCAL":
-    from imageGen import generate_images, upscale_image, generate_alternatives
+    from imageGen import generate_images, upscale_image, generate_alternatives, get_loras
 elif IMAGE_SOURCE == "API":
     from apiImageGen import generate_images, upscale_image, generate_alternatives
+
+loras = get_loras()
 
 # sync the slash command to your server
 @client.event
@@ -82,11 +84,13 @@ class ImageButton(discord.ui.Button):
 
 
 class Buttons(discord.ui.View):
-    def __init__(self, prompt, negative_prompt, images, *, timeout=180):
+    def __init__(self, prompt, negative_prompt, images, lora, lora_strength, *, timeout=180):
         super().__init__(timeout=timeout)
         self.prompt = prompt
         self.negative_prompt = negative_prompt
         self.images = images
+        self.lora = lora
+        self.lora_strength = lora_strength
 
         total_buttons = len(images) * 2 + 1  # For both alternative and upscale buttons + re-roll button
         if total_buttons > 25:  # Limit to 25 buttons
@@ -110,10 +114,10 @@ class Buttons(discord.ui.View):
     async def generate_alternatives_and_send(self, interaction, button):
         index = int(button.label[1:]) - 1  # Extract index from label
         await interaction.response.send_message("Creating some alternatives, this shouldn't take too long...")
-        images = await generate_alternatives(self.images[index], self.prompt, self.negative_prompt)
+        images = await generate_alternatives(self.images[index], self.prompt, self.negative_prompt, self.lora, self.lora_strength)
         collage_path = create_collage(images)
         final_message = f"{interaction.user.mention} here are your alternative images"
-        await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage.png'), view=Buttons(self.prompt, self.negative_prompt, images))
+        await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename='collage.png'), view=Buttons(self.prompt, self.negative_prompt, images, self.lora, self.lora_strength))
 
     async def upscale_and_send(self, interaction, button):
         index = int(button.label[1:]) - 1  # Extract index from label
@@ -135,21 +139,24 @@ class Buttons(discord.ui.View):
 
         # Construct the final message with user mention
         final_message = f"{interaction.user.mention} asked me to re-imagine \"{self.prompt}\", here is what I imagined for them."
-        await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view = Buttons(self.prompt,self.negative_prompt,images))
+        await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view = Buttons(self.prompt,self.negative_prompt,images, self.lora, self.lora_strength))
 
 @tree.command(name="imagine", description="Generate an image based on input text")
 @app_commands.describe(prompt='Prompt for the image being generated')
 @app_commands.describe(negative_prompt='Prompt for what you want to steer the AI away from')
-async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None):
+@app_commands.describe(lora='LoRA to apply')
+@app_commands.describe(lora_strength='How strong the LoRA affects the image. (default: 1.0)')
+@app_commands.choices(lora=[app_commands.Choice(name=l, value=l) for l in loras[0]][0:25])
+async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, lora: str = None, lora_strength: float = 1.0):
     # Send an initial message
     await interaction.response.send_message(f"{interaction.user.mention} asked me to imagine \"{prompt}\", this shouldn't take too long...")
 
     # Generate the image and get progress updates
-    images = await generate_images(prompt,negative_prompt)
+    images = await generate_images(prompt,negative_prompt, lora, lora_strength)
 
     # Construct the final message with user mention
     final_message = f"{interaction.user.mention} asked me to imagine \"{prompt}\", here is what I imagined for them."
-    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,images))
+    await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename='collage.png'), view=Buttons(prompt,negative_prompt,images,lora,lora_strength))
 
 # run the bot
 client.run(TOKEN)
