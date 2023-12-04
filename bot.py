@@ -229,7 +229,7 @@ class Buttons(discord.ui.View):
         upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
         upscaled_image.save(upscaled_image_path)
         final_message = f"{interaction.user.mention} here is your upscaled image"
-        buttons = AddDetailButtons(self.prompt, self.negative_prompt, self.model, self.lora_list, self.lora_strengths, self.enhance, upscaled_image, self.config, command=self.command)
+        buttons = AddDetailButtons(self.prompt, self.negative_prompt, self.model, self.lora_list, self.lora_strengths, self.enhance, upscaled_image, self.config, is_sdxl=self.is_sdxl)
         await interaction.channel.send(content=final_message, file=discord.File(fp=upscaled_image_path, filename='upscaled_image.png'), view=buttons)
 
     async def upscale_and_send_with_detail(self, interaction, button):
