@@ -104,7 +104,7 @@ class ImageGenerator:
             try:
                 message = json.loads(out)
                 if message["type"] == "execution_start":
-                    currently_Executing_Prompt = message["data"]["prompt_id"]
+                    currently_executing_Prompt = message["data"]["prompt_id"]
                 if message["type"] == "executing" and prompt_id == currently_executing_Prompt:
                     data = message["data"]
                     if data["node"] is None and data["prompt_id"] == prompt_id:
