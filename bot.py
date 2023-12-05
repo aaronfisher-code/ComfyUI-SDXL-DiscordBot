@@ -8,7 +8,7 @@ from datetime import datetime
 from math import ceil, sqrt
 import random
 
-from discord.app_commands import Choice
+from discord.app_commands import Choice, Range
 
 
 def setup_config():
@@ -361,8 +361,8 @@ async def slash_command(
     lora_strength3: float = 1.0,
     enhance: bool = False,
     aspect_ratio: str = None,
-    num_steps: int = None,
-    cfg_scale: float = None,
+    num_steps: Range[int, 1, 30] = None,
+    cfg_scale: Range[float, 1.0, 10.0] = None,
     seed: int = None
 ):
     if should_filter(prompt, negative_prompt):
@@ -384,12 +384,6 @@ async def slash_command(
 
     if seed is None:
         seed = random.randint(0, 999999999999999)
-
-    if num_steps is not None:
-        num_steps = max(1, min(num_steps, 30))
-
-    if cfg_scale is not None:
-        cfg_scale = max(1.0, min(cfg_scale, 10.0))
 
     # Generate the image and get progress updates
     images, enhanced_prompt = await generate_images(
@@ -430,8 +424,8 @@ async def slash_command(
     lora_strength2: float = 1.0,
     lora3: Choice[str] = None,
     lora_strength3: float = 1.0,
-    num_steps: int = None,
-    cfg_scale: float = None,
+    num_steps: Range[int, 1, 20] = None,
+    cfg_scale: Range[float, 1.0, 10.0] = None,
     seed: int = None,
 ):
     if should_filter(prompt, negative_prompt):
@@ -448,12 +442,6 @@ async def slash_command(
 
     if seed is None:
         seed = random.randint(0, 999999999999999)
-
-    if num_steps is not None:
-        num_steps = max(1, min(num_steps, 20))
-
-    if cfg_scale is not None:
-        cfg_scale = max(1.0, min(cfg_scale, 10.0))
 
     # Generate the video and get progress updates
     video, enhanced_prompt = await generate_images(
@@ -501,8 +489,8 @@ async def slash_command(
     lora3: Choice[str] = None,
     lora_strength3: float = 1.0,
     aspect_ratio: str = None,
-    num_steps: int = None,
-    cfg_scale: float = None,
+    num_steps: Range[int, 1, 20] = None,
+    cfg_scale: Range[float, 1.0, 10.0] = None,
     seed: int = None,
 ):
     if should_filter(prompt, negative_prompt):
@@ -519,12 +507,6 @@ async def slash_command(
 
     if seed is None:
         seed = random.randint(0, 999999999999999)
-
-    if num_steps is not None:
-        num_steps = max(1, min(num_steps, 20))
-
-    if cfg_scale is not None:
-        cfg_scale = max(1.0, min(cfg_scale, 10.0))
 
     config = "LOCAL_SDXL_TXT2IMG_CONFIG"
 
