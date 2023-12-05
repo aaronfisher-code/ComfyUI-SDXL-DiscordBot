@@ -1,19 +1,44 @@
-import websockets
-import uuid
-import json
-import urllib.request
-import urllib.parse
-from PIL import Image
-from io import BytesIO
 import configparser
-import os
-import tempfile
+import json
 import requests
+import tempfile
+import urllib.parse
+import urllib.request
+import uuid
+from dataclasses import dataclass
+from io import BytesIO
+from typing import Optional
+
+import websockets
+from PIL import Image
+
+
+@dataclass
+class PromptParams:
+    workflow_name: str
+
+    prompt: str
+    negative_prompt: Optional[str] = None
+
+    model: Optional[str] = None
+    loras: Optional[list[str]] = None
+    lora_strengths: Optional[list[float]] = None
+
+    aspect_ratio: Optional[str] = None
+    num_steps: Optional[int] = None
+    cfg_scale: Optional[float] = None
+
+    denoise_strength: Optional[float] = None
+
+    seed: Optional[int] = None
+    filename: str = None
+
 
 # Read the configuration
 config = configparser.ConfigParser()
 config.read('config.properties')
 server_address = config['LOCAL']['SERVER_ADDRESS']
+
 
 def queue_prompt(prompt, client_id):
     p = {"prompt": prompt, "client_id": client_id}
@@ -21,22 +46,23 @@ def queue_prompt(prompt, client_id):
     req =  urllib.request.Request("http://{}/prompt".format(server_address), data=data)
     return json.loads(urllib.request.urlopen(req).read())
 
+
 def get_image(filename, subfolder, folder_type):
     data = {"filename": filename, "subfolder": subfolder, "type": folder_type}
     url_values = urllib.parse.urlencode(data)
     with urllib.request.urlopen("http://{}/view?{}".format(server_address, url_values)) as response:
         return response.read()
 
+
 def get_history(prompt_id):
     with urllib.request.urlopen("http://{}/history/{}".format(server_address, prompt_id)) as response:
         return json.loads(response.read())
-    
+
+
 def upload_image(filepath, subfolder=None, folder_type=None, overwrite=False):
     url = f"http://{server_address}/upload/image"
     files = {'image': open(filepath, 'rb')}
-    data = {
-        'overwrite': str(overwrite).lower()
-    }
+    data = {'overwrite': str(overwrite).lower()}
     if subfolder:
         data['subfolder'] = subfolder
     if folder_type:
@@ -44,15 +70,18 @@ def upload_image(filepath, subfolder=None, folder_type=None, overwrite=False):
     response = requests.post(url, files=files, data=data)
     return response.json()
 
+
 def get_models():
     with urllib.request.urlopen("http://{}/object_info".format(server_address)) as response:
         object_info = json.loads(response.read())
         return object_info['CheckpointLoaderSimple']['input']['required']['ckpt_name']
 
+
 def get_loras():
     with urllib.request.urlopen("http://{}/object_info".format(server_address)) as response:
         object_info = json.loads(response.read())
         return object_info['LoraLoader']['input']['required']['lora_name']
+
 
 class ImageGenerator:
     def __init__(self):
@@ -87,7 +116,7 @@ class ImageGenerator:
 
         for node_id in history['outputs']:
             node_output = history['outputs'][node_id]
-            if("text" in node_output):
+            if "text" in node_output:
                 for prompt in node_output["text"]:
                     full_prompt = prompt
             if 'images' in node_output:
@@ -112,58 +141,51 @@ class ImageGenerator:
         if self.ws:
             await self.ws.close()
 
-def setup_workflow(
-    workflow,
-    prompt: str,
-    negative_prompt: str,
-    model: str,
-    loras: list[str],
-    lora_strengths : list[float],
-    config_name: str,
-    aspect_ratio: str = None,
-    num_steps: int = None,
-    cfg_scale: float = None,
-    denoise_strength: float = None,
-    filename: str = None,
-    seed : int = None,
-):
-    prompt_nodes = config.get(config_name, 'PROMPT_NODES').split(',')
-    neg_prompt_nodes = config.get(config_name, 'NEG_PROMPT_NODES').split(',')
-    rand_seed_nodes = config.get(config_name, 'RAND_SEED_NODES').split(',')
-    model_node = config.get(config_name, 'MODEL_NODE').split(',')
-    lora_node = config.get(config_name, 'LORA_NODE').split(',')
+
+def setup_workflow(workflow, params: PromptParams):
+    prompt_nodes = config.get(params.workflow_name, 'PROMPT_NODES').split(',')
+    neg_prompt_nodes = config.get(params.workflow_name, 'NEG_PROMPT_NODES').split(',')
+    rand_seed_nodes = config.get(params.workflow_name, 'RAND_SEED_NODES').split(',')
+    model_node = config.get(params.workflow_name, 'MODEL_NODE').split(',')
+    lora_node = config.get(params.workflow_name, 'LORA_NODE').split(',')
     llm_model_node = None
 
-    if (config.has_option(config_name, 'FILE_INPUT_NODES')):
-        file_input_nodes = config.get(config_name, 'FILE_INPUT_NODES').split(',')
+    if config.has_option(params.workflow_name, 'FILE_INPUT_NODES'):
+        file_input_nodes = config.get(params.workflow_name, 'FILE_INPUT_NODES').split(',')
 
-    if(config.has_option(config_name, 'LLM_MODEL_NODE')):
-        llm_model_node = config.get(config_name, 'LLM_MODEL_NODE')
+    if config.has_option(params.workflow_name, 'LLM_MODEL_NODE'):
+        llm_model_node = config.get(params.workflow_name, 'LLM_MODEL_NODE')
 
     # Modify the prompt dictionary
-    if (prompt != None and prompt_nodes[0] != ''):
+    if params.prompt is not None and prompt_nodes[0] != "":
         for node in prompt_nodes:
-            if ("text" in workflow[node]["inputs"]):
-                workflow[node]["inputs"]["text"] = prompt
-            elif ("prompt" in workflow[node]["inputs"]):
-                workflow[node]["inputs"]["prompt"] = prompt
-    if (negative_prompt != None and neg_prompt_nodes[0] != ''):
+            if "text" in workflow[node]["inputs"]:
+                workflow[node]["inputs"]["text"] = params.prompt
+            elif "prompt" in workflow[node]["inputs"]:
+                workflow[node]["inputs"]["prompt"] = params.prompt
+
+    if params.negative_prompt is not None and neg_prompt_nodes[0] != "":
         for node in neg_prompt_nodes:
-            workflow[node]["inputs"]["text"] = negative_prompt + ", (children, child, kids, kid:1.3)"
-    if (filename != None):
+            workflow[node]["inputs"]["text"] = params.negative_prompt + ", (children, child, kids, kid:1.3)"
+
+    if params.filename is not None and config.has_option(params.workflow_name, 'FILE_INPUT_NODES'):
         for node in file_input_nodes:
-            workflow[node]["inputs"]["image"] = filename
-    if (rand_seed_nodes[0] != ''):
+            workflow[node]["inputs"]["image"] = params.filename
+
+    if rand_seed_nodes[0] != "":
         for node in rand_seed_nodes:
-            workflow[node]["inputs"]["seed"] = seed
-    if (model_node[0] != '' and model != None):
+            workflow[node]["inputs"]["seed"] = params.seed
+
+    if params.model is not None and model_node[0] != "":
         for node in model_node:
             if "ckpt_name" in workflow[node]["inputs"]:
-                workflow[node]["inputs"]["ckpt_name"] = model
+                workflow[node]["inputs"]["ckpt_name"] = params.model
             elif "base_ckpt_name" in workflow[node]["inputs"]:
-                workflow[node]["inputs"]["base_ckpt_name"] = model
-    if (lora_node[0] != '' and loras != None):
-        for i, lora in enumerate(loras):
+                workflow[node]["inputs"]["base_ckpt_name"] = params.model
+
+    if params.loras is not None and lora_node[0] != "":
+        lora_strengths = params.lora_strengths or [1.0] * len(params.loras)
+        for i, lora in enumerate(params.loras):
             if lora is None:
                 continue
             for node in lora_node:
@@ -175,132 +197,102 @@ def setup_workflow(
                 elif "lora_0" + str(i + 1) in workflow[node]["inputs"]:
                     workflow[node]["inputs"]["lora_0" + str(i + 1)] = lora
                     workflow[node]["inputs"]["strength_0" + str(i + 1)] = lora_strengths[i]
-    if (llm_model_node != None):
+
+    if llm_model_node is not None:
         workflow[llm_model_node]["inputs"]["model_dir"] = config["LOCAL"]["LLM_MODEL_LOCATION"]
-    if(aspect_ratio != None):
-        empty_image_node = config.get(config_name, 'EMPTY_IMAGE_NODE').split(',')
+
+    if params.aspect_ratio is not None:
+        empty_image_node = config.get(params.workflow_name, 'EMPTY_IMAGE_NODE').split(',')
         for node in empty_image_node:
             if ("dimensions" in workflow[node]["inputs"]):
-                workflow[node]["inputs"]["dimensions"] = aspect_ratio
+                workflow[node]["inputs"]["dimensions"] = params.aspect_ratio
             else:
-                workflow[node]["inputs"]["empty_latent_width"] = int(aspect_ratio.lstrip().split('x')[0])
-                workflow[node]["inputs"]["empty_latent_height"] = int(aspect_ratio.split('x')[1].lstrip().split(' ')[0])
+                w = int(params.aspect_ratio.lstrip().split('x')[0])
+                h = int(params.aspect_ratio.split('x')[1].lstrip().split(' ')[0])
+                workflow[node]["inputs"]["empty_latent_width"] = w
+                workflow[node]["inputs"]["empty_latent_height"] = h
 
     # maybe set sampler arguments
-    sampler_args_given = denoise_strength is not None or num_steps is not None or cfg_scale is not None
-    if sampler_args_given and config.has_option(config_name, 'DENOISE_NODE'):
-        denoise_node = config.get(config_name, 'DENOISE_NODE').split(',')
+    sampler_args_given = params.denoise_strength is not None or params.num_steps is not None or params.cfg_scale is not None
+    if sampler_args_given and config.has_option(params.workflow_name, 'DENOISE_NODE'):
+        denoise_node = config.get(params.workflow_name, 'DENOISE_NODE').split(',')
         for node in denoise_node:
             default_args = workflow[node]["inputs"]
-            steps = num_steps or default_args["steps"]
-            cfg = cfg_scale or default_args["cfg"]
+            steps = params.num_steps or default_args["steps"]
+            cfg = params.cfg_scale or default_args["cfg"]
             workflow[node]["inputs"]["steps"] = steps
             workflow[node]["inputs"]["cfg"] = cfg
             # workaround for samplers that don't have a denoise input
             if "denoise" in default_args:
-                denoise = denoise_strength or default_args["denoise"]
+                denoise = params.denoise_strength or default_args["denoise"]
                 workflow[node]["inputs"]["denoise"] = denoise
 
     # limit batch size to 1 if denoise strength is given ()
-    if denoise_strength is not None and config.has_option(config_name, 'LATENT_IMAGE_NODE'):
-        latent_image_node = config.get(config_name, 'LATENT_IMAGE_NODE').split(',')
+    if params.denoise_strength is not None and config.has_option(params.workflow_name, 'LATENT_IMAGE_NODE'):
+        latent_image_node = config.get(params.workflow_name, 'LATENT_IMAGE_NODE').split(',')
         for node in latent_image_node:
             workflow[node]["inputs"]["amount"] = 1
 
-    print(workflow)
-
     return workflow
 
-async def generate_images(
-    prompt: str,
-    negative_prompt: str,
-    model: str = None,
-    loras: list[str] = None,
-    lora_strengths : list[float] = 1.0,
-    aspect_ratio: str = None,
-    num_steps: int = None,
-    cfg_scale: float = None,
-    seed: int = None,
-    config_name: str = 'LOCAL_TEXT2IMG',
-):
-    with open(config[config_name]['CONFIG'], 'r') as file:
+
+async def generate_images(params: PromptParams):
+    print("queuing workflow:", params)
+    with open(config[params.workflow_name]['CONFIG'], 'r') as file:
         workflow = json.load(file)
 
     generator = ImageGenerator()
     await generator.connect()
 
-    setup_workflow(
-        workflow, prompt, negative_prompt, model, loras, lora_strengths, config_name, aspect_ratio, num_steps, cfg_scale, seed=seed
-    )
+    setup_workflow(workflow, params)
 
     images, enhanced_prompt = await generator.get_images(workflow)
     await generator.close()
 
     return images, enhanced_prompt
 
-async def generate_alternatives(
-    image: Image.Image,
-    prompt: str,
-    negative_prompt: str,
-    model: str = None,
-    loras: list[str] = None,
-    lora_strengths : list[float] = 1.0,
-    config_name: str = "LOCAL_IMG2IMG",
-    num_steps: int = None,
-    cfg_scale: float = None,
-    denoise_strength: float = None,
-    seed: int = None,
-):
+
+async def generate_alternatives(params: PromptParams, image: Image.Image):
+    print("queuing workflow:", params)
     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
-      image.save(temp_file, format="PNG")
-      temp_filepath = temp_file.name
+        image.save(temp_file, format="PNG")
+        temp_filepath = temp_file.name
 
     # Upload the temporary file using the upload_image method
     response_data = upload_image(temp_filepath)
     filename = response_data['name']
+    params.filename = filename
 
-    with open(config[config_name]['CONFIG'], 'r') as file:
+    with open(config[params.workflow_name]['CONFIG'], 'r') as file:
         workflow = json.load(file)
       
     generator = ImageGenerator()
     await generator.connect()
 
-    setup_workflow(
-        workflow,
-        prompt,
-        negative_prompt,
-        model,
-        loras,
-        lora_strengths,
-        config_name,
-        None,
-        num_steps,
-        cfg_scale,
-        denoise_strength,
-        filename,
-        seed,
-    )
+    setup_workflow(workflow, params)
 
     images, enhanced_prompt = await generator.get_images(workflow)
     await generator.close()
 
     return images
 
-async def upscale_image(image: Image.Image, config_name: str = "LOCAL_UPSCALE"):
+
+async def upscale_image(image: Image.Image, workflow_name: str = "LOCAL_UPSCALE"):
+    print("queuing workflow:", workflow_name)
     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
-      image.save(temp_file, format="PNG")
-      temp_filepath = temp_file.name
+        image.save(temp_file, format="PNG")
+        temp_filepath = temp_file.name
 
     # Upload the temporary file using the upload_image method
     response_data = upload_image(temp_filepath)
     filename = response_data['name']
-    with open(config[config_name]['CONFIG'], 'r') as file:
-      workflow = json.load(file)
+    with open(config[workflow_name]['CONFIG'], 'r') as file:
+        workflow = json.load(file)
 
     generator = ImageGenerator()
     await generator.connect()
 
-    file_input_nodes = config.get(config_name, 'FILE_INPUT_NODES').split(',')
+    file_input_nodes = config.get(workflow_name, 'FILE_INPUT_NODES').split(',')
 
     for node in file_input_nodes:
         workflow[node]["inputs"]["image"] = filename
