@@ -194,10 +194,12 @@ def setup_workflow(
             default_args = workflow[node]["inputs"]
             steps = num_steps or default_args["steps"]
             cfg = cfg_scale or default_args["cfg"]
-            denoise = denoise_strength or default_args["denoise"]
             workflow[node]["inputs"]["steps"] = steps
             workflow[node]["inputs"]["cfg"] = cfg
-            workflow[node]["inputs"]["denoise"] = denoise
+            # workaround for samplers that don't have a denoise input
+            if "denoise" in default_args:
+                denoise = denoise_strength or default_args["denoise"]
+                workflow[node]["inputs"]["denoise"] = denoise
 
     # limit batch size to 1 if denoise strength is given ()
     if denoise_strength is not None and config.has_option(config_name, 'LATENT_IMAGE_NODE'):
