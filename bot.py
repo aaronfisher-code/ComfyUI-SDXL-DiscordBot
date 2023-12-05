@@ -119,6 +119,7 @@ if IMAGE_SOURCE == "LOCAL":
         generate_images,
         get_models,
         get_loras,
+        get_samplers,
         upscale_image,
     )
 elif IMAGE_SOURCE == "API":
@@ -127,6 +128,7 @@ elif IMAGE_SOURCE == "API":
 
 models = get_models()
 loras = get_loras()
+samplers = get_samplers()
 
 
 SD15_WORKFLOW = "LOCAL_TXT2IMG"
@@ -156,6 +158,7 @@ SD15_MODEL_CHOICES = [Choice(name=m, value=m) for m in models[0] if "xl" not in 
 SD15_LORA_CHOICES = [Choice(name=l, value=l) for l in loras[0] if "xl" not in l.lower()][:25]
 SDXL_MODEL_CHOICES = [Choice(name=m, value=m) for m in models[0] if "xl" in m.lower() and "refiner" not in m.lower()][:25]
 SDXL_LORA_CHOICES = [Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][:25]
+SAMPLER_CHOICES = [Choice(name=s, value=s) for s in samplers[0]]
 
 
 # sync the slash command to your server
@@ -284,7 +287,12 @@ class Buttons(discord.ui.View):
         await interaction.message.edit(view=self)
 
         params = deepcopy(self.params)
-        params.workflow_name = SDXL_WORKFLOW if self.is_sdxl else SD15_WORKFLOW
+        if self.is_sdxl:
+            params.workflow_name = SDXL_WORKFLOW
+        elif self.is_video:
+            params.workflow_name = VIDEO_WORKFLOW
+        else:
+            params.workflow_name = SD15_WORKFLOW
         params.filename = None
         params.seed = random.randint(0, 999999999999999)
 
@@ -316,6 +324,23 @@ class Buttons(discord.ui.View):
             return
 
         await interaction.message.delete()
+
+    @discord.ui.button(label="Info", style=discord.ButtonStyle.blurple, emoji="ℹ️", row=0)
+    async def image_info(self, interaction, button):
+        params = self.params
+        info_str = (
+            f"prompt: {params.prompt}\n"
+            f"negative prompt: {params.negative_prompt}\n"
+            f"model: {params.model or 'default'}\n"
+            f"loras: {params.loras}\n"
+            f"lora strengths: {params.lora_strengths}\n"
+            f"aspect ratio: {params.aspect_ratio or 'default'}\n"
+            f"sampler: {params.sampler or 'default'}\n"
+            f"num steps: {params.num_steps or 'default'}\n"
+            f"cfg scale: {params.cfg_scale or 'default'}\n"
+            f"seed: {params.seed}\n"
+        )
+        await interaction.response.send_message(info_str, ephemeral=True)
 
 
 class AddDetailButtons(discord.ui.View):
@@ -350,6 +375,7 @@ class AddDetailButtons(discord.ui.View):
     model="Model checkpoint to use",
     lora="LoRA to apply",
     lora_strength="Strength of LoRA",
+    sampler="Sampling algorithm to use",
     num_steps="Number of sampling steps; range [1, 30]",
     cfg_scale="Degree to which AI should follow prompt; range [1.0, 10.0]",
     # enhance='Enhance the image using a language model',
@@ -361,6 +387,7 @@ class AddDetailButtons(discord.ui.View):
     lora2=SD15_LORA_CHOICES,
     lora3=SD15_LORA_CHOICES,
     aspect_ratio=ASPECT_RATIO_CHOICES,
+    sampler=SAMPLER_CHOICES,
 )
 async def slash_command(
     interaction: discord.Interaction,
@@ -375,6 +402,7 @@ async def slash_command(
     lora_strength3: float = 1.0,
     # enhance: bool = False,
     aspect_ratio: str = None,
+    sampler: str = None,
     num_steps: Range[int, 1, 30] = None,
     cfg_scale: Range[float, 1.0, 10.0] = None,
     seed: int = None
@@ -415,6 +443,7 @@ async def slash_command(
         lora_list,
         lora_strengths,
         aspect_ratio,
+        sampler,
         num_steps,
         cfg_scale,
         seed=seed,
@@ -447,10 +476,11 @@ async def slash_command(
     model="Model checkpoint to use",
     lora="LoRA to apply",
     lora_strength="Strength of LoRA",
+    sampler="Sampling algorithm to use",
     num_steps="Number of sampling steps; range [1, 20]",
     cfg_scale="Degree to which AI should follow prompt; range [1.0, 10.0]",
 )
-@app_commands.choices(model=SD15_MODEL_CHOICES, lora=SD15_LORA_CHOICES)
+@app_commands.choices(model=SD15_MODEL_CHOICES, lora=SD15_LORA_CHOICES, sampler=SAMPLER_CHOICES)
 async def slash_command(
     interaction: discord.Interaction,
     prompt: str,
@@ -462,6 +492,7 @@ async def slash_command(
     lora_strength2: float = 1.0,
     lora3: Choice[str] = None,
     lora_strength3: float = 1.0,
+    sampler: str = None,
     num_steps: Range[int, 1, 20] = None,
     cfg_scale: Range[float, 1.0, 10.0] = None,
     seed: int = None,
@@ -500,6 +531,7 @@ async def slash_command(
         model,
         lora_list,
         lora_strengths,
+        sampler=sampler,
         num_steps=num_steps,
         cfg_scale=cfg_scale,
         seed=seed,
@@ -531,6 +563,7 @@ async def slash_command(
     lora="LoRA to apply",
     lora_strength="Strength of LoRA",
     aspect_ratio="Aspect ratio of the generated image",
+    sampler="Sampling algorithm to use",
     num_steps="Number of sampling steps; range [1, 20]",
     cfg_scale="Degree to which AI should follow prompt; range [1.0, 10.0]",
 )
@@ -540,6 +573,7 @@ async def slash_command(
     lora2=SDXL_LORA_CHOICES,
     lora3=SDXL_LORA_CHOICES,
     aspect_ratio=ASPECT_RATIO_CHOICES,
+    sampler=SAMPLER_CHOICES,
 )
 async def slash_command(
     interaction: discord.Interaction,
@@ -553,6 +587,7 @@ async def slash_command(
     lora3: Choice[str] = None,
     lora_strength3: float = 1.0,
     aspect_ratio: str = None,
+    sampler: str = None,
     num_steps: Range[int, 1, 20] = None,
     cfg_scale: Range[float, 1.0, 10.0] = None,
     seed: int = None,
@@ -592,6 +627,7 @@ async def slash_command(
         lora_list,
         lora_strengths,
         aspect_ratio,
+        sampler,
         num_steps,
         cfg_scale,
         seed=seed,

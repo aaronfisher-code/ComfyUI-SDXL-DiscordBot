@@ -25,6 +25,7 @@ class PromptParams:
     lora_strengths: Optional[list[float]] = None
 
     aspect_ratio: Optional[str] = None
+    sampler: Optional[str] = None
     num_steps: Optional[int] = None
     cfg_scale: Optional[float] = None
 
@@ -81,6 +82,12 @@ def get_loras():
     with urllib.request.urlopen("http://{}/object_info".format(server_address)) as response:
         object_info = json.loads(response.read())
         return object_info["LoraLoader"]["input"]["required"]["lora_name"]
+
+
+def get_samplers():
+    with urllib.request.urlopen("http://{}/object_info".format(server_address)) as response:
+        object_info = json.loads(response.read())
+        return object_info["KSampler"]["input"]["required"]["sampler_name"]
 
 
 class ImageGenerator:
@@ -218,6 +225,7 @@ def setup_workflow(workflow, params: PromptParams):
     # maybe set sampler arguments
     sampler_args_given = (
         params.denoise_strength is not None
+        or params.sampler is not None
         or params.num_steps is not None
         or params.cfg_scale is not None
     )
@@ -227,8 +235,10 @@ def setup_workflow(workflow, params: PromptParams):
             default_args = workflow[node]["inputs"]
             steps = params.num_steps or default_args["steps"]
             cfg = params.cfg_scale or default_args["cfg"]
+            sampler = params.sampler or default_args["sampler_name"]
             workflow[node]["inputs"]["steps"] = steps
             workflow[node]["inputs"]["cfg"] = cfg
+            workflow[node]["inputs"]["sampler_name"] = sampler
             # workaround for samplers that don't have a denoise input
             if "denoise" in default_args:
                 denoise = params.denoise_strength or default_args["denoise"]
