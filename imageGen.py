@@ -14,7 +14,7 @@ from PIL import Image
 
 
 @dataclass
-class PromptParams:
+class ImageWorkflow:
     workflow_name: str
 
     prompt: str
@@ -78,6 +78,7 @@ def get_models():
         return object_info["CheckpointLoaderSimple"]["input"]["required"]["ckpt_name"]
 
 
+
 def get_loras():
     with urllib.request.urlopen("http://{}/object_info".format(server_address)) as response:
         object_info = json.loads(response.read())
@@ -88,6 +89,7 @@ def get_samplers():
     with urllib.request.urlopen("http://{}/object_info".format(server_address)) as response:
         object_info = json.loads(response.read())
         return object_info["KSampler"]["input"]["required"]["sampler_name"]
+
 
 
 class ImageGenerator:
@@ -149,7 +151,7 @@ class ImageGenerator:
             await self.ws.close()
 
 
-def setup_workflow(workflow, params: PromptParams):
+def setup_workflow(workflow, params: ImageWorkflow):
     prompt_nodes = config.get(params.workflow_name, "PROMPT_NODES").split(",")
     neg_prompt_nodes = config.get(params.workflow_name, "NEG_PROMPT_NODES").split(",")
     rand_seed_nodes = config.get(params.workflow_name, "RAND_SEED_NODES").split(",")
@@ -253,7 +255,7 @@ def setup_workflow(workflow, params: PromptParams):
     return workflow
 
 
-async def generate_images(params: PromptParams):
+async def generate_images(params: ImageWorkflow):
     print("queuing workflow:", params)
     with open(config[params.workflow_name]["CONFIG"], "r") as file:
         workflow = json.load(file)
@@ -269,7 +271,7 @@ async def generate_images(params: PromptParams):
     return images, enhanced_prompt
 
 
-async def generate_alternatives(params: PromptParams, image: Image.Image):
+async def generate_alternatives(params: ImageWorkflow, image: Image.Image):
     print("queuing workflow:", params)
     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
         image.save(temp_file, format="PNG")
