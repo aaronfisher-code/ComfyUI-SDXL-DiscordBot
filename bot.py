@@ -77,7 +77,7 @@ BASE_ARG_DESCS = {
     "num_steps": "Number of sampling steps; range [1, 20]",
     "cfg_scale": "Degree to which AI should follow prompt; range [1.0, 100.0]",
 }
-IMAGINE_ARG_DESCS = BASE_ARG_DESCS
+IMAGINE_ARG_DESCS = {**BASE_ARG_DESCS, "num_steps": "Number of sampling steps; range [1, 30]"}
 SDXL_ARG_DESCS = BASE_ARG_DESCS
 VIDEO_ARG_DESCS = {k: v for k, v in BASE_ARG_DESCS.items() if k != "aspect_ratio"}
 
