@@ -6,7 +6,6 @@ import urllib.parse
 from PIL import Image
 from io import BytesIO
 import configparser
-import os
 import tempfile
 import requests
 
@@ -15,11 +14,13 @@ config = configparser.ConfigParser()
 config.read('config.properties')
 server_address = config['LOCAL']['SERVER_ADDRESS']
 
+
 def queue_prompt(prompt, client_id):
     p = {"prompt": prompt, "client_id": client_id}
     data = json.dumps(p).encode('utf-8')
-    req =  urllib.request.Request("http://{}/prompt".format(server_address), data=data)
+    req = urllib.request.Request("http://{}/prompt".format(server_address), data=data)
     return json.loads(urllib.request.urlopen(req).read())
+
 
 def get_image(filename, subfolder, folder_type):
     data = {"filename": filename, "subfolder": subfolder, "type": folder_type}
@@ -27,10 +28,12 @@ def get_image(filename, subfolder, folder_type):
     with urllib.request.urlopen("http://{}/view?{}".format(server_address, url_values)) as response:
         return response.read()
 
+
 def get_history(prompt_id):
     with urllib.request.urlopen("http://{}/history/{}".format(server_address, prompt_id)) as response:
         return json.loads(response.read())
-    
+
+
 def upload_image(filepath, subfolder=None, folder_type=None, overwrite=False):
     url = f"http://{server_address}/upload/image"
     files = {'image': open(filepath, 'rb')}
@@ -44,15 +47,18 @@ def upload_image(filepath, subfolder=None, folder_type=None, overwrite=False):
     response = requests.post(url, files=files, data=data)
     return response.json()
 
+
 def get_models():
     with urllib.request.urlopen("http://{}/object_info".format(server_address)) as response:
         object_info = json.loads(response.read())
         return object_info['CheckpointLoaderSimple']['input']['required']['ckpt_name']
 
+
 def get_loras():
     with urllib.request.urlopen("http://{}/object_info".format(server_address)) as response:
         object_info = json.loads(response.read())
         return object_info['LoraLoader']['input']['required']['lora_name']
+
 
 class ImageGenerator:
     def __init__(self):
@@ -66,7 +72,7 @@ class ImageGenerator:
     async def get_images(self, prompt):
         if not self.ws:
             await self.connect()
-    
+
         prompt_id = queue_prompt(prompt, self.client_id)['prompt_id']
         currently_Executing_Prompt = None
         output_images = []
@@ -82,12 +88,12 @@ class ImageGenerator:
                         break
             except ValueError as e:
                 print("Incompatible response from ComfyUI");
-                
+
         history = get_history(prompt_id)[prompt_id]
 
         for node_id in history['outputs']:
             node_output = history['outputs'][node_id]
-            if("text" in node_output):
+            if ("text" in node_output):
                 for prompt in node_output["text"]:
                     full_prompt = prompt
             if 'images' in node_output:
@@ -112,20 +118,21 @@ class ImageGenerator:
         if self.ws:
             await self.ws.close()
 
+
 def setup_workflow(
-    workflow,
-    prompt: str,
-    negative_prompt: str,
-    model: str,
-    loras: list[str],
-    lora_strengths : list[float],
-    config_name: str,
-    aspect_ratio: str = None,
-    num_steps: int = None,
-    cfg_scale: float = None,
-    denoise_strength: float = None,
-    filename: str = None,
-    seed : int = None,
+        workflow,
+        prompt: str,
+        negative_prompt: str,
+        model: str,
+        loras: list[str],
+        lora_strengths: list[float],
+        config_name: str,
+        aspect_ratio: str = None,
+        num_steps: int = None,
+        cfg_scale: float = None,
+        denoise_strength: float = None,
+        filename: str = None,
+        seed: int = None,
 ):
     prompt_nodes = config.get(config_name, 'PROMPT_NODES').split(',')
     neg_prompt_nodes = config.get(config_name, 'NEG_PROMPT_NODES').split(',')
@@ -137,7 +144,7 @@ def setup_workflow(
     if (config.has_option(config_name, 'FILE_INPUT_NODES')):
         file_input_nodes = config.get(config_name, 'FILE_INPUT_NODES').split(',')
 
-    if(config.has_option(config_name, 'LLM_MODEL_NODE')):
+    if (config.has_option(config_name, 'LLM_MODEL_NODE')):
         llm_model_node = config.get(config_name, 'LLM_MODEL_NODE')
 
     # Modify the prompt dictionary
@@ -177,7 +184,7 @@ def setup_workflow(
                     workflow[node]["inputs"]["strength_0" + str(i + 1)] = lora_strengths[i]
     if (llm_model_node != None):
         workflow[llm_model_node]["inputs"]["model_dir"] = config["LOCAL"]["LLM_MODEL_LOCATION"]
-    if(aspect_ratio != None):
+    if (aspect_ratio != None):
         empty_image_node = config.get(config_name, 'EMPTY_IMAGE_NODE').split(',')
         for node in empty_image_node:
             if ("dimensions" in workflow[node]["inputs"]):
@@ -207,21 +214,20 @@ def setup_workflow(
         for node in latent_image_node:
             workflow[node]["inputs"]["amount"] = 1
 
-    print(workflow)
-
     return workflow
 
+
 async def generate_images(
-    prompt: str,
-    negative_prompt: str,
-    model: str = None,
-    loras: list[str] = None,
-    lora_strengths : list[float] = 1.0,
-    aspect_ratio: str = None,
-    num_steps: int = None,
-    cfg_scale: float = None,
-    seed: int = None,
-    config_name: str = 'LOCAL_TEXT2IMG',
+        prompt: str,
+        negative_prompt: str,
+        model: str = None,
+        loras: list[str] = None,
+        lora_strengths: list[float] = 1.0,
+        aspect_ratio: str = None,
+        num_steps: int = None,
+        cfg_scale: float = None,
+        seed: int = None,
+        config_name: str = 'LOCAL_TEXT2IMG',
 ):
     with open(config[config_name]['CONFIG'], 'r') as file:
         workflow = json.load(file)
@@ -230,7 +236,17 @@ async def generate_images(
     await generator.connect()
 
     setup_workflow(
-        workflow, prompt, negative_prompt, model, loras, lora_strengths, config_name, aspect_ratio, num_steps, cfg_scale, seed=seed
+        workflow,
+        prompt,
+        negative_prompt,
+        model,
+        loras,
+        lora_strengths,
+        config_name,
+        aspect_ratio,
+        num_steps,
+        cfg_scale,
+        seed=seed
     )
 
     images, enhanced_prompt = await generator.get_images(workflow)
@@ -238,22 +254,23 @@ async def generate_images(
 
     return images, enhanced_prompt
 
+
 async def generate_alternatives(
-    image: Image.Image,
-    prompt: str,
-    negative_prompt: str,
-    model: str = None,
-    loras: list[str] = None,
-    lora_strengths : list[float] = 1.0,
-    config_name: str = "LOCAL_IMG2IMG",
-    num_steps: int = None,
-    cfg_scale: float = None,
-    denoise_strength: float = None,
-    seed: int = None,
+        image: Image.Image,
+        prompt: str,
+        negative_prompt: str,
+        model: str = None,
+        loras: list[str] = None,
+        lora_strengths: list[float] = 1.0,
+        config_name: str = "LOCAL_IMG2IMG",
+        num_steps: int = None,
+        cfg_scale: float = None,
+        denoise_strength: float = None,
+        seed: int = None,
 ):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
-      image.save(temp_file, format="PNG")
-      temp_filepath = temp_file.name
+        image.save(temp_file, format="PNG")
+        temp_filepath = temp_file.name
 
     # Upload the temporary file using the upload_image method
     response_data = upload_image(temp_filepath)
@@ -261,7 +278,7 @@ async def generate_alternatives(
 
     with open(config[config_name]['CONFIG'], 'r') as file:
         workflow = json.load(file)
-      
+
     generator = ImageGenerator()
     await generator.connect()
 
@@ -286,16 +303,17 @@ async def generate_alternatives(
 
     return images
 
+
 async def upscale_image(image: Image.Image, config_name: str = "LOCAL_UPSCALE"):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
-      image.save(temp_file, format="PNG")
-      temp_filepath = temp_file.name
+        image.save(temp_file, format="PNG")
+        temp_filepath = temp_file.name
 
     # Upload the temporary file using the upload_image method
     response_data = upload_image(temp_filepath)
     filename = response_data['name']
     with open(config[config_name]['CONFIG'], 'r') as file:
-      workflow = json.load(file)
+        workflow = json.load(file)
 
     generator = ImageGenerator()
     await generator.connect()
