@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-
 import discord
 import discord.ext
 import configparser
@@ -9,6 +7,7 @@ import random
 from discord import app_commands
 from discord.app_commands import Choice, Range
 
+from param_types import PromptParams, ModelParams, ImageParams, SamplerParams, WorkflowParams
 from buttons import Buttons
 from imageGen import generate_images, get_models, get_loras
 from collage_utils import create_collage, create_gif_collage
@@ -72,40 +71,6 @@ loras = get_loras()
 async def on_ready():
     await tree.sync()
     print(f'Logged in as {client.user.name} ({client.user.id})')
-
-
-@dataclass
-class PromptParams:
-    prompt: str = None
-    negative_prompt: str = None
-
-
-@dataclass
-class ModelParams:
-    model: str = None
-    lora: Choice[str] = None
-    lora_strength: float = 1.0
-    lora2: Choice[str] = None
-    lora_strength2: float = 1.0
-    lora3: Choice[str] = None
-    lora_strength3: float = 1.0
-
-
-@dataclass
-class ImageParams:
-    aspect_ratio: str = None
-
-
-@dataclass
-class SamplerParams:
-    num_steps: Range[int, 1, 20] = None
-    cfg_scale: Range[float, 1.0, 10.0] = None
-    seed: int = None
-
-
-@dataclass
-class WorkflowParams:
-    config: str = None
 
 
 @tree.command(name="refresh", description="Refresh the list of models and loras")
@@ -321,18 +286,13 @@ async def do_request(
 
     final_message = f"{completion_message}\n Seed: {sampler_params.seed}"
     buttons = Buttons(
-        prompt_params.prompt,
-        prompt_params.negative_prompt,
-        model_params.model,
-        lora_list,
-        lora_strengths,
-        False,
+        prompt_params,
+        model_params,
+        image_params,
+        sampler_params,
+        workflow_params,
         images,
         interaction.user,
-        workflow_params.config,
-        aspect_ratio=image_params.aspect_ratio,
-        num_steps=sampler_params.num_steps,
-        cfg_scale=sampler_params.cfg_scale,
         command=command_name
     )
 
