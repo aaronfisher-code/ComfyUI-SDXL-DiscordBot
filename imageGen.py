@@ -59,6 +59,13 @@ def get_history(prompt_id):
     with urllib.request.urlopen("http://{}/history/{}".format(server_address, prompt_id)) as response:
         return json.loads(response.read())
 
+def clear_history():
+    p = {
+        'clear': True
+    }
+    data = json.dumps(p).encode('utf-8')
+    req = urllib.request.Request("http://{}/history".format(server_address), data=data)
+    response = urllib.request.urlopen(req).read()
 
 def upload_image(filepath, subfolder=None, folder_type=None, overwrite=False):
     url = f"http://{server_address}/upload/image"
