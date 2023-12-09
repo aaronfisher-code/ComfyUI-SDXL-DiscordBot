@@ -1,14 +1,7 @@
-from dataclasses import dataclass
-from pyexpat import model
-
 import discord
 import discord.ext
 import configparser
 import os
-from PIL import Image
-from copy import deepcopy
-from datetime import datetime
-from math import ceil, sqrt
 import random
 
 from discord import app_commands
@@ -131,48 +124,6 @@ def should_filter(positive_prompt: str, negative_prompt: str) -> bool:
     return False
 
 
-@dataclass
-class PromptParams:
-    prompt: str = None
-    negative_prompt: str = None
-
-
-@dataclass
-class ModelParams:
-    model: str = None
-    lora: Choice[str] = None
-    lora_strength: float = 1.0
-    lora2: Choice[str] = None
-    lora_strength2: float = 1.0
-    lora3: Choice[str] = None
-    lora_strength3: float = 1.0
-
-
-@dataclass
-class ImageParams:
-    aspect_ratio: str = None
-
-
-@dataclass
-class SamplerParams:
-    sampler: Choice[str] = None
-    num_steps: Range[int, 1, 20] = None
-    cfg_scale: Range[float, 1.0, 10.0] = None
-    seed: int = None
-
-
-@dataclass
-class WorkflowParams:
-    config: str = None
-
-
-# sync the slash command to your server
-@client.event
-async def on_ready():
-    await tree.sync()
-    print(f"Logged in as {client.user.name} ({client.user.id})")
-
-
 @tree.command(name="refresh", description="Refresh the list of models and loras")
 async def slash_command(interaction: discord.Interaction):
     global models
@@ -203,24 +154,25 @@ async def slash_command(
     cfg_scale: Range[float, 1.0, 100.0] = None,
     seed: int = None,
 ):
-    prompt_params = PromptParams(prompt, negative_prompt)
-    model_params = ModelParams(
-        model, lora, lora_strength, lora2, lora_strength2, lora3, lora_strength3
+    params = ImageWorkflow(
+        SD15_WORKFLOW,
+        prompt,
+        negative_prompt,
+        model,
+        unpack_choices(lora, lora2, lora3),
+        [lora_strength, lora_strength2, lora_strength3],
+        aspect_ratio,
+        sampler,
+        num_steps,
+        cfg_scale,
+        seed=seed,
     )
-    image_params = ImageParams(aspect_ratio)
-    sampler_params = SamplerParams(sampler, num_steps, cfg_scale, seed)
-    workflow_params = WorkflowParams(SD15_WORKFLOW)
-
     await do_request(
         interaction,
         f'{interaction.user.mention} asked me to imagine "{prompt}", this shouldn\'t take too long...',
         f'{interaction.user.mention} asked me to imagine "{prompt}", here is what I imagined for them.',
         "imagine",
-        prompt_params,
-        model_params,
-        image_params,
-        sampler_params,
-        workflow_params,
+        params,
     )
 
 
@@ -243,24 +195,25 @@ async def slash_command(
     cfg_scale: Range[float, 1.0, 100.0] = None,
     seed: int = None,
 ):
-    prompt_params = PromptParams(prompt, negative_prompt)
-    model_params = ModelParams(
-        model, lora, lora_strength, lora2, lora_strength2, lora3, lora_strength3
+    params = ImageWorkflow(
+        VIDEO_WORKFLOW,
+        prompt,
+        negative_prompt,
+        model,
+        unpack_choices(lora, lora2, lora3),
+        [lora_strength, lora_strength2, lora_strength3],
+        None,
+        sampler=sampler,
+        num_steps=num_steps,
+        cfg_scale=cfg_scale,
+        seed=seed,
     )
-    image_params = ImageParams()
-    sampler_params = SamplerParams(sampler, num_steps, cfg_scale, seed)
-    workflow_params = WorkflowParams(VIDEO_WORKFLOW)
-
     await do_request(
         interaction,
         f'{interaction.user.mention} asked me to create the video "{prompt}", this shouldn\'t take too long...',
         f'{interaction.user.mention} asked me to create the video "{prompt}", here is what I created for them.',
         "video",
-        prompt_params,
-        model_params,
-        image_params,
-        sampler_params,
-        workflow_params,
+        params,
     )
 
 
@@ -284,24 +237,25 @@ async def slash_command(
     cfg_scale: Range[float, 1.0, 100.0] = None,
     seed: int = None,
 ):
-    prompt_params = PromptParams(prompt, negative_prompt)
-    model_params = ModelParams(
-        model, lora, lora_strength, lora2, lora_strength2, lora3, lora_strength3
+    params = ImageWorkflow(
+        SDXL_WORKFLOW,
+        prompt,
+        negative_prompt,
+        model,
+        unpack_choices(lora, lora2, lora3),
+        [lora_strength, lora_strength2, lora_strength3],
+        aspect_ratio,
+        sampler=sampler,
+        num_steps=num_steps,
+        cfg_scale=cfg_scale,
+        seed=seed,
     )
-    image_params = ImageParams(aspect_ratio)
-    sampler_params = SamplerParams(sampler, num_steps, cfg_scale, seed)
-    workflow_params = WorkflowParams(SDXL_WORKFLOW)
-
     await do_request(
         interaction,
         f'{interaction.user.mention} asked me to imagine "{prompt}", this shouldn\'t take too long...',
         f'{interaction.user.mention} asked me to imagine "{prompt}", here is what I imagined for them.',
         "sdxl",
-        prompt_params,
-        model_params,
-        image_params,
-        sampler_params,
-        workflow_params,
+        params,
     )
 
 
@@ -310,18 +264,14 @@ async def do_request(
     intro_message: str,
     completion_message: str,
     command_name: str,
-    prompt_params: PromptParams,
-    model_params: ModelParams,
-    image_params: ImageParams,
-    sampler_params: SamplerParams,
-    workflow_params: WorkflowParams,
+    params: ImageWorkflow,
 ):
-    if should_filter(prompt_params.prompt, prompt_params.negative_prompt):
+    if should_filter(params.prompt, params.negative_prompt):
         print(
-            f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {prompt_params.prompt}, Negative Prompt: {prompt_params.negative_prompt}"
+            f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {params.prompt}, Negative Prompt: {params.negative_prompt}"
         )
         await interaction.response.send_message(
-            f"The prompt {prompt_params.prompt} or negative prompt {prompt_params.negative_prompt} contains a blocked word, not generating image.",
+            f"The prompt {params.prompt} or negative prompt {params.negative_prompt} contains a blocked word, not generating image.",
             ephemeral=True,
         )
         return
@@ -329,47 +279,18 @@ async def do_request(
     # Send an initial message
     await interaction.response.send_message(intro_message)
 
-    lora_list = unpack_choices(model_params.lora, model_params.lora2, model_params.lora3)
-
-    lora_strengths = [
-        model_params.lora_strength,
-        model_params.lora_strength2,
-        model_params.lora_strength3,
-    ]
-
-    if sampler_params.seed is None:
-        sampler_params.seed = random.randint(0, 999999999999999)
-
-    params = ImageWorkflow(
-        workflow_params.config,
-        prompt_params.prompt,
-        prompt_params.negative_prompt,
-        model_params.model,
-        lora_list,
-        lora_strengths,
-        image_params.aspect_ratio,
-        sampler_params.sampler,
-        sampler_params.num_steps,
-        sampler_params.cfg_scale,
-        None,
-        sampler_params.seed,
-    )
+    if params.seed is None:
+        params.seed = random.randint(0, 999999999999999)
 
     images, enhanced_prompt = await generate_images(params)
 
-    if enhanced_prompt != None:
-        params.prompt = enhanced_prompt
-
-    # Construct the final message with user mention
     final_message = f"{completion_message}\n Seed: {params.seed}"
     buttons = Buttons(params, images, interaction.user, command=command_name)
-    # send as gif or png
-    await interaction.channel.send(
-        content=final_message,
-        file=discord.File(fp=create_collage(images), filename="collage.png"),
-        view=buttons,
-    )
 
+    fname = "collage.gif" if "GIF" in images[0].format else "collage.png"
+    await interaction.channel.send(
+        content=final_message, file=discord.File(fp=create_collage(images), filename=fname), view=buttons
+    )
 
 # run the bot
 client.run(TOKEN)
