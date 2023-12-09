@@ -160,6 +160,21 @@ SDXL_MODEL_CHOICES = [Choice(name=m, value=m) for m in models[0] if "xl" in m.lo
 SDXL_LORA_CHOICES = [Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][:25]
 SAMPLER_CHOICES = [Choice(name=s, value=s) for s in samplers[0]]
 
+BASE_ARG_DESCS = {
+    "prompt": "Prompt for the image being generated",
+    "negative_prompt": "Prompt for what you want to steer the AI away from",
+    "model": "Model checkpoint to use",
+    "lora": "LoRA to apply",
+    "lora_strength": "Strength of LoRA",
+    "aspect_ratio": "Aspect ratio of the generated image",
+    "sampler": "Sampling algorithm to use",
+    "num_steps": "Number of sampling steps; range [1, 20]",
+    "cfg_scale": "Degree to which AI should follow prompt; range [1.0, 10.0]",
+}
+VIDEO_ARG_DESCS = {
+    k: v for k, v in BASE_ARG_DESCS.items() if k != "aspect_ratio"
+}
+
 
 # sync the slash command to your server
 @client.event
@@ -369,18 +384,7 @@ class AddDetailButtons(discord.ui.View):
 
 
 @tree.command(name="imagine", description="Generate an image based on input text")
-@app_commands.describe(
-    prompt="Prompt for the image being generated",
-    negative_prompt="Prompt for what you want to steer the AI away from",
-    model="Model checkpoint to use",
-    lora="LoRA to apply",
-    lora_strength="Strength of LoRA",
-    sampler="Sampling algorithm to use",
-    num_steps="Number of sampling steps; range [1, 30]",
-    cfg_scale="Degree to which AI should follow prompt; range [1.0, 10.0]",
-    # enhance='Enhance the image using a language model',
-    aspect_ratio="Aspect ratio of the generated image",
-)
+@app_commands.describe(**BASE_ARG_DESCS)
 @app_commands.choices(
     model=SD15_MODEL_CHOICES,
     lora=SD15_LORA_CHOICES,
@@ -470,16 +474,7 @@ async def slash_command(
 
 
 @tree.command(name="video", description="Generate a video based on input text")
-@app_commands.describe(
-    prompt="Prompt for the video being generated",
-    negative_prompt="Prompt for what you want to steer the AI away from",
-    model="Model checkpoint to use",
-    lora="LoRA to apply",
-    lora_strength="Strength of LoRA",
-    sampler="Sampling algorithm to use",
-    num_steps="Number of sampling steps; range [1, 20]",
-    cfg_scale="Degree to which AI should follow prompt; range [1.0, 10.0]",
-)
+@app_commands.describe(**VIDEO_ARG_DESCS)
 @app_commands.choices(model=SD15_MODEL_CHOICES, lora=SD15_LORA_CHOICES, sampler=SAMPLER_CHOICES)
 async def slash_command(
     interaction: discord.Interaction,
@@ -556,17 +551,7 @@ async def slash_command(
 
 
 @tree.command(name="sdxl", description="Generate an image using SDXL")
-@app_commands.describe(
-    prompt="Prompt for the image being generated",
-    negative_prompt="Prompt for what you want to steer the AI away from",
-    model="Model checkpoint to use",
-    lora="LoRA to apply",
-    lora_strength="Strength of LoRA",
-    aspect_ratio="Aspect ratio of the generated image",
-    sampler="Sampling algorithm to use",
-    num_steps="Number of sampling steps; range [1, 20]",
-    cfg_scale="Degree to which AI should follow prompt; range [1.0, 10.0]",
-)
+@app_commands.describe(**BASE_ARG_DESCS)
 @app_commands.choices(
     model=SDXL_MODEL_CHOICES,
     lora=SDXL_LORA_CHOICES,
