@@ -37,6 +37,96 @@ def generate_default_config():
         config.write(configfile)
 
 
+# setting up the bot
+TOKEN, IMAGE_SOURCE = setup_config()
+intents = discord.Intents.default()
+client = discord.Client(intents=intents)
+tree = discord.app_commands.CommandTree(client)
+
+
+if IMAGE_SOURCE == "LOCAL":
+    from imageGen import (
+        PromptParams,
+        generate_alternatives,
+        generate_images,
+        get_models,
+        get_loras,
+        get_samplers,
+        upscale_image,
+    )
+elif IMAGE_SOURCE == "API":
+    from apiImageGen import generate_images, upscale_image, generate_alternatives
+
+
+models = get_models()
+loras = get_loras()
+samplers = get_samplers()
+
+SD15_WORKFLOW = "LOCAL_TXT2IMG"
+SD15_LLM_WORKFLOW = "LOCAL_TXT2IMG_LLM"
+SD15_ALTS_WORKFLOW = "LOCAL_IMG2IMG"
+SD15_DETAIL_WORKFLOW = "LOCAL_IMG2IMG"
+UPSCALE_WORKFLOW = "LOCAL_UPSCALE"
+
+SDXL_WORKFLOW = "LOCAL_TXT2IMG_SDXL"
+SDXL_LLM_WORKFLOW = "LOCAL_TXT2IMG_LLM_SDXL"
+SDXL_ALTS_WORKFLOW = "LOCAL_IMG2IMG_SDXL"
+SDXL_DETAIL_WORKFLOW = "LOCAL_DETAIL_SDXL"
+SDXL_UPSCALE_WORKFLOW = "LOCAL_UPSCALE_SDXL"
+
+VIDEO_WORKFLOW = "LOCAL_TXT2VID"
+
+# These aspect ratio resolution values correspond to the SDXL Empty Latent Image node.
+# A latent modification node in the workflow converts it to the equivalent SD 1.5 resolution values.
+ASPECT_RATIO_CHOICES = [
+    Choice(name="1:1", value="1024 x 1024  (square)"),
+    Choice(name="7:9 portrait", value=" 896 x 1152  (portrait)"),
+    Choice(name="4:7 portrait", value=" 768 x 1344  (portrait)"),
+    Choice(name="9:7 landscape", value="1152 x 896   (landscape)"),
+    Choice(name="7:4 landscape", value="1344 x 768   (landscape)"),
+]
+SD15_MODEL_CHOICES = [Choice(name=m, value=m) for m in models[0] if "xl" not in m.lower()][:25]
+SD15_LORA_CHOICES = [Choice(name=l, value=l) for l in loras[0] if "xl" not in l.lower()][:25]
+SDXL_MODEL_CHOICES = [Choice(name=m, value=m) for m in models[0] if "xl" in m.lower() and "refiner" not in m.lower()][:25]
+SDXL_LORA_CHOICES = [Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][:25]
+SAMPLER_CHOICES = [Choice(name=s, value=s) for s in samplers[0]]
+
+BASE_ARG_DESCS = {
+    "prompt": "Prompt for the image being generated",
+    "negative_prompt": "Prompt for what you want to steer the AI away from",
+    "model": "Model checkpoint to use",
+    "lora": "LoRA to apply",
+    "lora_strength": "Strength of LoRA",
+    "aspect_ratio": "Aspect ratio of the generated image",
+    "sampler": "Sampling algorithm to use",
+    "num_steps": "Number of sampling steps; range [1, 20]",
+    "cfg_scale": "Degree to which AI should follow prompt; range [1.0, 100.0]",
+}
+IMAGINE_ARG_DESCS = BASE_ARG_DESCS
+SDXL_ARG_DESCS = BASE_ARG_DESCS
+VIDEO_ARG_DESCS = {k: v for k, v in BASE_ARG_DESCS.items() if k != "aspect_ratio"}
+
+BASE_ARG_CHOICES = {
+    "aspect_ratio": ASPECT_RATIO_CHOICES,
+    "sampler": SAMPLER_CHOICES,
+}
+IMAGINE_ARG_CHOICES = {
+    "model": SD15_MODEL_CHOICES,
+    "lora": SD15_LORA_CHOICES,
+    "lora2": SD15_LORA_CHOICES,
+    "lora3": SD15_LORA_CHOICES,
+    **BASE_ARG_CHOICES,
+}
+SDXL_ARG_CHOICES = {
+    "model": SDXL_MODEL_CHOICES,
+    "lora": SDXL_LORA_CHOICES,
+    "lora2": SDXL_LORA_CHOICES,
+    "lora3": SDXL_LORA_CHOICES,
+    **BASE_ARG_CHOICES,
+}
+VIDEO_ARG_CHOICES = {k: v for k, v in IMAGINE_ARG_CHOICES if v not in {"lora2", "lora3", "aspect_ratio"}}
+
+
 def should_filter(positive_prompt: str, negative_prompt: str) -> bool:
     positive_prompt = positive_prompt or ""
     negative_prompt = negative_prompt or ""
@@ -103,77 +193,6 @@ def create_collage(images):
     collage.save(collage_path)
 
     return collage_path
-
-
-# setting up the bot
-TOKEN, IMAGE_SOURCE = setup_config()
-intents = discord.Intents.default()
-client = discord.Client(intents=intents)
-tree = discord.app_commands.CommandTree(client)
-
-
-if IMAGE_SOURCE == "LOCAL":
-    from imageGen import (
-        PromptParams,
-        generate_alternatives,
-        generate_images,
-        get_models,
-        get_loras,
-        get_samplers,
-        upscale_image,
-    )
-elif IMAGE_SOURCE == "API":
-    from apiImageGen import generate_images, upscale_image, generate_alternatives
-
-
-models = get_models()
-loras = get_loras()
-samplers = get_samplers()
-
-
-SD15_WORKFLOW = "LOCAL_TXT2IMG"
-SD15_LLM_WORKFLOW = "LOCAL_TXT2IMG_LLM"
-SD15_ALTS_WORKFLOW = "LOCAL_IMG2IMG"
-SD15_DETAIL_WORKFLOW = "LOCAL_IMG2IMG"
-UPSCALE_WORKFLOW = "LOCAL_UPSCALE"
-
-SDXL_WORKFLOW = "LOCAL_TXT2IMG_SDXL"
-SDXL_LLM_WORKFLOW = "LOCAL_TXT2IMG_LLM_SDXL"
-SDXL_ALTS_WORKFLOW = "LOCAL_IMG2IMG_SDXL"
-SDXL_DETAIL_WORKFLOW = "LOCAL_DETAIL_SDXL"
-SDXL_UPSCALE_WORKFLOW = "LOCAL_UPSCALE_SDXL"
-
-VIDEO_WORKFLOW = "LOCAL_TXT2VID"
-
-# These aspect ratio resolution values correspond to the SDXL Empty Latent Image node.
-# A latent modification node in the workflow converts it to the equivalent SD 1.5 resolution values.
-ASPECT_RATIO_CHOICES = [
-    Choice(name="1:1", value="1024 x 1024  (square)"),
-    Choice(name="7:9 portrait", value=" 896 x 1152  (portrait)"),
-    Choice(name="4:7 portrait", value=" 768 x 1344  (portrait)"),
-    Choice(name="9:7 landscape", value="1152 x 896   (landscape)"),
-    Choice(name="7:4 landscape", value="1344 x 768   (landscape)"),
-]
-SD15_MODEL_CHOICES = [Choice(name=m, value=m) for m in models[0] if "xl" not in m.lower()][:25]
-SD15_LORA_CHOICES = [Choice(name=l, value=l) for l in loras[0] if "xl" not in l.lower()][:25]
-SDXL_MODEL_CHOICES = [Choice(name=m, value=m) for m in models[0] if "xl" in m.lower() and "refiner" not in m.lower()][:25]
-SDXL_LORA_CHOICES = [Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][:25]
-SAMPLER_CHOICES = [Choice(name=s, value=s) for s in samplers[0]]
-
-BASE_ARG_DESCS = {
-    "prompt": "Prompt for the image being generated",
-    "negative_prompt": "Prompt for what you want to steer the AI away from",
-    "model": "Model checkpoint to use",
-    "lora": "LoRA to apply",
-    "lora_strength": "Strength of LoRA",
-    "aspect_ratio": "Aspect ratio of the generated image",
-    "sampler": "Sampling algorithm to use",
-    "num_steps": "Number of sampling steps; range [1, 20]",
-    "cfg_scale": "Degree to which AI should follow prompt; range [1.0, 10.0]",
-}
-VIDEO_ARG_DESCS = {
-    k: v for k, v in BASE_ARG_DESCS.items() if k != "aspect_ratio"
-}
 
 
 # sync the slash command to your server
@@ -384,15 +403,8 @@ class AddDetailButtons(discord.ui.View):
 
 
 @tree.command(name="imagine", description="Generate an image based on input text")
-@app_commands.describe(**BASE_ARG_DESCS)
-@app_commands.choices(
-    model=SD15_MODEL_CHOICES,
-    lora=SD15_LORA_CHOICES,
-    lora2=SD15_LORA_CHOICES,
-    lora3=SD15_LORA_CHOICES,
-    aspect_ratio=ASPECT_RATIO_CHOICES,
-    sampler=SAMPLER_CHOICES,
-)
+@app_commands.describe(**IMAGINE_ARG_DESCS)
+@app_commands.choices(**IMAGINE_ARG_CHOICES)
 async def slash_command(
     interaction: discord.Interaction,
     prompt: str,
@@ -408,7 +420,7 @@ async def slash_command(
     aspect_ratio: str = None,
     sampler: str = None,
     num_steps: Range[int, 1, 30] = None,
-    cfg_scale: Range[float, 1.0, 10.0] = None,
+    cfg_scale: Range[float, 1.0, 100.0] = None,
     seed: int = None
 ):
     if should_filter(prompt, negative_prompt):
@@ -475,7 +487,7 @@ async def slash_command(
 
 @tree.command(name="video", description="Generate a video based on input text")
 @app_commands.describe(**VIDEO_ARG_DESCS)
-@app_commands.choices(model=SD15_MODEL_CHOICES, lora=SD15_LORA_CHOICES, sampler=SAMPLER_CHOICES)
+@app_commands.choices(**VIDEO_ARG_CHOICES)
 async def slash_command(
     interaction: discord.Interaction,
     prompt: str,
@@ -489,7 +501,7 @@ async def slash_command(
     lora_strength3: float = 1.0,
     sampler: str = None,
     num_steps: Range[int, 1, 20] = None,
-    cfg_scale: Range[float, 1.0, 10.0] = None,
+    cfg_scale: Range[float, 1.0, 100.0] = None,
     seed: int = None,
 ):
     if should_filter(prompt, negative_prompt):
@@ -552,14 +564,7 @@ async def slash_command(
 
 @tree.command(name="sdxl", description="Generate an image using SDXL")
 @app_commands.describe(**BASE_ARG_DESCS)
-@app_commands.choices(
-    model=SDXL_MODEL_CHOICES,
-    lora=SDXL_LORA_CHOICES,
-    lora2=SDXL_LORA_CHOICES,
-    lora3=SDXL_LORA_CHOICES,
-    aspect_ratio=ASPECT_RATIO_CHOICES,
-    sampler=SAMPLER_CHOICES,
-)
+@app_commands.choices(**SDXL_ARG_CHOICES)
 async def slash_command(
     interaction: discord.Interaction,
     prompt: str,
@@ -574,7 +579,7 @@ async def slash_command(
     aspect_ratio: str = None,
     sampler: str = None,
     num_steps: Range[int, 1, 20] = None,
-    cfg_scale: Range[float, 1.0, 10.0] = None,
+    cfg_scale: Range[float, 1.0, 100.0] = None,
     seed: int = None,
 ):
     if should_filter(prompt, negative_prompt):
