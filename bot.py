@@ -404,6 +404,15 @@ class AddDetailButtons(discord.ui.View):
                                        )
 
 
+@tree.command(name="refresh", description="Refresh the list of models and loras")
+async def slash_command(interaction: discord.Interaction):
+    global models
+    global loras
+    models = get_models()
+    loras = get_loras()
+    await interaction.response.send_message("Refreshed models and loras", ephemeral=True)
+
+
 @tree.command(name="imagine", description="Generate an image based on input text")
 @app_commands.describe(prompt='Prompt for the image being generated')
 @app_commands.describe(negative_prompt='Prompt for what you want to steer the AI away from')
@@ -486,53 +495,22 @@ async def slash_command(
         cfg_scale: Range[float, 1.0, 10.0] = None,
         seed: int = None,
 ):
-    if should_filter(prompt, negative_prompt):
-        print(f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {prompt}, Negative Prompt: {negative_prompt}")
-        await interaction.response.send_message(f"The prompt {prompt} or negative prompt {negative_prompt} contains a blocked word, not generating image.",
-                                                ephemeral=True
-                                                )
-        return
+    prompt_params = PromptParams(prompt, negative_prompt)
+    model_params = ModelParams(model, lora, lora_strength, lora2, lora_strength2, lora3, lora_strength3)
+    image_params = ImageParams()
+    sampler_params = SamplerParams(num_steps, cfg_scale, seed)
+    workflow_params = WorkflowParams("LOCAL_TEXT2VIDEO")
 
-    # Send an initial message
-    await interaction.response.send_message(f"{interaction.user.mention} asked me to create the video \"{prompt}\", this shouldn't take too long...")
-
-    lora_list = [lora != None and lora.value or None, lora2 != None and lora2.value or None,
-                 lora3 != None and lora3.value or None]
-
-    lora_strengths = [lora_strength, lora_strength2, lora_strength3]
-
-    if seed is None:
-        seed = random.randint(0, 999999999999999)
-
-    # Generate the video and get progress updates
-    video, enhanced_prompt = await generate_images(
-        prompt, negative_prompt, model, lora_list, lora_strengths, None, num_steps, cfg_scale, seed, "LOCAL_TEXT2VIDEO"
-    )
-
-    if (enhanced_prompt != None):
-        prompt = enhanced_prompt
-
-    # Construct the final message with user mention
-    final_message = f"{interaction.user.mention} asked me to create the video \"{prompt}\", here is what I created for them. Seed: {seed}"
-
-    buttons = Buttons(
-        prompt,
-        negative_prompt,
-        model,
-        lora_list,
-        lora_strengths,
-        False,
-        video,
-        interaction.user,
-        "LOCAL_TEXT2VIDEO",
-        num_steps=num_steps,
-        cfg_scale=cfg_scale,
-        command="video"
-    )
-    await interaction.channel.send(content=final_message,
-                                   file=discord.File(fp=create_gif_collage(video), filename='collage.gif'),
-                                   view=buttons
-                                   )
+    await do_request(interaction,
+                     f"{interaction.user.mention} asked me to create the video \"{prompt}\", this shouldn't take too long...",
+                     f"{interaction.user.mention} asked me to create the video \"{prompt}\", here is what I created for them.",
+                     "video",
+                     prompt_params,
+                     model_params,
+                     image_params,
+                     sampler_params,
+                     workflow_params
+                     )
 
 
 @tree.command(name="sdxl", description="Generate an image using SDXL")
@@ -656,10 +634,17 @@ async def do_request(
         command=command_name
     )
     # send as gif or png
-    await interaction.channel.send(content=final_message,
-                                   file=discord.File(fp=create_collage(images), filename='collage.png'),
-                                   view=buttons
-                                   )
+
+    if "GIF" in images[0].format:
+        await interaction.channel.send(content=final_message,
+                                       file=discord.File(fp=create_gif_collage(images), filename='collage.gif'),
+                                       view=buttons
+                                       )
+    else:
+        await interaction.channel.send(content=final_message,
+                                       file=discord.File(fp=create_collage(images), filename='collage.png'),
+                                       view=buttons
+                                       )
 
 
 # run the bot
