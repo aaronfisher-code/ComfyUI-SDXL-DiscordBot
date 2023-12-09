@@ -4,7 +4,7 @@ import random
 
 from datetime import datetime
 from imageGen import generate_images, upscale_image, generate_alternatives
-from utils import create_collage, create_gif_collage
+from collage_utils import create_collage, create_gif_collage
 
 
 class ImageButton(discord.ui.Button):

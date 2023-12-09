@@ -9,9 +9,10 @@ import random
 from discord import app_commands
 from discord.app_commands import Choice, Range
 
-from buttons import ImageButton, Buttons, AddDetailButtons
-from imageGen import generate_images, upscale_image, generate_alternatives, get_models, get_loras
-from utils import create_collage, create_gif_collage
+from buttons import Buttons
+from imageGen import generate_images, get_models, get_loras
+from collage_utils import create_collage, create_gif_collage
+
 
 def setup_config():
     if not os.path.exists('config.properties'):
@@ -302,7 +303,6 @@ async def do_request(
     if sampler_params.seed is None:
         sampler_params.seed = random.randint(0, 999999999999999)
 
-    # Generate the image and get progress updates
     images, enhanced_prompt = await generate_images(
         prompt_params.prompt,
         prompt_params.negative_prompt,
@@ -319,7 +319,6 @@ async def do_request(
     if (enhanced_prompt != None):
         prompt_params.prompt = enhanced_prompt
 
-    # Construct the final message with user mention
     final_message = f"{completion_message}\n Seed: {sampler_params.seed}"
     buttons = Buttons(
         prompt_params.prompt,
@@ -336,7 +335,6 @@ async def do_request(
         cfg_scale=sampler_params.cfg_scale,
         command=command_name
     )
-    # send as gif or png
 
     if "GIF" in images[0].format:
         await interaction.channel.send(content=final_message,
