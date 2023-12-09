@@ -1,15 +1,22 @@
 import discord
 import discord.ext
-from discord import app_commands
 import configparser
 import os
-from PIL import Image
-from copy import deepcopy
-from datetime import datetime
-from math import ceil, sqrt
 import random
 
+from discord import app_commands
 from discord.app_commands import Choice, Range
+
+from buttons import Buttons
+from imageGen import (
+    ImageWorkflow,
+    generate_images,
+    get_models,
+    get_loras,
+    get_samplers,
+)
+from collage_utils import create_collage
+from consts import *
 
 
 def setup_config():
@@ -28,11 +35,6 @@ def generate_default_config():
     config = configparser.ConfigParser()
     config["DISCORD"] = {"TOKEN": "YOUR_DEFAULT_DISCORD_BOT_TOKEN"}
     config["LOCAL"] = {"SERVER_ADDRESS": "YOUR_COMFYUI_URL"}
-    config["API"] = {
-        "API_KEY": "STABILITY_AI_API_KEY",
-        "API_HOST": "https://api.stability.ai",
-        "API_IMAGE_ENGINE": "STABILITY_AI_IMAGE_GEN_MODEL",
-    }
     with open("config.properties", "w") as configfile:
         config.write(configfile)
 
@@ -44,37 +46,10 @@ client = discord.Client(intents=intents)
 tree = discord.app_commands.CommandTree(client)
 
 
-if IMAGE_SOURCE == "LOCAL":
-    from imageGen import (
-        PromptParams,
-        generate_alternatives,
-        generate_images,
-        get_models,
-        get_loras,
-        get_samplers,
-        upscale_image,
-    )
-elif IMAGE_SOURCE == "API":
-    from apiImageGen import generate_images, upscale_image, generate_alternatives
-
-
 models = get_models()
 loras = get_loras()
 samplers = get_samplers()
 
-SD15_WORKFLOW = "LOCAL_TXT2IMG"
-SD15_LLM_WORKFLOW = "LOCAL_TXT2IMG_LLM"
-SD15_ALTS_WORKFLOW = "LOCAL_IMG2IMG"
-SD15_DETAIL_WORKFLOW = "LOCAL_IMG2IMG"
-UPSCALE_WORKFLOW = "LOCAL_UPSCALE"
-
-SDXL_WORKFLOW = "LOCAL_TXT2IMG_SDXL"
-SDXL_LLM_WORKFLOW = "LOCAL_TXT2IMG_LLM_SDXL"
-SDXL_ALTS_WORKFLOW = "LOCAL_IMG2IMG_SDXL"
-SDXL_DETAIL_WORKFLOW = "LOCAL_DETAIL_SDXL"
-SDXL_UPSCALE_WORKFLOW = "LOCAL_UPSCALE_SDXL"
-
-VIDEO_WORKFLOW = "LOCAL_TXT2VID"
 
 # These aspect ratio resolution values correspond to the SDXL Empty Latent Image node.
 # A latent modification node in the workflow converts it to the equivalent SD 1.5 resolution values.
@@ -124,7 +99,13 @@ SDXL_ARG_CHOICES = {
     "lora3": SDXL_LORA_CHOICES,
     **BASE_ARG_CHOICES,
 }
-VIDEO_ARG_CHOICES = {k: v for k, v in IMAGINE_ARG_CHOICES if v not in {"lora2", "lora3", "aspect_ratio"}}
+VIDEO_ARG_CHOICES = {
+    k: v for k, v in IMAGINE_ARG_CHOICES.items() if k not in {"lora2", "lora3", "aspect_ratio"}
+}
+
+
+def unpack_choices(*args):
+    return [x is not None and x.value or None for x in args]
 
 
 def should_filter(positive_prompt: str, negative_prompt: str) -> bool:
@@ -143,268 +124,13 @@ def should_filter(positive_prompt: str, negative_prompt: str) -> bool:
     return False
 
 
-def create_gif_collage(images):
-    num_images = len(images)
-    num_cols = ceil(sqrt(num_images))
-    num_rows = ceil(num_images / num_cols)
-    collage_width = max(image.width for image in images) * num_cols
-    collage_height = max(image.height for image in images) * num_rows
-    collage = Image.new("RGB", (collage_width, collage_height))
-    collage.n_frames = images[0].n_frames
-
-    for idx, image in enumerate(images):
-        row = idx // num_cols
-        col = idx % num_cols
-        x_offset = col * image.width
-        y_offset = row * image.height
-        collage.paste(image, (x_offset, y_offset))
-
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-    collage_path = f"./out/images_{timestamp}.gif"
-    images[0].save(collage_path, save_all=True, append_images=images[1:], duration=125, loop=0)
-
-    return collage_path
-
-
-def create_collage(images):
-    if len(images) == 0:
-        print("Error: No images to make collage")
-        return None
-
-    if images[0].format == "GIF":
-        return create_gif_collage(images)
-
-    num_images = len(images)
-    num_cols = ceil(sqrt(num_images))
-    num_rows = ceil(num_images / num_cols)
-    collage_width = max(image.width for image in images) * num_cols
-    collage_height = max(image.height for image in images) * num_rows
-    collage = Image.new("RGB", (collage_width, collage_height))
-
-    for idx, image in enumerate(images):
-        row = idx // num_cols
-        col = idx % num_cols
-        x_offset = col * image.width
-        y_offset = row * image.height
-        collage.paste(image, (x_offset, y_offset))
-
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-    collage_path = f"./out/images_{timestamp}.png"
-    collage.save(collage_path)
-
-    return collage_path
-
-
-# sync the slash command to your server
-@client.event
-async def on_ready():
-    await tree.sync()
-    print(f"Logged in as {client.user.name} ({client.user.id})")
-
-
-class ImageButton(discord.ui.Button):
-    def __init__(self, label, emoji, row, callback):
-        super().__init__(label=label, style=discord.ButtonStyle.grey, emoji=emoji, row=row)
-        self._callback = callback
-
-    async def callback(self, interaction: discord.Interaction):
-        await self._callback(interaction, self)
-
-
-class Buttons(discord.ui.View):
-    def __init__(
-        self,
-        params,
-        images,
-        author,
-        *,
-        timeout=None,
-        command=None,
-    ):
-        super().__init__(timeout=timeout)
-        self.params = params
-        self.images = images
-        self.author = author
-        self.command = command
-
-        self.is_sdxl = command == "sdxl"
-        self.is_video = command == "video"
-
-        # upscaling/alternative buttons not needed for video
-        if self.is_video:
-            return
-
-        total_buttons = len(images) * 2 + 1  # For both alternative and upscale buttons + re-roll button
-        if total_buttons > 25:  # Limit to 25 buttons
-            images = images[:12]  # Adjust to only use the first 12 images
-
-        # Determine if re-roll button should be on its own row
-        reroll_row = 1 if total_buttons <= 21 else 0
-
-        # Dynamically add alternative buttons
-        for idx, _ in enumerate(images):
-            row = (idx + 1) // 5 + reroll_row  # Determine row based on index and re-roll row
-            btn = ImageButton(f"V{idx + 1}", "♻️", row, self.generate_alternatives_and_send)
-            self.add_item(btn)
-
-        # Dynamically add upscale buttons
-        for idx, _ in enumerate(images):
-            # Determine row based on index, number of alternative buttons, and re-roll row
-            row = (idx + len(images) + 1) // 5 + reroll_row
-            btn = ImageButton(f"U{idx + 1}", "⬆️", row, self.upscale_and_send)
-            self.add_item(btn)
-
-        # removed until the upscale flow is fixed
-        # Add upscale with added detail buttons
-        # for idx, _ in enumerate(images):
-        #    row = (idx + (len(images) * 2) + 2) // 5 + reroll_row
-        #    btn = ImageButton(f"U{idx + 1}", "🔎", row, self.upscale_and_send_with_detail)
-        #    self.add_item(btn)
-
-    async def generate_alternatives_and_send(self, interaction, button):
-        index = int(button.label[1:]) - 1  # Extract index from label
-        await interaction.response.send_message("Creating some alternatives, this shouldn't take too long...")
-
-        params = deepcopy(self.params)
-        params.workflow_name = SDXL_ALTS_WORKFLOW if self.is_sdxl else SD15_ALTS_WORKFLOW
-        params.seed = random.randint(0, 999999999999999)
-
-        # TODO: should alternatives use num_steps and cfg_scale from original?
-        # Buttons should probably still receive these params for rerolls
-        images = await generate_alternatives(params, self.images[index])
-        collage_path = create_collage(images)
-        final_message = f"{interaction.user.mention} here are your alternative images"
-
-        buttons = Buttons(params, images, self.author, command=self.command)
-
-        # if a gif, set filename as gif, otherwise png
-        fname = "collage.gif" if images[0].format == "GIF" else "collage.png"
-        await interaction.channel.send(
-            content=final_message, file=discord.File(fp=collage_path, filename=fname), view=buttons
-        )
-
-    async def upscale_and_send(self, interaction, button):
-        index = int(button.label[1:]) - 1  # Extract index from label
-        await interaction.response.send_message("Upscaling the image, this shouldn't take too long...")
-
-        params = deepcopy(self.params)
-        params.workflow_name = UPSCALE_WORKFLOW
-        upscaled_image = await upscale_image(self.images[index])
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
-        upscaled_image.save(upscaled_image_path)
-        final_message = f"{interaction.user.mention} here is your upscaled image"
-        buttons = AddDetailButtons(params, upscaled_image, is_sdxl=self.is_sdxl)
-        await interaction.channel.send(
-            content=final_message, file=discord.File(fp=upscaled_image_path, filename="upscaled_image.png"), view=buttons
-        )
-
-    async def upscale_and_send_with_detail(self, interaction, button):
-        index = int(button.label[1:]) - 1
-        await interaction.response.send_message("Upscaling and increasing detail in the image, this shouldn't take too long...")
-
-        upscaled_image = await upscale_image(self.images[index])
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
-        upscaled_image.save(upscaled_image_path)
-        final_message = f"{interaction.user.mention} here is your upscaled image"
-        await interaction.channel.send(
-            content=final_message, file=discord.File(fp=upscaled_image_path, filename="upscaled_image.png")
-        )
-
-    @discord.ui.button(label="Re-roll", style=discord.ButtonStyle.green, emoji="🎲", row=0)
-    async def reroll_image(self, interaction, btn):
-        await interaction.response.send_message(
-            f'{interaction.user.mention} asked me to re-imagine "{self.params.prompt}", this shouldn\'t take too long...'
-        )
-        btn.disabled = True
-        await interaction.message.edit(view=self)
-
-        params = deepcopy(self.params)
-        if self.is_sdxl:
-            params.workflow_name = SDXL_WORKFLOW
-        elif self.is_video:
-            params.workflow_name = VIDEO_WORKFLOW
-        else:
-            params.workflow_name = SD15_WORKFLOW
-        params.filename = None
-        params.seed = random.randint(0, 999999999999999)
-
-        # Generate a new image with the same prompt
-        images, enhanced_prompt = await generate_images(params)
-
-        if self.is_video:
-            collage = create_gif_collage(images)
-            fname = "collage.gif"
-        else:
-            collage = create_collage(images)
-            fname = "collage.png"
-
-        # Construct the final message with user mention
-        final_message = (
-            f'{interaction.user.mention} asked me to re-imagine "{params.prompt}", here is what I imagined for them. '
-            f"Seed: {params.seed}"
-        )
-        buttons = Buttons(params, images, self.author, command=self.command)
-
-        await interaction.channel.send(
-            content=final_message, file=discord.File(fp=collage, filename=fname), view=buttons
-        )
-
-    @discord.ui.button(label="Delete", style=discord.ButtonStyle.red, emoji="🗑️", row=0)
-    async def delete_image_post(self, interaction, button):
-        # make sure the user is the one who posted the image
-        if interaction.user.id != self.author.id:
-            return
-
-        await interaction.message.delete()
-
-    @discord.ui.button(label="Info", style=discord.ButtonStyle.blurple, emoji="ℹ️", row=0)
-    async def image_info(self, interaction, button):
-        params = self.params
-        info_str = (
-            f"prompt: {params.prompt}\n"
-            f"negative prompt: {params.negative_prompt}\n"
-            f"model: {params.model or 'default'}\n"
-            f"loras: {params.loras}\n"
-            f"lora strengths: {params.lora_strengths}\n"
-            f"aspect ratio: {params.aspect_ratio or 'default'}\n"
-            f"sampler: {params.sampler or 'default'}\n"
-            f"num steps: {params.num_steps or 'default'}\n"
-            f"cfg scale: {params.cfg_scale or 'default'}\n"
-            f"seed: {params.seed}\n"
-        )
-        await interaction.response.send_message(info_str, ephemeral=True)
-
-
-class AddDetailButtons(discord.ui.View):
-    def __init__(self, params, images, *, timeout=None, is_sdxl=False):
-        super().__init__(timeout=timeout)
-        self.params = params
-        self.images = images
-        self.is_sdxl = is_sdxl
-
-        self.add_item(ImageButton("Add Detail", "🔎", 0, self.add_detail))
-
-    async def add_detail(self, interaction, button):
-        await interaction.response.send_message("Increasing detail in the image, this shouldn't take too long...")
-
-        # do img2img
-        params = deepcopy(self.params)
-        params.workflow_name = SDXL_DETAIL_WORKFLOW if self.is_sdxl else SD15_DETAIL_WORKFLOW
-        params.denoise_strength = 0.45
-        params.seed = random.randint(0, 999999999999999)
-
-        images = await generate_alternatives(params, self.images)
-        collage_path = create_collage(images)
-        final_message = f"{interaction.user.mention} here is your image with more detail"
-
-        await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename="collage.png"))
-
-@tree.command(name="clear_history", description="Clear the history of images generated by the bot")
+@tree.command(name="refresh", description="Refresh the list of models and loras")
 async def slash_command(interaction: discord.Interaction):
-    clear_history()
-    await interaction.response.send_message("Cleared history", ephemeral=True)
+    global models
+    global loras
+    models = get_models()
+    loras = get_loras()
+    await interaction.response.send_message("Refreshed models and loras", ephemeral=True)
 
 
 @tree.command(name="imagine", description="Generate an image based on input text")
@@ -426,67 +152,27 @@ async def slash_command(
     sampler: str = None,
     num_steps: Range[int, 1, 30] = None,
     cfg_scale: Range[float, 1.0, 100.0] = None,
-    seed: int = None
+    seed: int = None,
 ):
-    if should_filter(prompt, negative_prompt):
-        print(
-            f"Prompt or negative prompt contains a blocked word, not generating image. "
-            f"Prompt: {prompt}, Negative Prompt: {negative_prompt}"
-        )
-        await interaction.response.send_message(
-            f"The prompt {prompt} or negative prompt {negative_prompt} contains a blocked word, not generating image.",
-            ephemeral=True,
-        )
-        return
-
-    # Send an initial message
-    await interaction.response.send_message(
-        f'{interaction.user.mention} asked me to imagine "{prompt}", this shouldn\'t take too long...'
-    )
-
-    lora_list = [
-        lora != None and lora.value or None,
-        lora2 != None and lora2.value or None,
-        lora3 != None and lora3.value or None,
-    ]
-
-    lora_strengths = [lora_strength, lora_strength2, lora_strength3]
-
-    if seed is None:
-        seed = random.randint(0, 999999999999999)
-
-    params = PromptParams(
-        # SD15_LLM_WORKFLOW if enhance else SD15_WORKFLOW,
+    params = ImageWorkflow(
         SD15_WORKFLOW,
         prompt,
         negative_prompt,
         model,
-        lora_list,
-        lora_strengths,
+        unpack_choices(lora, lora2, lora3),
+        [lora_strength, lora_strength2, lora_strength3],
         aspect_ratio,
         sampler,
         num_steps,
         cfg_scale,
         seed=seed,
     )
-
-    # Generate the image and get progress updates
-    images, enhanced_prompt = await generate_images(params)
-
-    # Construct the final message with user mention
-    if enhanced_prompt is None:
-        final_message = f'{interaction.user.mention} asked me to imagine "{prompt}", here is what I imagined for them. Seed: {seed}'
-    else:
-        final_message = (
-            f'{interaction.user.mention} asked me to imagine "{prompt}", here is what I imagined for them.\n'
-            f'(Prompt enhanced with _"{enhanced_prompt}"_ Seed: {seed})'
-        )
-        params.prompt = enhanced_prompt
-
-    buttons = Buttons(params, images, interaction.user, command="imagine")
-    # send as gif or png
-    await interaction.channel.send(
-        content=final_message, file=discord.File(fp=create_collage(images), filename="collage.png"), view=buttons
+    await do_request(
+        interaction,
+        f'{interaction.user.mention} asked me to imagine "{prompt}", this shouldn\'t take too long...',
+        f'{interaction.user.mention} asked me to imagine "{prompt}", here is what I imagined for them.',
+        "imagine",
+        params,
     )
 
 
@@ -509,61 +195,25 @@ async def slash_command(
     cfg_scale: Range[float, 1.0, 100.0] = None,
     seed: int = None,
 ):
-    if should_filter(prompt, negative_prompt):
-        print(
-            f"Prompt or negative prompt contains a blocked word, not generating image. \n"
-            f"Prompt: {prompt}, Negative Prompt: {negative_prompt}"
-        )
-        await interaction.response.send_message(
-            f"The prompt {prompt} or negative prompt {negative_prompt} contains a blocked word, not generating image.",
-            ephemeral=True,
-        )
-        return
-
-    # Send an initial message
-    await interaction.response.send_message(
-        f'{interaction.user.mention} asked me to create the video "{prompt}", this shouldn\'t take too long...'
-    )
-
-    lora_list = [
-        lora != None and lora.value or None,
-        lora2 != None and lora2.value or None,
-        lora3 != None and lora3.value or None,
-    ]
-
-    lora_strengths = [lora_strength, lora_strength2, lora_strength3]
-
-    if seed is None:
-        seed = random.randint(0, 999999999999999)
-
-    params = PromptParams(
+    params = ImageWorkflow(
         VIDEO_WORKFLOW,
         prompt,
         negative_prompt,
         model,
-        lora_list,
-        lora_strengths,
+        unpack_choices(lora, lora2, lora3),
+        [lora_strength, lora_strength2, lora_strength3],
+        None,
         sampler=sampler,
         num_steps=num_steps,
         cfg_scale=cfg_scale,
         seed=seed,
     )
-
-    # Generate the video and get progress updates
-    video, enhanced_prompt = await generate_images(params)
-
-    if enhanced_prompt is not None:
-        params.prompt = enhanced_prompt
-
-    # Construct the final message with user mention
-    final_message = (
-        f'{interaction.user.mention} asked me to create the video "{params.prompt}", here is what I created for them. '
-        f"Seed: {seed}"
-    )
-
-    buttons = Buttons(params, video, interaction.user, command="video")
-    await interaction.channel.send(
-        content=final_message, file=discord.File(fp=create_gif_collage(video), filename="collage.gif"), view=buttons
+    await do_request(
+        interaction,
+        f'{interaction.user.mention} asked me to create the video "{prompt}", this shouldn\'t take too long...',
+        f'{interaction.user.mention} asked me to create the video "{prompt}", here is what I created for them.',
+        "video",
+        params,
     )
 
 
@@ -587,63 +237,60 @@ async def slash_command(
     cfg_scale: Range[float, 1.0, 100.0] = None,
     seed: int = None,
 ):
-    if should_filter(prompt, negative_prompt):
+    params = ImageWorkflow(
+        SDXL_WORKFLOW,
+        prompt,
+        negative_prompt,
+        model,
+        unpack_choices(lora, lora2, lora3),
+        [lora_strength, lora_strength2, lora_strength3],
+        aspect_ratio,
+        sampler=sampler,
+        num_steps=num_steps,
+        cfg_scale=cfg_scale,
+        seed=seed,
+    )
+    await do_request(
+        interaction,
+        f'{interaction.user.mention} asked me to imagine "{prompt}", this shouldn\'t take too long...',
+        f'{interaction.user.mention} asked me to imagine "{prompt}", here is what I imagined for them.',
+        "sdxl",
+        params,
+    )
+
+
+async def do_request(
+    interaction: discord.Interaction,
+    intro_message: str,
+    completion_message: str,
+    command_name: str,
+    params: ImageWorkflow,
+):
+    if should_filter(params.prompt, params.negative_prompt):
         print(
-            f"Prompt or negative prompt contains a blocked word, not generating image. \n"
-            f"Prompt: {prompt}, Negative Prompt: {negative_prompt}"
+            f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {params.prompt}, Negative Prompt: {params.negative_prompt}"
         )
         await interaction.response.send_message(
-            f"The prompt {prompt} or negative prompt {negative_prompt} contains a blocked word, not generating image.",
+            f"The prompt {params.prompt} or negative prompt {params.negative_prompt} contains a blocked word, not generating image.",
             ephemeral=True,
         )
         return
 
     # Send an initial message
-    await interaction.response.send_message(
-        f'{interaction.user.mention} asked me to imagine "{prompt}", this shouldn\'t take too long...'
-    )
+    await interaction.response.send_message(intro_message)
 
-    lora_list = [
-        lora != None and lora.value or None,
-        lora2 != None and lora2.value or None,
-        lora3 != None and lora3.value or None,
-    ]
+    if params.seed is None:
+        params.seed = random.randint(0, 999999999999999)
 
-    lora_strengths = [lora_strength, lora_strength2, lora_strength3]
-
-    if seed is None:
-        seed = random.randint(0, 999999999999999)
-
-    params = PromptParams(
-        SDXL_WORKFLOW,
-        prompt,
-        negative_prompt,
-        model,
-        lora_list,
-        lora_strengths,
-        aspect_ratio,
-        sampler,
-        num_steps,
-        cfg_scale,
-        seed=seed,
-    )
-
-    # Generate the image and get progress updates
     images, enhanced_prompt = await generate_images(params)
 
-    if enhanced_prompt != None:
-        params.prompt = enhanced_prompt
+    final_message = f"{completion_message}\n Seed: {params.seed}"
+    buttons = Buttons(params, images, interaction.user, command=command_name)
 
-    # Construct the final message with user mention
-    final_message = f'{interaction.user.mention} asked me to imagine "{prompt}", here is what I imagined for them. Seed: {seed}'
-    buttons = Buttons(params, images, interaction.user, command="sdxl")
-    # send as gif or png
+    fname = "collage.gif" if "GIF" in images[0].format else "collage.png"
     await interaction.channel.send(
-        content=final_message,
-        file=discord.File(fp=create_collage(images), filename="collage.png"),
-        view=buttons,
+        content=final_message, file=discord.File(fp=create_collage(images), filename=fname), view=buttons
     )
-
 
 # run the bot
 client.run(TOKEN)

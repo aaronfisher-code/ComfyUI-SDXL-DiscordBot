@@ -1,6 +1,8 @@
-from PIL import Image
 from datetime import datetime
 from math import ceil, sqrt
+
+from PIL import Image
+
 
 def create_gif_collage(images):
     num_images = len(images)
