@@ -259,7 +259,7 @@
         null,
         12,
         6,
-        "dpm_2",
+        "dpmpp_sde",
         "karras",
         0,
         -1,
@@ -351,7 +351,7 @@
         "Node name for S&R": "Eff. Loader SDXL"
       },
       "widgets_values": [
-        "xl/dreamshaperXL10_alpha2Xl10.safetensors",
+        "xl/RealitiesEdgeXLLCM_TURBOXL.safetensors",
         -1,
         "None",
         -2,

@@ -35,7 +35,7 @@
       ],
       "steps": 12,
       "cfg": 6,
-      "sampler_name": "dpm_2",
+      "sampler_name": "dpmpp_sde",
       "scheduler": "karras",
       "start_at_step": 0,
       "refine_at_step": -1,
@@ -58,7 +58,7 @@
   },
   "65": {
     "inputs": {
-      "base_ckpt_name": "xl/dreamshaperXL10_alpha2Xl10.safetensors",
+      "base_ckpt_name": "xl/RealitiesEdgeXLLCM_TURBOXL.safetensors",
       "base_clip_skip": -1,
       "refiner_ckpt_name": "None",
       "refiner_clip_skip": -2,
