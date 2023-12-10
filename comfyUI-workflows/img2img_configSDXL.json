@@ -7,11 +7,11 @@
       ],
       "steps": 12,
       "cfg": 6,
-      "sampler_name": "dpm_2",
-      "scheduler": "karras",
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
       "denoise": 0.8,
       "model": [
-        "11",
+        "23",
         0
       ],
       "positive": [
@@ -39,7 +39,7 @@
     "inputs": {
       "text": "text, watermark",
       "clip": [
-        "11",
+        "23",
         1
       ]
     },
@@ -142,7 +142,7 @@
         0
       ],
       "clip": [
-        "11",
+        "23",
         1
       ]
     },
@@ -159,5 +159,26 @@
       "prompt": "a dog"
     },
     "class_type": "CR Prompt Text"
+  },
+  "23": {
+    "inputs": {
+      "lora_01": "xl/LCMTurboMix_Euler_A_fix.safetensors",
+      "strength_01": 1,
+      "lora_02": "None",
+      "strength_02": 1,
+      "lora_03": "None",
+      "strength_03": 1,
+      "lora_04": "None",
+      "strength_04": 1,
+      "model": [
+        "11",
+        0
+      ],
+      "clip": [
+        "11",
+        1
+      ]
+    },
+    "class_type": "Lora Loader Stack (rgthree)"
   }
 }
