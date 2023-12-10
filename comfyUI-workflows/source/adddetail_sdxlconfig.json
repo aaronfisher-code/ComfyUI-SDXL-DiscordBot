@@ -408,67 +408,6 @@
       ]
     },
     {
-      "id": 35,
-      "type": "Lora Loader Stack (rgthree)",
-      "pos": [
-        -290,
-        373
-      ],
-      "size": {
-        "0": 315,
-        "1": 246
-      },
-      "flags": {},
-      "order": 8,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 60
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 61
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            62
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            63,
-            64
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Lora Loader Stack (rgthree)"
-      },
-      "widgets_values": [
-        "xl/LCMTurboMix_Euler_A_fix.safetensors",
-        1,
-        "None",
-        1,
-        "None",
-        1,
-        "xl/add-detail-xl.safetensors",
-        1
-      ]
-    },
-    {
       "id": 33,
       "type": "UltimateSDUpscale",
       "pos": [
@@ -607,6 +546,67 @@
       },
       "widgets_values": [
         "xl/protovisionxl.safetensors"
+      ]
+    },
+    {
+      "id": 35,
+      "type": "Lora Loader Stack (rgthree)",
+      "pos": [
+        -290,
+        373
+      ],
+      "size": {
+        "0": 315,
+        "1": 246
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 60
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 61
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            62
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            63,
+            64
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Lora Loader Stack (rgthree)"
+      },
+      "widgets_values": [
+        "xl/LCMTurboMix_Euler_A_fix.safetensors",
+        1,
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1
       ]
     }
   ],

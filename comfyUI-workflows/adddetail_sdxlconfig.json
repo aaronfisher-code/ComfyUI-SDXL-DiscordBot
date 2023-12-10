@@ -169,7 +169,7 @@
       "strength_02": 1,
       "lora_03": "None",
       "strength_03": 1,
-      "lora_04": "xl/add-detail-xl.safetensors",
+      "lora_04": "None",
       "strength_04": 1,
       "model": [
         "11",
