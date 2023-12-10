@@ -13,7 +13,7 @@ from imageGen import (
     generate_images,
     get_models,
     get_loras,
-    get_samplers, clear_history,
+    get_samplers, clear_history, SD15_GENERATION_DEFAULTS, SDXL_GENERATION_DEFAULTS, VIDEO_GENERATION_DEFAULTS
 )
 from collage_utils import create_collage
 from consts import *
@@ -163,13 +163,13 @@ async def slash_command(
         SD15_WORKFLOW,
         prompt,
         negative_prompt,
-        model,
+        model or SD15_GENERATION_DEFAULTS.model,
         unpack_choices(lora, lora2, lora3),
         [lora_strength, lora_strength2, lora_strength3],
-        aspect_ratio,
-        sampler,
-        num_steps,
-        cfg_scale,
+        aspect_ratio or SD15_GENERATION_DEFAULTS.aspect_ratio,
+        sampler or SD15_GENERATION_DEFAULTS.sampler,
+        num_steps or SD15_GENERATION_DEFAULTS.num_steps,
+        cfg_scale or SD15_GENERATION_DEFAULTS.cfg_scale,
         seed=seed,
     )
     await do_request(
@@ -204,13 +204,13 @@ async def slash_command(
         VIDEO_WORKFLOW,
         prompt,
         negative_prompt,
-        model,
+        model or VIDEO_GENERATION_DEFAULTS.model,
         unpack_choices(lora, lora2, lora3),
         [lora_strength, lora_strength2, lora_strength3],
         None,
-        sampler=sampler,
-        num_steps=num_steps,
-        cfg_scale=cfg_scale,
+        sampler=sampler or VIDEO_GENERATION_DEFAULTS.sampler,
+        num_steps=num_steps or VIDEO_GENERATION_DEFAULTS.num_steps,
+        cfg_scale=cfg_scale or VIDEO_GENERATION_DEFAULTS.cfg_scale,
         seed=seed,
     )
     await do_request(
@@ -246,13 +246,13 @@ async def slash_command(
         SDXL_WORKFLOW,
         prompt,
         negative_prompt,
-        model,
+        model or SDXL_GENERATION_DEFAULTS.model,
         unpack_choices(lora, lora2, lora3),
         [lora_strength, lora_strength2, lora_strength3],
-        aspect_ratio,
-        sampler=sampler,
-        num_steps=num_steps,
-        cfg_scale=cfg_scale,
+        aspect_ratio or SDXL_GENERATION_DEFAULTS.aspect_ratio,
+        sampler=sampler or SDXL_GENERATION_DEFAULTS.sampler,
+        num_steps=num_steps or SDXL_GENERATION_DEFAULTS.num_steps,
+        cfg_scale=cfg_scale or SDXL_GENERATION_DEFAULTS.cfg_scale,
         seed=seed,
     )
     await do_request(

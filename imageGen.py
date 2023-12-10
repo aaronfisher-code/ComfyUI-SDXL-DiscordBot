@@ -40,6 +40,54 @@ config = configparser.ConfigParser()
 config.read("config.properties")
 server_address = config["LOCAL"]["SERVER_ADDRESS"]
 
+SD15_GENERATION_DEFAULTS = ImageWorkflow(
+    None,  # workflow name
+    None,  # prompt
+    None,  # negative_prompt
+    config["SD15_GENERATION_DEFAULTS"]["MODEL"],
+    None,  # loras
+    None,  # lora_strengths TODO add lora and lora strength defaults
+    config["SD15_GENERATION_DEFAULTS"]["ASPECT_RATIO"],
+    config["SD15_GENERATION_DEFAULTS"]["SAMPLER"],
+    int(config["SD15_GENERATION_DEFAULTS"]["NUM_STEPS"]),
+    float(config["SD15_GENERATION_DEFAULTS"]["CFG_SCALE"]),
+    float(config["SD15_GENERATION_DEFAULTS"]["DENOISE_STRENGTH"]),
+    None,  # seed
+    None  # filename
+)
+
+SDXL_GENERATION_DEFAULTS = ImageWorkflow(
+    None,  # workflow name
+    None,  # prompt
+    None,  # negative_prompt
+    config["SDXL_GENERATION_DEFAULTS"]["MODEL"],
+    None,  # loras
+    None,  # lora_strengths
+    config["SDXL_GENERATION_DEFAULTS"]["ASPECT_RATIO"],
+    config["SDXL_GENERATION_DEFAULTS"]["SAMPLER"],
+    int(config["SDXL_GENERATION_DEFAULTS"]["NUM_STEPS"]),
+    float(config["SDXL_GENERATION_DEFAULTS"]["CFG_SCALE"]),
+    float(config["SDXL_GENERATION_DEFAULTS"]["DENOISE_STRENGTH"]),
+    None,  # seed
+    None  # filename
+)
+
+VIDEO_GENERATION_DEFAULTS = ImageWorkflow(
+    None,  # workflow name
+    None,  # prompt
+    None,  # negative_prompt
+    config["VIDEO_GENERATION_DEFAULTS"]["MODEL"],
+    None,  # loras
+    None,  # lora_strengths
+    None,  # aspect_ratio
+    config["VIDEO_GENERATION_DEFAULTS"]["SAMPLER"],
+    int(config["VIDEO_GENERATION_DEFAULTS"]["NUM_STEPS"]),
+    float(config["VIDEO_GENERATION_DEFAULTS"]["CFG_SCALE"]),
+    None,  # denoise_strength
+    None,  # seed
+    None  # filename
+)
+
 
 def queue_prompt(prompt, client_id):
     p = {"prompt": prompt, "client_id": client_id}
@@ -59,6 +107,7 @@ def get_history(prompt_id):
     with urllib.request.urlopen("http://{}/history/{}".format(server_address, prompt_id)) as response:
         return json.loads(response.read())
 
+
 def clear_history():
     p = {
         'clear': True
@@ -66,6 +115,7 @@ def clear_history():
     data = json.dumps(p).encode('utf-8')
     req = urllib.request.Request("http://{}/history".format(server_address), data=data)
     response = urllib.request.urlopen(req).read()
+
 
 def upload_image(filepath, subfolder=None, folder_type=None, overwrite=False):
     url = f"http://{server_address}/upload/image"
@@ -85,7 +135,6 @@ def get_models():
         return object_info["CheckpointLoaderSimple"]["input"]["required"]["ckpt_name"]
 
 
-
 def get_loras():
     with urllib.request.urlopen("http://{}/object_info".format(server_address)) as response:
         object_info = json.loads(response.read())
@@ -96,7 +145,6 @@ def get_samplers():
     with urllib.request.urlopen("http://{}/object_info".format(server_address)) as response:
         object_info = json.loads(response.read())
         return object_info["KSampler"]["input"]["required"]["sampler_name"]
-
 
 
 class ImageGenerator:
@@ -185,7 +233,7 @@ def setup_workflow(workflow, params: ImageWorkflow):
             workflow[node]["inputs"]["text"] = params.negative_prompt + ", (children, child, kids, kid:1.3)"
 
     if params.filename is not None and config.has_option(
-        params.workflow_name, "FILE_INPUT_NODES"
+            params.workflow_name, "FILE_INPUT_NODES"
     ):
         for node in file_input_nodes:
             workflow[node]["inputs"]["image"] = params.filename
@@ -220,7 +268,7 @@ def setup_workflow(workflow, params: ImageWorkflow):
     if llm_model_node is not None:
         workflow[llm_model_node]["inputs"]["model_dir"] = config["LOCAL"]["LLM_MODEL_LOCATION"]
 
-    if params.aspect_ratio is not None:
+    if params.aspect_ratio is not None and config.has_option(params.workflow_name, "EMPTY_IMAGE_NODE"):
         empty_image_node = config.get(params.workflow_name, "EMPTY_IMAGE_NODE").split(",")
         for node in empty_image_node:
             if "dimensions" in workflow[node]["inputs"]:
@@ -233,10 +281,10 @@ def setup_workflow(workflow, params: ImageWorkflow):
 
     # maybe set sampler arguments
     sampler_args_given = (
-        params.denoise_strength is not None
-        or params.sampler is not None
-        or params.num_steps is not None
-        or params.cfg_scale is not None
+            params.denoise_strength is not None
+            or params.sampler is not None
+            or params.num_steps is not None
+            or params.cfg_scale is not None
     )
     if sampler_args_given and config.has_option(params.workflow_name, "DENOISE_NODE"):
         denoise_node = config.get(params.workflow_name, "DENOISE_NODE").split(",")
