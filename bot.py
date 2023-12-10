@@ -74,8 +74,8 @@ BASE_ARG_DESCS = {
     "lora_strength": "Strength of LoRA",
     "aspect_ratio": "Aspect ratio of the generated image",
     "sampler": "Sampling algorithm to use",
-    "num_steps": "Number of sampling steps; range [1, 20]",
-    "cfg_scale": "Degree to which AI should follow prompt; range [1.0, 100.0]",
+    "num_steps": f"Number of sampling steps; range [1, {MAX_STEPS}]",
+    "cfg_scale": f"Degree to which AI should follow prompt; range [1.0, {MAX_CFG}]",
 }
 IMAGINE_ARG_DESCS = BASE_ARG_DESCS
 SDXL_ARG_DESCS = BASE_ARG_DESCS
@@ -155,8 +155,8 @@ async def slash_command(
     # enhance: bool = False,
     aspect_ratio: str = None,
     sampler: str = None,
-    num_steps: Range[int, 1, 30] = None,
-    cfg_scale: Range[float, 1.0, 100.0] = None,
+    num_steps: Range[int, 1, MAX_STEPS] = None,
+    cfg_scale: Range[float, 1.0, MAX_CFG] = None,
     seed: int = None,
 ):
     params = ImageWorkflow(
@@ -196,8 +196,8 @@ async def slash_command(
     lora3: Choice[str] = None,
     lora_strength3: float = 1.0,
     sampler: str = None,
-    num_steps: Range[int, 1, 20] = None,
-    cfg_scale: Range[float, 1.0, 100.0] = None,
+    num_steps: Range[int, 1, MAX_STEPS] = None,
+    cfg_scale: Range[float, 1.0, MAX_CFG] = None,
     seed: int = None,
 ):
     params = ImageWorkflow(
@@ -238,8 +238,8 @@ async def slash_command(
     lora_strength3: float = 1.0,
     aspect_ratio: str = None,
     sampler: str = None,
-    num_steps: Range[int, 1, 20] = None,
-    cfg_scale: Range[float, 1.0, 100.0] = None,
+    num_steps: Range[int, 1, MAX_STEPS] = None,
+    cfg_scale: Range[float, 1.0, MAX_CFG] = None,
     seed: int = None,
 ):
     params = ImageWorkflow(
