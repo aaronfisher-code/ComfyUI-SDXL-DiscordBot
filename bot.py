@@ -1,3 +1,4 @@
+from io import BytesIO
 import discord
 import discord.ext
 import configparser
@@ -7,13 +8,23 @@ import random
 from discord import app_commands
 from discord.app_commands import Choice, Range
 
-from buttons import Buttons
+from buttons import AudioButtons, Buttons
+from comfy_api import (
+    get_models,
+    get_loras,
+    get_samplers,
+    clear_history,
+    get_tortoise_voices,
+)
 from imageGen import (
     ImageWorkflow,
     generate_images,
-    get_models,
-    get_loras,
-    get_samplers, clear_history, SD15_GENERATION_DEFAULTS, SDXL_GENERATION_DEFAULTS, VIDEO_GENERATION_DEFAULTS
+    SD15_GENERATION_DEFAULTS, SDXL_GENERATION_DEFAULTS, VIDEO_GENERATION_DEFAULTS
+)
+from audio_gen import (
+    AudioWorkflow,
+    generate_audio,
+    MUSICGEN_DEFAULTS, TORTOISE_DEFAULTS
 )
 from collage_utils import create_collage
 from consts import *
@@ -48,6 +59,7 @@ tree = discord.app_commands.CommandTree(client)
 models = get_models()
 loras = get_loras()
 samplers = get_samplers()
+tortoise_voices = get_tortoise_voices()
 
 # These aspect ratio resolution values correspond to the SDXL Empty Latent Image node.
 # A latent modification node in the workflow converts it to the equivalent SD 1.5 resolution values.
@@ -63,6 +75,7 @@ SD15_LORA_CHOICES = [Choice(name=l, value=l) for l in loras[0] if "xl" not in l.
 SDXL_MODEL_CHOICES = [Choice(name=m, value=m) for m in models[0] if "xl" in m.lower() and "refiner" not in m.lower()][:25]
 SDXL_LORA_CHOICES = [Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][:25]
 SAMPLER_CHOICES = [Choice(name=s, value=s) for s in samplers[0]]
+TORTOISE_VOICE_CHOICES = [Choice(name=v, value=v) for v in sorted(tortoise_voices[0])][-25:]
 
 BASE_ARG_DESCS = {
     "prompt": "Prompt for the image being generated",
@@ -123,8 +136,12 @@ def should_filter(positive_prompt: str, negative_prompt: str) -> bool:
 async def refresh_models():
     global models
     global loras
+    global tortoise_voices
     models = get_models()
     loras = get_loras()
+    tortoise_voices = get_tortoise_voices()
+    cmds = await tree.sync()
+    print("synced:", cmds)
 
 
 @tree.command(name="refresh", description="Refresh the list of models and loras")
@@ -137,6 +154,64 @@ async def slash_command(interaction: discord.Interaction):
 async def slash_command(interaction: discord.Interaction):
     clear_history()
     await interaction.response.send_message("Cleared history", ephemeral=True)
+
+
+# @app_commands.describe()
+@tree.command(name="music", description="Generate music from text using Musicgen.")
+async def slash_command(
+    interaction: discord.Interaction,
+    prompt: str,
+    duration: Range[float, 5.0, 10.0] = None,
+    cfg: Range[float, 0.0, 100.0] = None,
+    top_k: Range[int, 0, 1000] = None,
+    top_p: Range[float, 0.0, 1.0] = None,
+    temperature: Range[float, 1e-3, 10.0] = None,
+    seed: int = None,
+):
+    params = AudioWorkflow(
+        MUSIC_WORKFLOW,
+        prompt,
+        duration=duration or MUSICGEN_DEFAULTS.duration,
+        cfg=cfg or MUSICGEN_DEFAULTS.cfg,
+        top_k=top_k or MUSICGEN_DEFAULTS.top_k,
+        top_p=top_p or MUSICGEN_DEFAULTS.top_p,
+        temperature=temperature or MUSICGEN_DEFAULTS.temperature,
+        seed=seed,
+    )
+    await do_request(
+        interaction,
+        f'{interaction.user.mention} asked me to make music that sounds like "{prompt}", this shouldn\'t take too long...',
+        f'{interaction.user.mention} asked me to make music that sounds like "{prompt}", here is what I made for them.',
+        "music",
+        params,
+    )
+
+
+@tree.command(name="speech", description="Generate speech from text using TorToiSe.")
+@app_commands.choices(voice=TORTOISE_VOICE_CHOICES)
+async def slash_command(
+    interaction: discord.Interaction,
+    prompt: str,
+    voice: str = None,
+    top_p: Range[float, 0.0, 1.0] = None,
+    temperature: Range[float, 1e-3, 10.0] = None,
+    seed: int = None,
+):
+    params = AudioWorkflow(
+        TORTOISE_WORKFLOW,
+        prompt,
+        voice=voice or TORTOISE_DEFAULTS.voice,
+        top_p=top_p or TORTOISE_DEFAULTS.top_p,
+        temperature=temperature or TORTOISE_DEFAULTS.temperature,
+        seed=seed,
+    )
+    await do_request(
+        interaction,
+        "speech",
+        params,
+        f'{interaction.user.mention} wants to speak, this shouldn\'t take too long...',
+        f'{interaction.user.mention} said "{prompt}".'
+    )
 
 
 @tree.command(name="imagine", description="Generate an image based on input text")
@@ -264,7 +339,7 @@ async def do_request(
         intro_message: str,
         completion_message: str,
         command_name: str,
-        params: ImageWorkflow,
+        params: ImageWorkflow | AudioWorkflow,
 ):
     if should_filter(params.prompt, params.negative_prompt):
         print(
@@ -282,15 +357,23 @@ async def do_request(
     if params.seed is None:
         params.seed = random.randint(0, 999999999999999)
 
-    images, enhanced_prompt = await generate_images(params)
-
     final_message = f"{completion_message}\n Seed: {params.seed}"
-    buttons = Buttons(params, images, interaction.user, command=command_name)
+    if isinstance(params, ImageWorkflow):
+        images, enhanced_prompt = await generate_images(params)
 
-    fname = "collage.gif" if "GIF" in images[0].format else "collage.png"
-    await interaction.channel.send(
-        content=final_message, file=discord.File(fp=create_collage(images), filename=fname), view=buttons
-    )
+        buttons = Buttons(params, images, interaction.user, command=command_name)
+
+        fname = "collage.gif" if "GIF" in images[0].format else "collage.png"
+        await interaction.channel.send(
+            content=final_message, file=discord.File(fp=create_collage(images), filename=fname), view=buttons
+        )
+    else:
+        data, _ = await generate_audio(params)
+        _, videos, sound_fnames = data
+        buttons = AudioButtons(params, sound_fnames, command=command_name)
+        files = [discord.File(BytesIO(vid), filename=f"sound_{i}.webm") for i, vid in enumerate(videos)]
+        await interaction.channel.send(content=final_message, files=files, view=buttons)
+
 
 
 @client.event
