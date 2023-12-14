@@ -1,14 +1,10 @@
-from io import BytesIO
 import random
 from copy import deepcopy
 from datetime import datetime
 
 import discord
-import discord.ext
 from discord import ui
 
-import audio_gen
-from audio_gen import AudioWorkflow
 from imageGen import ImageWorkflow, generate_images, upscale_image, generate_alternatives
 from collage_utils import create_collage, create_gif_collage
 from consts import *

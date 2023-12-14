@@ -1,11 +1,9 @@
 import configparser
 import json
 from dataclasses import dataclass
-import os
-import tempfile
 from typing import Optional
 
-from comfy_api import ComfyGenerator, upload_image
+from comfy_api import ComfyGenerator
 
 
 # Read the configuration
@@ -123,58 +121,4 @@ async def generate_audio(params: AudioWorkflow):
     videos = images["videos"]
     videos, video_fnames = zip(*videos)
 
-    # params.snd_filename = clip_fnames
-    # params.vid_filename = video_fnames
-
     return (clips, videos, clip_fnames), enhanced_prompt
-
-
-# async def generate_alternatives(params: ImageWorkflow, image: Image.Image):
-#     print("queuing workflow:", params)
-#     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
-#         image.save(temp_file, format="PNG")
-#         temp_filepath = temp_file.name
-
-#     # Upload the temporary file using the upload_image method
-#     response_data = upload_image(temp_filepath)
-#     filename = response_data["name"]
-#     params.filename = filename
-
-#     with open(config[params.workflow_name]["CONFIG"], "r") as file:
-#         workflow = json.load(file)
-
-#     generator = ImageGenerator()
-#     await generator.connect()
-
-#     setup_workflow(workflow, params)
-
-#     images, enhanced_prompt = await generator.get_images(workflow)
-#     await generator.close()
-
-#     return images
-
-
-# async def upscale_image(image: Image.Image, workflow_name: str = "LOCAL_UPSCALE"):
-#     print("queuing workflow:", workflow_name)
-#     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
-#         image.save(temp_file, format="PNG")
-#         temp_filepath = temp_file.name
-
-#     # Upload the temporary file using the upload_image method
-#     response_data = upload_image(temp_filepath)
-#     filename = response_data["name"]
-#     with open(config[workflow_name]["CONFIG"], "r") as file:
-#         workflow = json.load(file)
-
-#     generator = ImageGenerator()
-#     await generator.connect()
-
-#     file_input_nodes = config.get(workflow_name, "FILE_INPUT_NODES").split(",")
-
-#     for node in file_input_nodes:
-#         workflow[node]["inputs"]["image"] = filename
-
-#     images, enhanced_prompt = await generator.get_images(workflow)
-#     await generator.close()
-
-#     return images[0]

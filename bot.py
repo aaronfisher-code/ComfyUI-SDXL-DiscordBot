@@ -1,9 +1,8 @@
-import discord
-import discord.ext
 import configparser
 import os
 import random
 
+import discord
 from discord import app_commands
 from discord.app_commands import Choice, Range
 
@@ -17,7 +16,9 @@ from comfy_api import (
 from imageGen import (
     ImageWorkflow,
     generate_images,
-    SD15_GENERATION_DEFAULTS, SDXL_GENERATION_DEFAULTS, VIDEO_GENERATION_DEFAULTS
+    SD15_GENERATION_DEFAULTS,
+    SDXL_GENERATION_DEFAULTS,
+    VIDEO_GENERATION_DEFAULTS,
 )
 from collage_utils import create_collage
 from consts import *
@@ -38,19 +39,24 @@ def setup_config():
 
     config = configparser.ConfigParser()
     config.read("config.properties")
-    return config["BOT"]["TOKEN"], config["BOT"]["SDXL_SOURCE"]
+    token = (
+        os.environ["DISCORD_APP_TOKEN"]
+        if "DISCORD_APP_TOKEN" in os.environ
+        else config["BOT"]["TOKEN"]
+    )
+    return token
 
 
 def generate_default_config():
     config = configparser.ConfigParser()
-    config["DISCORD"] = {"TOKEN": "YOUR_DEFAULT_DISCORD_BOT_TOKEN"}
+    config["BOT"] = {"TOKEN": "YOUR_DEFAULT_DISCORD_BOT_TOKEN"}
     config["LOCAL"] = {"SERVER_ADDRESS": "YOUR_COMFYUI_URL"}
     with open("config.properties", "w") as configfile:
         config.write(configfile)
 
 
 # setting up the bot
-TOKEN, IMAGE_SOURCE = setup_config()
+TOKEN = setup_config()
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 tree = discord.app_commands.CommandTree(client)

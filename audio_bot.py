@@ -1,10 +1,11 @@
-from io import BytesIO
 import random
+from io import BytesIO
+
 import discord
 from discord import app_commands
 from discord.app_commands import Choice, Range
-from audio_buttons import AudioButtons
 
+from audio_buttons import AudioButtons
 from comfy_api import get_tortoise_voices
 from consts import *
 from audio_gen import (
@@ -13,6 +14,7 @@ from audio_gen import (
     MUSICGEN_DEFAULTS,
     TORTOISE_DEFAULTS,
 )
+
 
 tortoise_voices = get_tortoise_voices()
 TORTOISE_VOICE_CHOICES = [Choice(name=v, value=v) for v in sorted(tortoise_voices[0])][-25:]
