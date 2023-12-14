@@ -140,8 +140,6 @@ async def refresh_models():
     models = get_models()
     loras = get_loras()
     tortoise_voices = get_tortoise_voices()
-    cmds = await tree.sync()
-    print("synced:", cmds)
 
 
 @tree.command(name="refresh", description="Refresh the list of models and loras")
