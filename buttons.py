@@ -22,13 +22,13 @@ class ImageButton(discord.ui.Button):
 
 class Buttons(discord.ui.View):
     def __init__(
-        self,
-        params,
-        images,
-        author,
-        *,
-        timeout=None,
-        command=None,
+            self,
+            params,
+            images,
+            author,
+            *,
+            timeout=None,
+            command=None,
     ):
         super().__init__(timeout=timeout)
         self.params = params
@@ -59,7 +59,7 @@ class Buttons(discord.ui.View):
         # Dynamically add upscale buttons
         for idx, _ in enumerate(images):
             # Determine row based on index, number of alternative buttons, and re-roll row
-            row = (idx + len(images) + 1) // 5 + reroll_row  
+            row = (idx + len(images) + 1) // 5 + reroll_row
             btn = ImageButton(f"U{idx + 1}", "⬆️", row, self.upscale_and_send)
             self.add_item(btn)
 
@@ -105,12 +105,16 @@ class Buttons(discord.ui.View):
         final_message = f"{interaction.user.mention} here is your upscaled image"
         buttons = AddDetailButtons(params, upscaled_image, is_sdxl=self.is_sdxl)
         await interaction.channel.send(
-            content=final_message, file=discord.File(fp=upscaled_image_path, filename="upscaled_image.png"), view=buttons
+            content=final_message,
+            file=discord.File(fp=upscaled_image_path, filename="upscaled_image.png"),
+            view=buttons
         )
 
     async def upscale_and_send_with_detail(self, interaction, button):
         index = int(button.label[1:]) - 1
-        await interaction.response.send_message("Upscaling and increasing detail in the image, this shouldn't take too long...")
+        await interaction.response.send_message(
+            "Upscaling and increasing detail in the image, this shouldn't take too long..."
+        )
 
         upscaled_image = await upscale_image(self.images[index])
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -191,6 +195,33 @@ class Buttons(discord.ui.View):
         await interaction.response.send_message(info_str, ephemeral=True)
 
 
+class AddDetailButtons(discord.ui.View):
+    def __init__(self, params, images, *, timeout=None, is_sdxl=False):
+        super().__init__(timeout=timeout)
+        self.params = params
+        self.images = images
+        self.is_sdxl = is_sdxl
+
+        self.add_item(ImageButton("Add Detail", "🔎", 0, self.add_detail))
+
+    async def add_detail(self, interaction, button):
+        await interaction.response.send_message("Increasing detail in the image, this shouldn't take too long...")
+
+        # do img2img
+        params = deepcopy(self.params)
+        params.workflow_name = SDXL_DETAIL_WORKFLOW if self.is_sdxl else SD15_DETAIL_WORKFLOW
+        params.denoise_strength = 0.45
+        params.seed = random.randint(0, 999999999999999)
+
+        images = await generate_alternatives(params, self.images)
+        collage_path = create_collage(images)
+        final_message = f"{interaction.user.mention} here is your image with more detail"
+
+        await interaction.channel.send(content=final_message,
+                                       file=discord.File(fp=collage_path, filename="collage.png")
+                                       )
+
+
 class EditModal(ui.Modal, title="Edit Image"):
     def __init__(self, params: ImageWorkflow, command: str):
         super().__init__(timeout=120)
@@ -262,29 +293,30 @@ class EditModal(ui.Modal, title="Edit Image"):
             collage = create_collage(images)
             fname = "collage.png"
 
-        await interaction.channel.send(content=final_message, file=discord.File(fp=collage, filename=fname), view=buttons)
+        await interaction.channel.send(content=final_message,
+                                       file=discord.File(fp=collage, filename=fname),
+                                       view=buttons
+                                       )
 
+    async def interaction_check(self, interaction: discord.Interaction, /) -> bool:
+        if self.num_steps.value.isnumeric() == False:
+            await self.on_error(interaction, Exception("Number of steps must be an integer"))
+            return False
 
-class AddDetailButtons(discord.ui.View):
-    def __init__(self, params, images, *, timeout=None, is_sdxl=False):
-        super().__init__(timeout=timeout)
-        self.params = params
-        self.images = images
-        self.is_sdxl = is_sdxl
+        if self.cfg_scale.value.replace(".", "").isnumeric() == False:
+            await self.on_error(interaction, Exception("CFG scale must be a float"))
+            return False
 
-        self.add_item(ImageButton("Add Detail", "🔎", 0, self.add_detail))
+        if int(self.num_steps.value) < 0 or int(self.num_steps.value) > MAX_STEPS:
+            await self.on_error(interaction, Exception(f"Number of steps must be between 0 and {MAX_STEPS}"))
+            return False
 
-    async def add_detail(self, interaction, button):
-        await interaction.response.send_message("Increasing detail in the image, this shouldn't take too long...")
+        if float(self.cfg_scale.value) < 1 or float(self.cfg_scale.value) > MAX_CFG:
+            await self.on_error(interaction, Exception(f"CFG scale must be between 1 and {MAX_CFG}"))
+            return False
 
-        # do img2img
-        params = deepcopy(self.params)
-        params.workflow_name = SDXL_DETAIL_WORKFLOW if self.is_sdxl else SD15_DETAIL_WORKFLOW
-        params.denoise_strength = 0.45
-        params.seed = random.randint(0, 999999999999999)
+        if self.seed.value != None and self.seed.value != "" and int(self.seed.value) > 1 << 50:
+            await self.on_error(interaction, Exception("Seed must be less than 2^50"))
+            return False
 
-        images = await generate_alternatives(params, self.images)
-        collage_path = create_collage(images)
-        final_message = f"{interaction.user.mention} here is your image with more detail"
-
-        await interaction.channel.send(content=final_message, file=discord.File(fp=collage_path, filename="collage.png"))
+        return True

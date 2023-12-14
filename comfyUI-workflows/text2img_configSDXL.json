@@ -33,10 +33,10 @@
         "12",
         0
       ],
-      "steps": 12,
-      "cfg": 6,
-      "sampler_name": "dpm_2",
-      "scheduler": "karras",
+      "steps": 8,
+      "cfg": 2,
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
       "start_at_step": 0,
       "refine_at_step": -1,
       "preview_method": "none",
@@ -58,7 +58,7 @@
   },
   "65": {
     "inputs": {
-      "base_ckpt_name": "xl/dreamshaperXL10_alpha2Xl10.safetensors",
+      "base_ckpt_name": "xl/protovisionxl.safetensors",
       "base_clip_skip": -1,
       "refiner_ckpt_name": "None",
       "refiner_clip_skip": -2,
@@ -79,7 +79,7 @@
       "empty_latent_height": 1024,
       "batch_size": 4,
       "lora_stack": [
-        "67",
+        "68",
         0
       ]
     },
@@ -99,6 +99,27 @@
       "lora_name_3": "None",
       "model_weight_3": 1,
       "clip_weight_3": 1
+    },
+    "class_type": "CR LoRA Stack"
+  },
+  "68": {
+    "inputs": {
+      "switch_1": "On",
+      "lora_name_1": "xl/LCMTurboMix_Euler_A_fix.safetensors",
+      "model_weight_1": 1,
+      "clip_weight_1": 1,
+      "switch_2": "Off",
+      "lora_name_2": "None",
+      "model_weight_2": 1,
+      "clip_weight_2": 1,
+      "switch_3": "Off",
+      "lora_name_3": "None",
+      "model_weight_3": 1,
+      "clip_weight_3": 1,
+      "lora_stack": [
+        "67",
+        0
+      ]
     },
     "class_type": "CR LoRA Stack"
   }

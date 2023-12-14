@@ -45,11 +45,9 @@ intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 tree = discord.app_commands.CommandTree(client)
 
-
 models = get_models()
 loras = get_loras()
 samplers = get_samplers()
-
 
 # These aspect ratio resolution values correspond to the SDXL Empty Latent Image node.
 # A latent modification node in the workflow converts it to the equivalent SD 1.5 resolution values.
@@ -74,8 +72,8 @@ BASE_ARG_DESCS = {
     "lora_strength": "Strength of LoRA",
     "aspect_ratio": "Aspect ratio of the generated image",
     "sampler": "Sampling algorithm to use",
-    "num_steps": "Number of sampling steps; range [1, 20]",
-    "cfg_scale": "Degree to which AI should follow prompt; range [1.0, 100.0]",
+    "num_steps": f"Number of sampling steps; range [1, {MAX_STEPS}]",
+    "cfg_scale": f"Degree to which AI should follow prompt; range [1.0, {MAX_CFG}]",
 }
 IMAGINE_ARG_DESCS = {**BASE_ARG_DESCS, "num_steps": "Number of sampling steps; range [1, 30]"}
 SDXL_ARG_DESCS = BASE_ARG_DESCS
@@ -89,14 +87,12 @@ IMAGINE_ARG_CHOICES = {
     "model": SD15_MODEL_CHOICES,
     "lora": SD15_LORA_CHOICES,
     "lora2": SD15_LORA_CHOICES,
-    "lora3": SD15_LORA_CHOICES,
     **BASE_ARG_CHOICES,
 }
 SDXL_ARG_CHOICES = {
     "model": SDXL_MODEL_CHOICES,
     "lora": SDXL_LORA_CHOICES,
     "lora2": SDXL_LORA_CHOICES,
-    "lora3": SDXL_LORA_CHOICES,
     **BASE_ARG_CHOICES,
 }
 VIDEO_ARG_CHOICES = {
@@ -124,12 +120,16 @@ def should_filter(positive_prompt: str, negative_prompt: str) -> bool:
     return False
 
 
-@tree.command(name="refresh", description="Refresh the list of models and loras")
-async def slash_command(interaction: discord.Interaction):
+async def refresh_models():
     global models
     global loras
     models = get_models()
     loras = get_loras()
+
+
+@tree.command(name="refresh", description="Refresh the list of models and loras")
+async def slash_command(interaction: discord.Interaction):
+    await refresh_models()
     await interaction.response.send_message("Refreshed models and loras", ephemeral=True)
 
 
@@ -143,30 +143,28 @@ async def slash_command(interaction: discord.Interaction):
 @app_commands.describe(**IMAGINE_ARG_DESCS)
 @app_commands.choices(**IMAGINE_ARG_CHOICES)
 async def slash_command(
-    interaction: discord.Interaction,
-    prompt: str,
-    negative_prompt: str = None,
-    model: str = None,
-    lora: Choice[str] = None,
-    lora_strength: float = 1.0,
-    lora2: Choice[str] = None,
-    lora_strength2: float = 1.0,
-    lora3: Choice[str] = None,
-    lora_strength3: float = 1.0,
-    # enhance: bool = False,
-    aspect_ratio: str = None,
-    sampler: str = None,
-    num_steps: Range[int, 1, 30] = None,
-    cfg_scale: Range[float, 1.0, 100.0] = None,
-    seed: int = None,
+        interaction: discord.Interaction,
+        prompt: str,
+        negative_prompt: str = None,
+        model: str = None,
+        lora: Choice[str] = None,
+        lora_strength: float = 1.0,
+        lora2: Choice[str] = None,
+        lora_strength2: float = 1.0,
+        # enhance: bool = False,
+        aspect_ratio: str = None,
+        sampler: str = None,
+        num_steps: Range[int, 1, MAX_STEPS] = None,
+        cfg_scale: Range[float, 1.0, MAX_CFG] = None,
+        seed: int = None,
 ):
     params = ImageWorkflow(
         SD15_WORKFLOW,
         prompt,
         negative_prompt,
         model or SD15_GENERATION_DEFAULTS.model,
-        unpack_choices(lora, lora2, lora3),
-        [lora_strength, lora_strength2, lora_strength3],
+        unpack_choices(lora, lora2),
+        [lora_strength, lora_strength2],
         aspect_ratio or SD15_GENERATION_DEFAULTS.aspect_ratio,
         sampler or SD15_GENERATION_DEFAULTS.sampler,
         num_steps or SD15_GENERATION_DEFAULTS.num_steps,
@@ -186,28 +184,26 @@ async def slash_command(
 @app_commands.describe(**VIDEO_ARG_DESCS)
 @app_commands.choices(**VIDEO_ARG_CHOICES)
 async def slash_command(
-    interaction: discord.Interaction,
-    prompt: str,
-    negative_prompt: str = None,
-    model: str = None,
-    lora: Choice[str] = None,
-    lora_strength: float = 1.0,
-    lora2: Choice[str] = None,
-    lora_strength2: float = 1.0,
-    lora3: Choice[str] = None,
-    lora_strength3: float = 1.0,
-    sampler: str = None,
-    num_steps: Range[int, 1, 20] = None,
-    cfg_scale: Range[float, 1.0, 100.0] = None,
-    seed: int = None,
+        interaction: discord.Interaction,
+        prompt: str,
+        negative_prompt: str = None,
+        model: str = None,
+        lora: Choice[str] = None,
+        lora_strength: float = 1.0,
+        lora2: Choice[str] = None,
+        lora_strength2: float = 1.0,
+        sampler: str = None,
+        num_steps: Range[int, 1, MAX_STEPS] = None,
+        cfg_scale: Range[float, 1.0, MAX_CFG] = None,
+        seed: int = None,
 ):
     params = ImageWorkflow(
         VIDEO_WORKFLOW,
         prompt,
         negative_prompt,
         model or VIDEO_GENERATION_DEFAULTS.model,
-        unpack_choices(lora, lora2, lora3),
-        [lora_strength, lora_strength2, lora_strength3],
+        unpack_choices(lora, lora2),
+        [lora_strength, lora_strength2],
         None,
         sampler=sampler or VIDEO_GENERATION_DEFAULTS.sampler,
         num_steps=num_steps or VIDEO_GENERATION_DEFAULTS.num_steps,
@@ -227,29 +223,27 @@ async def slash_command(
 @app_commands.describe(**BASE_ARG_DESCS)
 @app_commands.choices(**SDXL_ARG_CHOICES)
 async def slash_command(
-    interaction: discord.Interaction,
-    prompt: str,
-    negative_prompt: str = None,
-    model: str = None,
-    lora: Choice[str] = None,
-    lora_strength: float = 1.0,
-    lora2: Choice[str] = None,
-    lora_strength2: float = 1.0,
-    lora3: Choice[str] = None,
-    lora_strength3: float = 1.0,
-    aspect_ratio: str = None,
-    sampler: str = None,
-    num_steps: Range[int, 1, 20] = None,
-    cfg_scale: Range[float, 1.0, 100.0] = None,
-    seed: int = None,
+        interaction: discord.Interaction,
+        prompt: str,
+        negative_prompt: str = None,
+        model: str = None,
+        lora: Choice[str] = None,
+        lora_strength: float = 1.0,
+        lora2: Choice[str] = None,
+        lora_strength2: float = 1.0,
+        aspect_ratio: str = None,
+        sampler: str = None,
+        num_steps: Range[int, 1, MAX_STEPS] = None,
+        cfg_scale: Range[float, 1.0, MAX_CFG] = None,
+        seed: int = None,
 ):
     params = ImageWorkflow(
         SDXL_WORKFLOW,
         prompt,
         negative_prompt,
         model or SDXL_GENERATION_DEFAULTS.model,
-        unpack_choices(lora, lora2, lora3),
-        [lora_strength, lora_strength2, lora_strength3],
+        unpack_choices(lora, lora2),
+        [lora_strength, lora_strength2],
         aspect_ratio or SDXL_GENERATION_DEFAULTS.aspect_ratio,
         sampler=sampler or SDXL_GENERATION_DEFAULTS.sampler,
         num_steps=num_steps or SDXL_GENERATION_DEFAULTS.num_steps,
@@ -266,11 +260,11 @@ async def slash_command(
 
 
 async def do_request(
-    interaction: discord.Interaction,
-    intro_message: str,
-    completion_message: str,
-    command_name: str,
-    params: ImageWorkflow,
+        interaction: discord.Interaction,
+        intro_message: str,
+        completion_message: str,
+        command_name: str,
+        params: ImageWorkflow,
 ):
     if should_filter(params.prompt, params.negative_prompt):
         print(
@@ -297,6 +291,15 @@ async def do_request(
     await interaction.channel.send(
         content=final_message, file=discord.File(fp=create_collage(images), filename=fname), view=buttons
     )
+
+
+@client.event
+async def on_ready():
+    await refresh_models()
+    clear_history()
+    for guild in client.guilds:
+        await tree.sync()
+
 
 # run the bot
 client.run(TOKEN)

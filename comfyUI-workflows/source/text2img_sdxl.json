@@ -1,56 +1,7 @@
 {
-  "last_node_id": 67,
-  "last_link_id": 124,
+  "last_node_id": 68,
+  "last_link_id": 126,
   "nodes": [
-    {
-      "id": 67,
-      "type": "CR LoRA Stack",
-      "pos": [
-        -430,
-        -170
-      ],
-      "size": {
-        "0": 315,
-        "1": 322
-      },
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "lora_stack",
-          "type": "LORA_STACK",
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "name": "LORA_STACK",
-          "type": "LORA_STACK",
-          "links": [
-            123
-          ],
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CR LoRA Stack"
-      },
-      "widgets_values": [
-        "On",
-        "None",
-        1,
-        1,
-        "Off",
-        "None",
-        1,
-        1,
-        "Off",
-        "None",
-        1,
-        1
-      ]
-    },
     {
       "id": 40,
       "type": "CR Prompt Text",
@@ -63,7 +14,7 @@
         "1": 102.87689208984375
       },
       "flags": {},
-      "order": 1,
+      "order": 0,
       "mode": 0,
       "outputs": [
         {
@@ -95,7 +46,7 @@
         "1": 270
       },
       "flags": {},
-      "order": 6,
+      "order": 7,
       "mode": 0,
       "inputs": [
         {
@@ -121,7 +72,7 @@
         "1": 130
       },
       "flags": {},
-      "order": 2,
+      "order": 1,
       "mode": 0,
       "outputs": [
         {
@@ -156,7 +107,7 @@
         "1": 78.17271423339844
       },
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
       "outputs": [
         {
@@ -188,7 +139,7 @@
         "1": 542
       },
       "flags": {},
-      "order": 5,
+      "order": 6,
       "mode": 0,
       "inputs": [
         {
@@ -257,10 +208,10 @@
       "widgets_values": [
         840704117820961,
         null,
-        12,
-        6,
-        "dpm_2",
-        "karras",
+        8,
+        2,
+        "euler_ancestral",
+        "normal",
         0,
         -1,
         "none",
@@ -282,13 +233,13 @@
         "1": 402
       },
       "flags": {},
-      "order": 4,
+      "order": 5,
       "mode": 0,
       "inputs": [
         {
           "name": "lora_stack",
           "type": "LORA_STACK",
-          "link": 123,
+          "link": 125,
           "slot_index": 0
         },
         {
@@ -351,7 +302,7 @@
         "Node name for S&R": "Eff. Loader SDXL"
       },
       "widgets_values": [
-        "xl/dreamshaperXL10_alpha2Xl10.safetensors",
+        "xl/protovisionxl.safetensors",
         -1,
         "None",
         -2,
@@ -369,6 +320,106 @@
       "color": "#222233",
       "bgcolor": "#333355",
       "shape": 1
+    },
+    {
+      "id": 67,
+      "type": "CR LoRA Stack",
+      "pos": [
+        -565,
+        -173
+      ],
+      "size": {
+        "0": 315,
+        "1": 322
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "lora_stack",
+          "type": "LORA_STACK",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LORA_STACK",
+          "type": "LORA_STACK",
+          "links": [
+            126
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CR LoRA Stack"
+      },
+      "widgets_values": [
+        "On",
+        "None",
+        1,
+        1,
+        "Off",
+        "None",
+        1,
+        1,
+        "Off",
+        "None",
+        1,
+        1
+      ]
+    },
+    {
+      "id": 68,
+      "type": "CR LoRA Stack",
+      "pos": [
+        -216,
+        -169
+      ],
+      "size": {
+        "0": 315,
+        "1": 322
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "lora_stack",
+          "type": "LORA_STACK",
+          "link": 126,
+          "slot_index": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LORA_STACK",
+          "type": "LORA_STACK",
+          "links": [
+            125
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CR LoRA Stack"
+      },
+      "widgets_values": [
+        "On",
+        "xl/LCMTurboMix_Euler_A_fix.safetensors",
+        1,
+        1,
+        "Off",
+        "None",
+        1,
+        1,
+        "Off",
+        "None",
+        1,
+        1
+      ]
     }
   ],
   "links": [
@@ -421,20 +472,28 @@
       "INT"
     ],
     [
-      123,
-      67,
-      0,
-      65,
-      0,
-      "LORA_STACK"
-    ],
-    [
       124,
       40,
       0,
       65,
       3,
       "STRING"
+    ],
+    [
+      125,
+      68,
+      0,
+      65,
+      0,
+      "LORA_STACK"
+    ],
+    [
+      126,
+      67,
+      0,
+      68,
+      0,
+      "LORA_STACK"
     ]
   ],
   "groups": [],

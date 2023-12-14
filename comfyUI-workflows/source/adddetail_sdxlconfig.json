@@ -1,6 +1,6 @@
 {
-  "last_node_id": 34,
-  "last_link_id": 59,
+  "last_node_id": 35,
+  "last_link_id": 64,
   "nodes": [
     {
       "id": 9,
@@ -14,7 +14,7 @@
         "1": 626.17333984375
       },
       "flags": {},
-      "order": 11,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
@@ -26,100 +26,6 @@
       "properties": {},
       "widgets_values": [
         "final_output"
-      ]
-    },
-    {
-      "id": 33,
-      "type": "UltimateSDUpscale",
-      "pos": [
-        1001,
-        -35
-      ],
-      "size": {
-        "0": 326.11474609375,
-        "1": 894.906005859375
-      },
-      "flags": {},
-      "order": 10,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 51
-        },
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 52,
-          "slot_index": 1
-        },
-        {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "link": 53,
-          "slot_index": 2
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "link": 54
-        },
-        {
-          "name": "vae",
-          "type": "VAE",
-          "link": 55,
-          "slot_index": 4
-        },
-        {
-          "name": "upscale_model",
-          "type": "UPSCALE_MODEL",
-          "link": 56,
-          "slot_index": 5
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": 59,
-          "widget": {
-            "name": "seed"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            58
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "UltimateSDUpscale"
-      },
-      "widgets_values": [
-        2,
-        820046909643404,
-        "randomize",
-        15,
-        8,
-        "dpmpp_2m_sde",
-        "karras",
-        0.45,
-        "Linear",
-        1024,
-        1024,
-        8,
-        32,
-        "Half Tile",
-        0.05,
-        64,
-        8,
-        16,
-        "enable"
       ]
     },
     {
@@ -171,13 +77,13 @@
         "1": 180.6060791015625
       },
       "flags": {},
-      "order": 8,
+      "order": 9,
       "mode": 0,
       "inputs": [
         {
           "name": "clip",
           "type": "CLIP",
-          "link": 20
+          "link": 63
         }
       ],
       "outputs": [
@@ -241,13 +147,13 @@
         "1": 270.0000305175781
       },
       "flags": {},
-      "order": 9,
+      "order": 10,
       "mode": 0,
       "inputs": [
         {
           "name": "clip",
           "type": "CLIP",
-          "link": 28,
+          "link": 64,
           "slot_index": 0
         },
         {
@@ -445,8 +351,8 @@
       "id": 11,
       "type": "Lora Loader Stack (rgthree)",
       "pos": [
-        -668,
-        368
+        -689,
+        375
       ],
       "size": {
         "0": 315,
@@ -472,7 +378,7 @@
           "name": "MODEL",
           "type": "MODEL",
           "links": [
-            52
+            60
           ],
           "shape": 3,
           "slot_index": 0
@@ -481,8 +387,7 @@
           "name": "CLIP",
           "type": "CLIP",
           "links": [
-            20,
-            28
+            61
           ],
           "shape": 3,
           "slot_index": 1
@@ -500,6 +405,100 @@
         1,
         "xl/add-detail-xl.safetensors",
         1
+      ]
+    },
+    {
+      "id": 33,
+      "type": "UltimateSDUpscale",
+      "pos": [
+        1001,
+        -35
+      ],
+      "size": {
+        "0": 326.11474609375,
+        "1": 894.906005859375
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 51
+        },
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 62,
+          "slot_index": 1
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 53,
+          "slot_index": 2
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 54
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 55,
+          "slot_index": 4
+        },
+        {
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "link": 56,
+          "slot_index": 5
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 59,
+          "widget": {
+            "name": "seed"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            58
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UltimateSDUpscale"
+      },
+      "widgets_values": [
+        2,
+        820046909643404,
+        "randomize",
+        8,
+        2,
+        "euler_ancestral",
+        "normal",
+        0.45,
+        "Linear",
+        1024,
+        1024,
+        8,
+        32,
+        "Half Tile",
+        0.05,
+        64,
+        8,
+        16,
+        "enable"
       ]
     },
     {
@@ -546,7 +545,68 @@
         "Node name for S&R": "CheckpointLoaderSimple"
       },
       "widgets_values": [
-        "xl/dreamshaperXL10_alpha2Xl10.safetensors"
+        "xl/protovisionxl.safetensors"
+      ]
+    },
+    {
+      "id": 35,
+      "type": "Lora Loader Stack (rgthree)",
+      "pos": [
+        -290,
+        373
+      ],
+      "size": {
+        "0": 315,
+        "1": 246
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 60
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 61
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            62
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            63,
+            64
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Lora Loader Stack (rgthree)"
+      },
+      "widgets_values": [
+        "xl/LCMTurboMix_Euler_A_fix.safetensors",
+        1,
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1
       ]
     }
   ],
@@ -565,22 +625,6 @@
       1,
       11,
       1,
-      "CLIP"
-    ],
-    [
-      20,
-      11,
-      1,
-      7,
-      0,
-      "CLIP"
-    ],
-    [
-      28,
-      11,
-      1,
-      17,
-      0,
       "CLIP"
     ],
     [
@@ -614,14 +658,6 @@
       33,
       0,
       "IMAGE"
-    ],
-    [
-      52,
-      11,
-      0,
-      33,
-      1,
-      "MODEL"
     ],
     [
       53,
@@ -670,6 +706,46 @@
       33,
       6,
       "INT"
+    ],
+    [
+      60,
+      11,
+      0,
+      35,
+      0,
+      "MODEL"
+    ],
+    [
+      61,
+      11,
+      1,
+      35,
+      1,
+      "CLIP"
+    ],
+    [
+      62,
+      35,
+      0,
+      33,
+      1,
+      "MODEL"
+    ],
+    [
+      63,
+      35,
+      1,
+      7,
+      0,
+      "CLIP"
+    ],
+    [
+      64,
+      35,
+      1,
+      17,
+      0,
+      "CLIP"
     ]
   ],
   "groups": [],
