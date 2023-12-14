@@ -7,10 +7,10 @@ RUN apt-get update
 RUN apt install -y python3 python3-pip python3-virtualenv git
 
 RUN useradd -m -s /bin/bash bot
-RUN mkdir /workspace && chown -R bot:bot /workspace
-COPY --chown=bot:bot \
-    *.py config.properties requirements.txt comfyUI-workflows \
-    /workspace
+RUN mkdir -p /workspace/comfyUI-workflows && chown -R bot:bot /workspace
+
+COPY --chown=bot:bot *.py config.properties requirements.txt /workspace/
+COPY --chown=bot:bot comfyUI-workflows/*.json /workspace/comfyUI-workflows/
 
 USER bot
 WORKDIR /workspace
