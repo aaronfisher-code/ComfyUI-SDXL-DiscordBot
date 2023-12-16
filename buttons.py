@@ -234,7 +234,7 @@ class EditModal(ui.Modal, title="Edit Image"):
         self.prompt = ui.TextInput(label="Prompt",
                                    placeholder="Enter a prompt",
                                    min_length=1,
-                                   max_length=256,
+                                   max_length=2048,
                                    default=self.params.prompt
                                    )
         self.negative_prompt = ui.TextInput(label="Negative Prompt",
