@@ -1,5 +1,4 @@
-import configparser
-import os
+import logging
 import random
 
 import discord
@@ -22,37 +21,16 @@ from imageGen import (
 )
 from collage_utils import create_collage
 from consts import *
+from util import (
+    read_config,
+    setup_config,
+    should_filter,
+    unpack_choices,
+)
 
 
-def read_config():
-    config = configparser.ConfigParser()
-    config.read("config.properties")
-    return config
-
-
-def setup_config():
-    if not os.path.exists("config.properties"):
-        generate_default_config()
-
-    if not os.path.exists("./out"):
-        os.makedirs("./out")
-
-    config = configparser.ConfigParser()
-    config.read("config.properties")
-    token = (
-        os.environ["DISCORD_APP_TOKEN"]
-        if "DISCORD_APP_TOKEN" in os.environ
-        else config["BOT"]["TOKEN"]
-    )
-    return token
-
-
-def generate_default_config():
-    config = configparser.ConfigParser()
-    config["BOT"] = {"TOKEN": "YOUR_DEFAULT_DISCORD_BOT_TOKEN"}
-    config["LOCAL"] = {"SERVER_ADDRESS": "YOUR_COMFYUI_URL"}
-    with open("config.properties", "w") as configfile:
-        config.write(configfile)
+discord.utils.setup_logging()
+logger = logging.getLogger("bot")
 
 
 # setting up the bot
@@ -116,31 +94,12 @@ VIDEO_ARG_CHOICES = {
 }
 
 
-def unpack_choices(*args):
-    return [x is not None and x.value or None for x in args]
-
-
-def should_filter(positive_prompt: str, negative_prompt: str) -> bool:
-    positive_prompt = positive_prompt or ""
-    negative_prompt = negative_prompt or ""
-
-    config = configparser.ConfigParser()
-    config.read("config.properties")
-    word_list = config["BLOCKED_WORDS"]["WORDS"].split(",")
-    if word_list is None:
-        print("No blocked words found in config.properties")
-        return False
-    for word in word_list:
-        if word.lower() in positive_prompt.lower() or word in negative_prompt.lower():
-            return True
-    return False
-
-
 async def refresh_models():
     global models
     global loras
     models = get_models()
     loras = get_loras()
+    logger.info("refreshed models.")
 
 
 @tree.command(name="refresh", description="Refresh the list of models and loras")
@@ -283,8 +242,10 @@ async def do_request(
         params: ImageWorkflow,
 ):
     if should_filter(params.prompt, params.negative_prompt):
-        print(
-            f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {params.prompt}, Negative Prompt: {params.negative_prompt}"
+        logger.info(
+            "Prompt or negative prompt contains a blocked word, not generating image. Prompt: %s, Negative Prompt: %s",
+            params.prompt,
+            params.negative_prompt,
         )
         await interaction.response.send_message(
             f"The prompt {params.prompt} or negative prompt {params.negative_prompt} contains a blocked word, not generating image.",
@@ -312,8 +273,8 @@ async def do_request(
 async def on_ready():
     await refresh_models()
     clear_history()
-    for guild in client.guilds:
-        print(await tree.sync())
+    cmds = await tree.sync()
+    logger.info("synced %d commands: %s.", len(cmds), ", ".join(c.name for c in cmds))
 
 
 if c := read_config():
@@ -327,4 +288,4 @@ if c := read_config():
 
 
 # run the bot
-client.run(TOKEN)
+client.run(TOKEN, log_handler=None)

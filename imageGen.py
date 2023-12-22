@@ -108,8 +108,8 @@ def setup_workflow(workflow, params: ImageWorkflow):
             elif "prompt" in workflow[node]["inputs"]:
                 workflow[node]["inputs"]["prompt"] = params.prompt
 
-    if params.negative_prompt is not None and neg_prompt_nodes[0] != "":
-        neg_prompt = params.negative_prompt + ", (children, child, kids, kid:1.3)"
+    if neg_prompt_nodes[0] != "":
+        neg_prompt = (params.negative_prompt or "") + ", (children, child, kids, kid, teens, teen:1.3)"
         for node in neg_prompt_nodes:
             if "text" in workflow[node]["inputs"]:
                 workflow[node]["inputs"]["text"] = neg_prompt

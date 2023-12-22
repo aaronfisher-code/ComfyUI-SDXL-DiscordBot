@@ -8,6 +8,7 @@ from discord import ui
 from imageGen import ImageWorkflow, generate_images, upscale_image, generate_alternatives
 from collage_utils import create_collage, create_gif_collage
 from consts import *
+from util import should_filter
 
 
 class ImageButton(discord.ui.Button):
@@ -315,5 +316,8 @@ class EditModal(ui.Modal, title="Edit Image"):
         if self.seed.value != None and self.seed.value != "" and int(self.seed.value) > 1 << 50:
             await self.on_error(interaction, Exception("Seed must be less than 2^50"))
             return False
+        
+        if should_filter(self.prompt.value, self.negative_prompt.value):
+            await self.on_error(interaction, Exception("Blocked word(s) in prompt"))
 
         return True

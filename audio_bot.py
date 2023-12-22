@@ -1,3 +1,4 @@
+import logging
 import random
 from io import BytesIO
 
@@ -14,6 +15,8 @@ from audio_gen import (
     MUSICGEN_DEFAULTS,
     TORTOISE_DEFAULTS,
 )
+
+logger = logging.getLogger("bot")
 
 
 tortoise_voices = get_tortoise_voices()
@@ -83,7 +86,8 @@ async def do_request(
     command_name,
     params,
 ):
-    await interaction.response.send_message(intro_message);
+    await interaction.response.send_message(intro_message)
+
     if params.seed is None:
         params.seed = random.randint(0, 999999999999999)
 

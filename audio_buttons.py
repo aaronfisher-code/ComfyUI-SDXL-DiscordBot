@@ -117,7 +117,7 @@ class AudioEditModal(ui.Modal, title="Edit/Extend Sound"):
         self.add_item(self.top_k)
 
     async def on_submit(self, interaction: discord.Interaction) -> None:
-        await interaction.response.send_message("Generating image with new parameters, this shouldn't take too long...")
+        await interaction.response.send_message("Generating audio with new parameters, this shouldn't take too long...")
 
         params = deepcopy(self.params)
         try:

@@ -1,6 +1,7 @@
 from collections import defaultdict
 import configparser
 import json
+import logging
 import requests
 import urllib
 import uuid
@@ -9,6 +10,8 @@ from io import BytesIO
 import websockets
 from PIL import Image
 
+
+logger = logging.getLogger(__name__)
 
 config = configparser.ConfigParser()
 config.read("config.properties")
@@ -53,28 +56,27 @@ def upload_image(filepath, subfolder=None, folder_type=None, overwrite=False):
     return response.json()
 
 
-def get_models():
+def get_node_input_choices(node_name, input_name):
+    logger.debug('fetching possible values for input "%s" of node "%s"', input_name, node_name)
     with urllib.request.urlopen("http://{}/object_info".format(server_address)) as response:
         object_info = json.loads(response.read())
-        return object_info["CheckpointLoaderSimple"]["input"]["required"]["ckpt_name"]
+        return object_info[node_name]["input"]["required"][input_name]
+
+
+def get_models():
+    return get_node_input_choices("CheckpointLoaderSimple", "ckpt_name")
 
 
 def get_loras():
-    with urllib.request.urlopen("http://{}/object_info".format(server_address)) as response:
-        object_info = json.loads(response.read())
-        return object_info["LoraLoader"]["input"]["required"]["lora_name"]
+    return get_node_input_choices("LoraLoader", "lora_name")
 
 
 def get_samplers():
-    with urllib.request.urlopen("http://{}/object_info".format(server_address)) as response:
-        object_info = json.loads(response.read())
-        return object_info["KSampler"]["input"]["required"]["sampler_name"]
+    return get_node_input_choices("KSampler", "sampler_name")
 
 
 def get_tortoise_voices():
-    with urllib.request.urlopen("http://{}/object_info".format(server_address)) as response:
-        object_info = json.loads(response.read())
-        return object_info["TortoiseTTSGenerate"]["input"]["required"]["voice"]
+    return get_node_input_choices("TortoiseTTSGenerate", "voice")
 
 
 class ComfyGenerator:
@@ -103,7 +105,7 @@ class ComfyGenerator:
                     if data["node"] is None and data["prompt_id"] == prompt_id:
                         break
             except ValueError as e:
-                print("Incompatible response from ComfyUI")
+                logger.warning("Incompatible response from ComfyUI")
 
         history = get_history(prompt_id)[prompt_id]
 
@@ -111,7 +113,6 @@ class ComfyGenerator:
 
         for node_id in history["outputs"]:
             node_output = history["outputs"][node_id]
-            print(node_output)
             if "text" in node_output:
                 for prompt in node_output["text"]:
                     full_prompt = prompt
@@ -137,6 +138,9 @@ class ComfyGenerator:
                     data = get_image(video["filename"], video["subfolder"], video["type"])
                     if "final_output" in video["filename"]:
                         output["videos"].append((data, video["filename"]))
+
+        logger.debug("Collected %d outputs", len(output))
+
         return output, full_prompt
 
     async def close(self):
