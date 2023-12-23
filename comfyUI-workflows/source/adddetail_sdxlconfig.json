@@ -1,6 +1,6 @@
 {
   "last_node_id": 39,
-  "last_link_id": 81,
+  "last_link_id": 82,
   "nodes": [
     {
       "id": 11,
@@ -59,67 +59,6 @@
         "None",
         1,
         "xl/add-detail-xl.safetensors",
-        1
-      ]
-    },
-    {
-      "id": 35,
-      "type": "Lora Loader Stack (rgthree)",
-      "pos": [
-        -290,
-        373
-      ],
-      "size": {
-        "0": 315,
-        "1": 246
-      },
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 60
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 61
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            67
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            63,
-            64
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Lora Loader Stack (rgthree)"
-      },
-      "widgets_values": [
-        "xl/LCMTurboMix_Euler_A_fix.safetensors",
-        1,
-        "None",
-        1,
-        "None",
-        1,
-        "None",
         1
       ]
     },
@@ -406,7 +345,8 @@
             79
           ],
           "shape": 3,
-          "slot_index": 0
+          "slot_index": 0,
+          "dir": 4
         }
       ],
       "properties": {
@@ -505,8 +445,7 @@
           "name": "MODEL",
           "type": "MODEL",
           "links": [
-            16,
-            80
+            16
           ],
           "slot_index": 0
         },
@@ -544,7 +483,7 @@
       ],
       "size": {
         "0": 210,
-        "1": 78.17271423339844
+        "1": 96
       },
       "flags": {},
       "order": 3,
@@ -559,6 +498,12 @@
           ],
           "shape": 3,
           "slot_index": 0
+        },
+        {
+          "name": "show_help",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
         }
       ],
       "properties": {
@@ -566,6 +511,68 @@
       },
       "widgets_values": [
         "a dog"
+      ]
+    },
+    {
+      "id": 35,
+      "type": "Lora Loader Stack (rgthree)",
+      "pos": [
+        -290,
+        373
+      ],
+      "size": {
+        "0": 315,
+        "1": 246
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 60
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 61
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            67,
+            82
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            63,
+            64
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Lora Loader Stack (rgthree)"
+      },
+      "widgets_values": [
+        "xl/LCMTurboMix_Euler_A_fix.safetensors",
+        1,
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1
       ]
     },
     {
@@ -586,7 +593,7 @@
         {
           "name": "model",
           "type": "MODEL",
-          "link": 80,
+          "link": 82,
           "slot_index": 0
         },
         {
@@ -624,11 +631,11 @@
       "widgets_values": [
         388795130734508,
         "fixed",
-        12,
+        16,
         2,
         "euler_ancestral",
         "normal",
-        0.2
+        0.3
       ],
       "color": "#232",
       "bgcolor": "#353"
@@ -796,20 +803,20 @@
       "INT"
     ],
     [
-      80,
-      4,
-      0,
-      37,
-      0,
-      "MODEL"
-    ],
-    [
       81,
       21,
       0,
       17,
       2,
       "STRING"
+    ],
+    [
+      82,
+      35,
+      0,
+      37,
+      0,
+      "MODEL"
     ]
   ],
   "groups": [],

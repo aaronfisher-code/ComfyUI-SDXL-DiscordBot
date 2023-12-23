@@ -55,7 +55,7 @@
   "13": {
     "inputs": {
       "image": "example.png",
-      "choose file to upload": "image"
+      "upload": "image"
     },
     "class_type": "LoadImage"
   },
@@ -144,13 +144,13 @@
   "37": {
     "inputs": {
       "seed": 388795130734508,
-      "steps": 12,
+      "steps": 16,
       "cfg": 2,
       "sampler_name": "euler_ancestral",
       "scheduler": "normal",
-      "denoise": 0.2,
+      "denoise": 0.3,
       "model": [
-        "4",
+        "35",
         0
       ],
       "positive": [
