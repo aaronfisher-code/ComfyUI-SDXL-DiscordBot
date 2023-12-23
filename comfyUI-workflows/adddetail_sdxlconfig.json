@@ -55,7 +55,7 @@
   "13": {
     "inputs": {
       "image": "example.png",
-      "upload": "image"
+      "choose file to upload": "image"
     },
     "class_type": "LoadImage"
   },
@@ -120,7 +120,7 @@
       "sampler_name": "euler_ancestral",
       "scheduler": "normal",
       "denoise": 1,
-      "alpha_1": 5,
+      "alpha_1": 8,
       "blending_schedule": "cosine",
       "model": [
         "35",
@@ -144,11 +144,11 @@
   "37": {
     "inputs": {
       "seed": 388795130734508,
-      "steps": 16,
+      "steps": 9,
       "cfg": 2,
       "sampler_name": "euler_ancestral",
       "scheduler": "normal",
-      "denoise": 0.3,
+      "denoise": 0.25,
       "model": [
         "35",
         0
