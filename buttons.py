@@ -210,7 +210,7 @@ class AddDetailButtons(discord.ui.View):
         # do img2img
         params = deepcopy(self.params)
         params.workflow_name = SDXL_DETAIL_WORKFLOW if self.is_sdxl else SD15_DETAIL_WORKFLOW
-        params.denoise_strength = 0.45
+        params.denoise_strength = None
         params.seed = random.randint(0, 999999999999999)
 
         images = await generate_alternatives(params, self.images)
