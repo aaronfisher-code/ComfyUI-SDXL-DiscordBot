@@ -19,7 +19,7 @@
     "inputs": {
       "filename_prefix": "final_output",
       "images": [
-        "33",
+        "39",
         0
       ]
     },
@@ -72,7 +72,7 @@
         0
       ],
       "text_l": [
-        "23",
+        "21",
         0
       ],
       "clip": [
@@ -87,79 +87,6 @@
       "prompt": "a dog"
     },
     "class_type": "CR Prompt Text"
-  },
-  "23": {
-    "inputs": {
-      "prompt": "a dog"
-    },
-    "class_type": "CR Prompt Text"
-  },
-  "32": {
-    "inputs": {
-      "upscale_method": "lanczos",
-      "scale_by": 0.5,
-      "image": [
-        "13",
-        0
-      ]
-    },
-    "class_type": "ImageScaleBy"
-  },
-  "33": {
-    "inputs": {
-      "upscale_by": 2,
-      "seed": [
-        "12",
-        0
-      ],
-      "steps": 8,
-      "cfg": 2,
-      "sampler_name": "euler_ancestral",
-      "scheduler": "normal",
-      "denoise": 0.45,
-      "mode_type": "Linear",
-      "tile_width": 1024,
-      "tile_height": 1024,
-      "mask_blur": 8,
-      "tile_padding": 32,
-      "seam_fix_mode": "Half Tile",
-      "seam_fix_denoise": 0.05,
-      "seam_fix_width": 64,
-      "seam_fix_mask_blur": 8,
-      "seam_fix_padding": 16,
-      "force_uniform_tiles": "enable",
-      "image": [
-        "32",
-        0
-      ],
-      "model": [
-        "35",
-        0
-      ],
-      "positive": [
-        "17",
-        0
-      ],
-      "negative": [
-        "7",
-        0
-      ],
-      "vae": [
-        "4",
-        2
-      ],
-      "upscale_model": [
-        "34",
-        0
-      ]
-    },
-    "class_type": "UltimateSDUpscale"
-  },
-  "34": {
-    "inputs": {
-      "model_name": "ESRGAN_4x.pth"
-    },
-    "class_type": "Upscale Model Loader"
   },
   "35": {
     "inputs": {
@@ -181,5 +108,90 @@
       ]
     },
     "class_type": "Lora Loader Stack (rgthree)"
+  },
+  "36": {
+    "inputs": {
+      "seed": [
+        "12",
+        0
+      ],
+      "steps": 8,
+      "cfg": 2,
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "denoise": 1,
+      "alpha_1": 5,
+      "blending_schedule": "cosine",
+      "model": [
+        "35",
+        0
+      ],
+      "positive": [
+        "17",
+        0
+      ],
+      "negative": [
+        "7",
+        0
+      ],
+      "latent_image": [
+        "38",
+        0
+      ]
+    },
+    "class_type": "Iterative Mixing KSampler"
+  },
+  "37": {
+    "inputs": {
+      "seed": 388795130734508,
+      "steps": 12,
+      "cfg": 2,
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "denoise": 0.1,
+      "model": [
+        "4",
+        0
+      ],
+      "positive": [
+        "17",
+        0
+      ],
+      "negative": [
+        "7",
+        0
+      ],
+      "latent_image": [
+        "36",
+        0
+      ]
+    },
+    "class_type": "KSampler"
+  },
+  "38": {
+    "inputs": {
+      "pixels": [
+        "13",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
+    },
+    "class_type": "VAEEncode"
+  },
+  "39": {
+    "inputs": {
+      "samples": [
+        "37",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
+    },
+    "class_type": "VAEDecode"
   }
 }
