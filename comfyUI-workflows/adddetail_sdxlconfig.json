@@ -148,7 +148,7 @@
       "cfg": 2,
       "sampler_name": "euler_ancestral",
       "scheduler": "normal",
-      "denoise": 0.1,
+      "denoise": 0.2,
       "model": [
         "4",
         0

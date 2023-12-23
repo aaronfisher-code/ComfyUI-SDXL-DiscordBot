@@ -316,10 +316,10 @@
         881,
         36
       ],
-      "size": [
-        315,
-        358
-      ],
+      "size": {
+        "0": 315,
+        "1": 358
+      },
       "flags": {},
       "order": 9,
       "mode": 0,
@@ -418,71 +418,6 @@
         null,
         null
       ]
-    },
-    {
-      "id": 37,
-      "type": "KSampler",
-      "pos": [
-        1314,
-        -26
-      ],
-      "size": {
-        "0": 315,
-        "1": 474
-      },
-      "flags": {},
-      "order": 10,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 80,
-          "slot_index": 0
-        },
-        {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "link": 70,
-          "slot_index": 1
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "link": 71,
-          "slot_index": 2
-        },
-        {
-          "name": "latent_image",
-          "type": "LATENT",
-          "link": 66
-        }
-      ],
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            76
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "KSampler"
-      },
-      "widgets_values": [
-        388795130734508,
-        "fixed",
-        12,
-        2,
-        "euler_ancestral",
-        "normal",
-        0.1
-      ],
-      "color": "#232",
-      "bgcolor": "#353"
     },
     {
       "id": 39,
@@ -632,6 +567,71 @@
       "widgets_values": [
         "a dog"
       ]
+    },
+    {
+      "id": 37,
+      "type": "KSampler",
+      "pos": [
+        1314,
+        -26
+      ],
+      "size": {
+        "0": 315,
+        "1": 474
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 80,
+          "slot_index": 0
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 70,
+          "slot_index": 1
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 71,
+          "slot_index": 2
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 66
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            76
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        388795130734508,
+        "fixed",
+        12,
+        2,
+        "euler_ancestral",
+        "normal",
+        0.2
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
     }
   ],
   "links": [
