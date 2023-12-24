@@ -48,14 +48,14 @@
   },
   "12": {
     "inputs": {
-      "seed": 611553317310193
+      "seed": 1499628722797
     },
     "class_type": "Seed (rgthree)"
   },
   "13": {
     "inputs": {
       "image": "example.png",
-      "choose file to upload": "image"
+      "upload": "image"
     },
     "class_type": "LoadImage"
   },
@@ -143,7 +143,10 @@
   },
   "37": {
     "inputs": {
-      "seed": 388795130734508,
+      "seed": [
+        "40",
+        0
+      ],
       "steps": 9,
       "cfg": 2,
       "sampler_name": "euler_ancestral",
@@ -193,5 +196,11 @@
       ]
     },
     "class_type": "VAEDecode"
+  },
+  "40": {
+    "inputs": {
+      "seed": 55700247452682
+    },
+    "class_type": "Seed (rgthree)"
   }
 }
