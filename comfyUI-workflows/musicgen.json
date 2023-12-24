@@ -24,7 +24,10 @@
   },
   "58": {
     "inputs": {
-      "sr": 32000,
+      "sr": [
+        "46",
+        1
+      ],
       "file_format": "webm",
       "filename_prefix": "final_output",
       "image": [

@@ -17,7 +17,10 @@
         "1",
         1
       ],
-      "to_rate": 32000,
+      "to_rate": [
+        "2",
+        1
+      ],
       "to_channels": 1,
       "audio": [
         "1",
@@ -82,7 +85,10 @@
   },
   "8": {
     "inputs": {
-      "sr": 32000,
+      "sr": [
+        "2",
+        1
+      ],
       "file_format": "webm",
       "filename_prefix": "final_output",
       "image": [
@@ -99,7 +105,7 @@
   "9": {
     "inputs": {
       "sr": [
-        "1",
+        "2",
         1
       ],
       "from_s": [
