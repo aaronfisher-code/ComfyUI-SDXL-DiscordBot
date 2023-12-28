@@ -17,6 +17,7 @@ from imageGen import (
 )
 from collage_utils import create_collage
 from consts import *
+from utils import get_filename
 
 
 def setup_config():
@@ -281,11 +282,12 @@ async def do_request(
     final_message = f"{completion_message}\n Seed: {params.seed}"
     buttons = Buttons(params, images, interaction.user, command=command_name)
 
-    fname = "collage.gif" if "GIF" in images[0].format else "collage.png"
+    file_name = get_filename(interaction, params)
+
+    fname = f"{file_name}.gif" if "GIF" in images[0].format else f"{file_name}.png"
     await interaction.channel.send(
         content=final_message, file=discord.File(fp=create_collage(images), filename=fname), view=buttons
     )
-
 
 @client.event
 async def on_ready():
