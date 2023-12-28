@@ -3,7 +3,10 @@
     "inputs": {
       "ckpt_name": "xl/protovisionxl.safetensors"
     },
-    "class_type": "CheckpointLoaderSimple"
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
   },
   "7": {
     "inputs": {
@@ -13,7 +16,10 @@
         1
       ]
     },
-    "class_type": "CLIPTextEncode"
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
   },
   "9": {
     "inputs": {
@@ -23,7 +29,10 @@
         0
       ]
     },
-    "class_type": "SaveImage"
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
   },
   "11": {
     "inputs": {
@@ -44,20 +53,29 @@
         1
       ]
     },
-    "class_type": "Lora Loader Stack (rgthree)"
+    "class_type": "Lora Loader Stack (rgthree)",
+    "_meta": {
+      "title": "Lora Loader Stack (rgthree)"
+    }
   },
   "12": {
     "inputs": {
-      "seed": 1499628722797
+      "seed": -1
     },
-    "class_type": "Seed (rgthree)"
+    "class_type": "Seed (rgthree)",
+    "_meta": {
+      "title": "Seed (rgthree)"
+    }
   },
   "13": {
     "inputs": {
       "image": "example.png",
       "upload": "image"
     },
-    "class_type": "LoadImage"
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
   },
   "17": {
     "inputs": {
@@ -80,13 +98,19 @@
         1
       ]
     },
-    "class_type": "CLIPTextEncodeSDXL"
+    "class_type": "CLIPTextEncodeSDXL",
+    "_meta": {
+      "title": "CLIPTextEncodeSDXL"
+    }
   },
   "21": {
     "inputs": {
       "prompt": "a dog"
     },
-    "class_type": "CR Prompt Text"
+    "class_type": "CR Prompt Text",
+    "_meta": {
+      "title": "📝 CR Prompt Text"
+    }
   },
   "35": {
     "inputs": {
@@ -107,7 +131,10 @@
         1
       ]
     },
-    "class_type": "Lora Loader Stack (rgthree)"
+    "class_type": "Lora Loader Stack (rgthree)",
+    "_meta": {
+      "title": "Lora Loader Stack (rgthree)"
+    }
   },
   "36": {
     "inputs": {
@@ -122,6 +149,7 @@
       "denoise": 1,
       "alpha_1": 8,
       "blending_schedule": "cosine",
+      "stop_blending_at_pct": 1,
       "model": [
         "35",
         0
@@ -139,7 +167,10 @@
         0
       ]
     },
-    "class_type": "Iterative Mixing KSampler"
+    "class_type": "Iterative Mixing KSampler",
+    "_meta": {
+      "title": "Iterative Mixing KSampler"
+    }
   },
   "37": {
     "inputs": {
@@ -169,7 +200,10 @@
         0
       ]
     },
-    "class_type": "KSampler"
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
   },
   "38": {
     "inputs": {
@@ -182,7 +216,10 @@
         2
       ]
     },
-    "class_type": "VAEEncode"
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
   },
   "39": {
     "inputs": {
@@ -195,12 +232,18 @@
         2
       ]
     },
-    "class_type": "VAEDecode"
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
   },
   "40": {
     "inputs": {
-      "seed": 55700247452682
+      "seed": -1
     },
-    "class_type": "Seed (rgthree)"
+    "class_type": "Seed (rgthree)",
+    "_meta": {
+      "title": "Seed (rgthree)"
+    }
   }
 }
