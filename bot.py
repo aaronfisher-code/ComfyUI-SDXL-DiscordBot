@@ -140,6 +140,7 @@ async def slash_command(
         num_steps or SD15_GENERATION_DEFAULTS.num_steps,
         cfg_scale or SD15_GENERATION_DEFAULTS.cfg_scale,
         seed=seed,
+        slash_command="imagine",
     )
     await do_request(
         interaction,
@@ -179,6 +180,7 @@ async def slash_command(
         num_steps=num_steps or VIDEO_GENERATION_DEFAULTS.num_steps,
         cfg_scale=cfg_scale or VIDEO_GENERATION_DEFAULTS.cfg_scale,
         seed=seed,
+        slash_command="video",
     )
     await do_request(
         interaction,
@@ -219,6 +221,7 @@ async def slash_command(
         num_steps=num_steps or SDXL_GENERATION_DEFAULTS.num_steps,
         cfg_scale=cfg_scale or SDXL_GENERATION_DEFAULTS.cfg_scale,
         seed=seed,
+        slash_command="sdxl",
     )
     await do_request(
         interaction,

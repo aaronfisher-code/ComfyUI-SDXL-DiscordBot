@@ -9,7 +9,7 @@ from discord import ui
 from imageGen import ImageWorkflow, generate_images, upscale_image, generate_alternatives
 from collage_utils import create_collage, create_gif_collage
 from consts import *
-from util import should_filter, get_filename
+from util import should_filter, get_filename, build_command
 
 
 class ImageButton(discord.ui.Button):
@@ -192,6 +192,7 @@ class Buttons(discord.ui.View):
             f"num steps: {params.num_steps or 'default'}\n"
             f"cfg scale: {params.cfg_scale or 'default'}\n"
             f"seed: {params.seed}\n"
+            f"```{build_command(params)}```"
         )
         await interaction.response.send_message(info_str, ephemeral=True)
 

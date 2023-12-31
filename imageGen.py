@@ -30,6 +30,7 @@ class ImageWorkflow:
 
     seed: Optional[int] = None
     filename: str = None
+    slash_command: str = None
 
 
 # Read the configuration
@@ -50,7 +51,8 @@ SD15_GENERATION_DEFAULTS = ImageWorkflow(
     float(config["SD15_GENERATION_DEFAULTS"]["CFG_SCALE"]),
     float(config["SD15_GENERATION_DEFAULTS"]["DENOISE_STRENGTH"]),
     None,  # seed
-    None  # filename
+    None,  # filename
+    "imagine"  # slash_command
 )
 
 SDXL_GENERATION_DEFAULTS = ImageWorkflow(
@@ -66,7 +68,8 @@ SDXL_GENERATION_DEFAULTS = ImageWorkflow(
     float(config["SDXL_GENERATION_DEFAULTS"]["CFG_SCALE"]),
     float(config["SDXL_GENERATION_DEFAULTS"]["DENOISE_STRENGTH"]),
     None,  # seed
-    None  # filename
+    None,  # filename
+    "sdxl"  # slash_command
 )
 
 VIDEO_GENERATION_DEFAULTS = ImageWorkflow(
@@ -82,7 +85,8 @@ VIDEO_GENERATION_DEFAULTS = ImageWorkflow(
     float(config["VIDEO_GENERATION_DEFAULTS"]["CFG_SCALE"]),
     None,  # denoise_strength
     None,  # seed
-    None  # filename
+    None,  # filename
+    "video"  # slash_command
 )
 
 

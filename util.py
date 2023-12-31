@@ -54,3 +54,26 @@ def unpack_choices(*args):
 
 def get_filename(interaction: Interaction, params: ImageWorkflow):
     return f"{interaction.user.name}_{params.prompt[:10]}_{params.seed}"
+
+def build_command(params: ImageWorkflow):
+    try:
+        command = f"/{params.slash_command}"
+        command += f" prompt:{params.prompt}"
+        if params.negative_prompt:
+            command += f" negative_prompt:{params.negative_prompt}"
+        command += f" seed:{params.seed}"
+        command += f" model:{params.model.replace('.safetensors', '')}"
+        command += f" sampler:{params.sampler}"
+        command += f" num_steps:{params.num_steps}"
+        command += f" cfg_scale:{params.cfg_scale}"
+        if len(params.loras) != 0:
+            for i, lora in enumerate(params.loras):
+                if lora is None or lora == "None":
+                    continue
+                command += f" lora{i > 0 and i + 1 or ''}:{str(lora).replace('.safetensors', '')}"
+                command += f" lora_strength{i > 0 and i + 1 or ''}:{params.lora_strengths[i]}"
+        return command
+    except Exception as e:
+        print(e)
+        return ""
+
