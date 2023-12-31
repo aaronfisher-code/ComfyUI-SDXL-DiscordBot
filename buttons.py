@@ -9,8 +9,7 @@ from discord import ui
 from imageGen import ImageWorkflow, generate_images, upscale_image, generate_alternatives
 from collage_utils import create_collage, create_gif_collage
 from consts import *
-from utils import get_filename
-from util import should_filter
+from util import should_filter, get_filename
 
 
 class ImageButton(discord.ui.Button):

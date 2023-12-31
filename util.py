@@ -1,6 +1,9 @@
 import configparser
 import os
 
+from discord import Interaction
+from imageGen import ImageWorkflow
+
 
 def read_config():
     config = configparser.ConfigParser()
@@ -48,3 +51,6 @@ def should_filter(positive_prompt: str, negative_prompt: str) -> bool:
 
 def unpack_choices(*args):
     return [x is not None and x.value or None for x in args]
+
+def get_filename(interaction: Interaction, params: ImageWorkflow):
+    return f"{interaction.user.name}_{params.prompt[:10]}_{params.seed}"

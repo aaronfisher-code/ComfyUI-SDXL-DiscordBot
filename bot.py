@@ -1,7 +1,8 @@
 import logging
 import random
-
+import os
 import discord
+
 from discord import app_commands
 from discord.app_commands import Choice, Range
 
@@ -21,13 +22,15 @@ from imageGen import (
 )
 from collage_utils import create_collage
 from consts import *
-from utils import get_filename
 from util import (
     read_config,
     setup_config,
     should_filter,
     unpack_choices,
+    get_filename,
+    generate_default_config
 )
+
 
 def setup_config():
     if not os.path.exists("config.properties"):
@@ -35,14 +38,14 @@ def setup_config():
 
     if not os.path.exists("./out"):
         os.makedirs("./out")
-
+    config = read_config()
+    return config["BOT"]["TOKEN"], config["BOT"]["SDXL_SOURCE"]
 
 discord.utils.setup_logging()
 logger = logging.getLogger("bot")
 
-
 # setting up the bot
-TOKEN = setup_config()
+TOKEN, IMAGE_SOURCE = setup_config()
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 tree = discord.app_commands.CommandTree(client)
@@ -62,7 +65,8 @@ ASPECT_RATIO_CHOICES = [
 ]
 SD15_MODEL_CHOICES = [Choice(name=m, value=m) for m in models[0] if "xl" not in m.lower()][:25]
 SD15_LORA_CHOICES = [Choice(name=l, value=l) for l in loras[0] if "xl" not in l.lower()][:25]
-SDXL_MODEL_CHOICES = [Choice(name=m, value=m) for m in models[0] if "xl" in m.lower() and "refiner" not in m.lower()][:25]
+SDXL_MODEL_CHOICES = [Choice(name=m, value=m) for m in models[0] if "xl" in m.lower() and "refiner" not in m.lower()][
+                     :25]
 SDXL_LORA_CHOICES = [Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][:25]
 SAMPLER_CHOICES = [Choice(name=s, value=s) for s in samplers[0]]
 
@@ -273,6 +277,7 @@ async def do_request(
         content=final_message, file=discord.File(fp=create_collage(images), filename=fname), view=buttons
     )
 
+
 @client.event
 async def on_ready():
     await refresh_models()
@@ -282,14 +287,15 @@ async def on_ready():
 
 
 if c := read_config():
-    if c["BOT"]["MUSIC_ENABLED"]:
+    if c["BOT"]["MUSIC_ENABLED"].lower() == "true":
         from audio_bot import music_command
+
         tree.add_command(music_command)
 
-    if c["BOT"]["SPEECH_ENABLED"]:
+    if c["BOT"]["SPEECH_ENABLED"].lower() == "true":
         from audio_bot import speech_command
-        tree.add_command(speech_command)
 
+        tree.add_command(speech_command)
 
 # run the bot
 client.run(TOKEN, log_handler=None)
