@@ -28,24 +28,13 @@ from util import (
     should_filter,
     unpack_choices,
     get_filename,
-    generate_default_config
 )
-
-
-def setup_config():
-    if not os.path.exists("config.properties"):
-        generate_default_config()
-
-    if not os.path.exists("./out"):
-        os.makedirs("./out")
-    config = read_config()
-    return config["BOT"]["TOKEN"], config["BOT"]["SDXL_SOURCE"]
 
 discord.utils.setup_logging()
 logger = logging.getLogger("bot")
 
 # setting up the bot
-TOKEN, IMAGE_SOURCE = setup_config()
+TOKEN = setup_config()
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 tree = discord.app_commands.CommandTree(client)
@@ -63,11 +52,11 @@ ASPECT_RATIO_CHOICES = [
     Choice(name="9:7 landscape", value="1152 x 896   (landscape)"),
     Choice(name="7:4 landscape", value="1344 x 768   (landscape)"),
 ]
-SD15_MODEL_CHOICES = [Choice(name=m, value=m) for m in models[0] if "xl" not in m.lower()][:25]
-SD15_LORA_CHOICES = [Choice(name=l, value=l) for l in loras[0] if "xl" not in l.lower()][:25]
-SDXL_MODEL_CHOICES = [Choice(name=m, value=m) for m in models[0] if "xl" in m.lower() and "refiner" not in m.lower()][
+SD15_MODEL_CHOICES = [Choice(name=m.replace(".safetensors", ""), value=m) for m in models[0] if "xl" not in m.lower()][:25]
+SD15_LORA_CHOICES = [Choice(name=l.replace(".safetensors", ""), value=l) for l in loras[0] if "xl" not in l.lower()][:25]
+SDXL_MODEL_CHOICES = [Choice(name=m.replace(".safetensors", ""), value=m) for m in models[0] if "xl" in m.lower() and "refiner" not in m.lower()][
                      :25]
-SDXL_LORA_CHOICES = [Choice(name=l, value=l) for l in loras[0] if "xl" in l.lower()][:25]
+SDXL_LORA_CHOICES = [Choice(name=l.replace(".safetensors", ""), value=l) for l in loras[0] if "xl" in l.lower()][:25]
 SAMPLER_CHOICES = [Choice(name=s, value=s) for s in samplers[0]]
 
 BASE_ARG_DESCS = {
