@@ -10,6 +10,7 @@ from imageGen import ImageWorkflow, generate_images, upscale_image, generate_alt
 from collage_utils import create_collage, create_gif_collage
 from consts import *
 from utils import get_filename
+from util import should_filter
 
 
 class ImageButton(discord.ui.Button):
@@ -88,8 +89,7 @@ class Buttons(discord.ui.View):
         buttons = Buttons(params, images, self.author, command=self.command)
 
         # if a gif, set filename as gif, otherwise png
-        file_name = get_filename(interaction, params)
-        fname = f"{file_name}.gif" if images[0].format == "GIF" else f"{file_name}.png"
+        fname = "collage.gif" if images[0].format == "GIF" else "collage.png"
         await interaction.channel.send(
             content=final_message, file=discord.File(fp=collage_path, filename=fname), view=buttons
         )
@@ -106,10 +106,9 @@ class Buttons(discord.ui.View):
         upscaled_image.save(upscaled_image_path)
         final_message = f"{interaction.user.mention} here is your upscaled image"
         buttons = AddDetailButtons(params, upscaled_image, is_sdxl=self.is_sdxl)
-        file_name = f"upscaled_image_{get_filename(interaction, params)}"
         await interaction.channel.send(
             content=final_message,
-            file=discord.File(fp=upscaled_image_path, filename=f"{file_name}.png"),
+            file=discord.File(fp=upscaled_image_path, filename="upscaled_image.png"),
             view=buttons
         )
 
@@ -154,14 +153,12 @@ class Buttons(discord.ui.View):
         # Generate a new image with the same prompt
         images, enhanced_prompt = await generate_images(params)
 
-        file_name = get_filename(interaction, params)
-
         if self.is_video:
             collage = create_gif_collage(images)
-            fname = f"{file_name}.gif"
+            fname = "collage.gif"
         else:
             collage = create_collage(images)
-            fname = f"{file_name}.png"
+            fname = "collage.png"
 
         # Construct the final message with user mention
         final_message = (
@@ -222,10 +219,8 @@ class AddDetailButtons(discord.ui.View):
         collage_path = create_collage(images)
         final_message = f"{interaction.user.mention} here is your image with more detail"
 
-        file_name = get_filename(interaction, params)
-
         await interaction.channel.send(content=final_message,
-                                       file=discord.File(fp=collage_path, filename=f"{file_name}.png")
+                                       file=discord.File(fp=collage_path, filename="collage.png")
                                        )
 
 
@@ -293,14 +288,12 @@ class EditModal(ui.Modal, title="Edit Image"):
             command=self.command
         )
 
-        file_name = get_filename(interaction, params)
-
         if self.is_video:
             collage = create_gif_collage(images)
-            fname = f"{file_name}.gif"
+            fname = "collage.gif"
         else:
             collage = create_collage(images)
-            fname = f"{file_name}.png"
+            fname = "collage.png"
 
         await interaction.channel.send(content=final_message,
                                        file=discord.File(fp=collage, filename=fname),

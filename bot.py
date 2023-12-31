@@ -1,24 +1,33 @@
-import discord
-import discord.ext
-import configparser
-import os
+import logging
 import random
 
+import discord
 from discord import app_commands
 from discord.app_commands import Choice, Range
 
 from buttons import Buttons
+from comfy_api import (
+    get_models,
+    get_loras,
+    get_samplers,
+    clear_history,
+)
 from imageGen import (
     ImageWorkflow,
     generate_images,
-    get_models,
-    get_loras,
-    get_samplers, clear_history, SD15_GENERATION_DEFAULTS, SDXL_GENERATION_DEFAULTS, VIDEO_GENERATION_DEFAULTS
+    SD15_GENERATION_DEFAULTS,
+    SDXL_GENERATION_DEFAULTS,
+    VIDEO_GENERATION_DEFAULTS,
 )
 from collage_utils import create_collage
 from consts import *
 from utils import get_filename
-
+from util import (
+    read_config,
+    setup_config,
+    should_filter,
+    unpack_choices,
+)
 
 def setup_config():
     if not os.path.exists("config.properties"):
@@ -27,21 +36,13 @@ def setup_config():
     if not os.path.exists("./out"):
         os.makedirs("./out")
 
-    config = configparser.ConfigParser()
-    config.read("config.properties")
-    return config["BOT"]["TOKEN"], config["BOT"]["SDXL_SOURCE"]
 
-
-def generate_default_config():
-    config = configparser.ConfigParser()
-    config["DISCORD"] = {"TOKEN": "YOUR_DEFAULT_DISCORD_BOT_TOKEN"}
-    config["LOCAL"] = {"SERVER_ADDRESS": "YOUR_COMFYUI_URL"}
-    with open("config.properties", "w") as configfile:
-        config.write(configfile)
+discord.utils.setup_logging()
+logger = logging.getLogger("bot")
 
 
 # setting up the bot
-TOKEN, IMAGE_SOURCE = setup_config()
+TOKEN = setup_config()
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 tree = discord.app_commands.CommandTree(client)
@@ -76,7 +77,7 @@ BASE_ARG_DESCS = {
     "num_steps": f"Number of sampling steps; range [1, {MAX_STEPS}]",
     "cfg_scale": f"Degree to which AI should follow prompt; range [1.0, {MAX_CFG}]",
 }
-IMAGINE_ARG_DESCS = BASE_ARG_DESCS
+IMAGINE_ARG_DESCS = {**BASE_ARG_DESCS, "num_steps": "Number of sampling steps; range [1, 30]"}
 SDXL_ARG_DESCS = BASE_ARG_DESCS
 VIDEO_ARG_DESCS = {k: v for k, v in BASE_ARG_DESCS.items() if k != "aspect_ratio"}
 
@@ -101,31 +102,12 @@ VIDEO_ARG_CHOICES = {
 }
 
 
-def unpack_choices(*args):
-    return [x is not None and x.value or None for x in args]
-
-
-def should_filter(positive_prompt: str, negative_prompt: str) -> bool:
-    positive_prompt = positive_prompt or ""
-    negative_prompt = negative_prompt or ""
-
-    config = configparser.ConfigParser()
-    config.read("config.properties")
-    word_list = config["BLOCKED_WORDS"]["WORDS"].split(",")
-    if word_list is None:
-        print("No blocked words found in config.properties")
-        return False
-    for word in word_list:
-        if word.lower() in positive_prompt.lower() or word in negative_prompt.lower():
-            return True
-    return False
-
-
 async def refresh_models():
     global models
     global loras
     models = get_models()
     loras = get_loras()
+    logger.info("refreshed models.")
 
 
 @tree.command(name="refresh", description="Refresh the list of models and loras")
@@ -262,8 +244,10 @@ async def do_request(
         params: ImageWorkflow,
 ):
     if should_filter(params.prompt, params.negative_prompt):
-        print(
-            f"Prompt or negative prompt contains a blocked word, not generating image. Prompt: {params.prompt}, Negative Prompt: {params.negative_prompt}"
+        logger.info(
+            "Prompt or negative prompt contains a blocked word, not generating image. Prompt: %s, Negative Prompt: %s",
+            params.prompt,
+            params.negative_prompt,
         )
         await interaction.response.send_message(
             f"The prompt {params.prompt} or negative prompt {params.negative_prompt} contains a blocked word, not generating image.",
@@ -293,9 +277,19 @@ async def do_request(
 async def on_ready():
     await refresh_models()
     clear_history()
-    for guild in client.guilds:
-        await tree.sync()
+    cmds = await tree.sync()
+    logger.info("synced %d commands: %s.", len(cmds), ", ".join(c.name for c in cmds))
+
+
+if c := read_config():
+    if c["BOT"]["MUSIC_ENABLED"]:
+        from audio_bot import music_command
+        tree.add_command(music_command)
+
+    if c["BOT"]["SPEECH_ENABLED"]:
+        from audio_bot import speech_command
+        tree.add_command(speech_command)
 
 
 # run the bot
-client.run(TOKEN)
+client.run(TOKEN, log_handler=None)
