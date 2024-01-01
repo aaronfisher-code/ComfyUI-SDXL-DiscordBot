@@ -104,6 +104,10 @@ def setup_workflow(workflow, params: ImageWorkflow):
     if config.has_option(params.workflow_name, "LLM_MODEL_NODE"):
         llm_model_node = config.get(params.workflow_name, "LLM_MODEL_NODE")
 
+    if config.has_option(params.workflow_name, "TURBO_LORA_NODE"):
+        turbo_lora_node = config.get(params.workflow_name, "TURBO_LORA_NODE")
+
+
     # Modify the prompt dictionary
     if params.prompt is not None and prompt_nodes[0] != "":
         for node in prompt_nodes:
@@ -194,6 +198,12 @@ def setup_workflow(workflow, params: ImageWorkflow):
         latent_image_node = config.get(params.workflow_name, "LATENT_IMAGE_NODE").split(",")
         for node in latent_image_node:
             workflow[node]["inputs"]["amount"] = 1
+
+    if turbo_lora_node is not None and config.get("SDXL_GENERATION_DEFAULTS", "TURBO_ENABLED") == "False":
+        if "lora_01" in workflow[turbo_lora_node]["inputs"]:
+            workflow[turbo_lora_node]["inputs"]["lora_01"] = "None"
+        elif "switch_1" in workflow[turbo_lora_node]["inputs"]:
+            workflow[turbo_lora_node]["inputs"]["switch_1"] = "Off"
 
     return workflow
 
