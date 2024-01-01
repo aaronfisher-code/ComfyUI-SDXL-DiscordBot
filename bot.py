@@ -1,3 +1,4 @@
+import json
 import logging
 import random
 import os
@@ -42,6 +43,9 @@ tree = discord.app_commands.CommandTree(client)
 models = get_models()
 loras = get_loras()
 samplers = get_samplers()
+
+generation_messages = json.loads(open("generation_messages.json", "r").read())
+completion_messages = json.loads(open("completion_messages.json", "r").read())
 
 # These aspect ratio resolution values correspond to the SDXL Empty Latent Image node.
 # A latent modification node in the workflow converts it to the equivalent SD 1.5 resolution values.
@@ -144,8 +148,8 @@ async def slash_command(
     )
     await do_request(
         interaction,
-        f'{interaction.user.mention} asked me to imagine "{prompt}", this shouldn\'t take too long...',
-        f'{interaction.user.mention} asked me to imagine "{prompt}", here is what I imagined for them.',
+        f'🖼️ {interaction.user.mention} asked me to imagine "{prompt}"! {random.choice(generation_messages)} 🖼️',
+        f'{interaction.user.mention} asked me to imagine "{prompt}"! {random.choice(completion_messages)}',
         "imagine",
         params,
     )
@@ -184,8 +188,8 @@ async def slash_command(
     )
     await do_request(
         interaction,
-        f'{interaction.user.mention} asked me to create the video "{prompt}", this shouldn\'t take too long...',
-        f'{interaction.user.mention} asked me to create the video "{prompt}", here is what I created for them.',
+        f'🎥{interaction.user.mention} asked me to create the video "{prompt}"! {random.choice(generation_messages)} 🎥',
+        f'{interaction.user.mention} asked me to create the video "{prompt}"! {random.choice(completion_messages)} 🎥',
         "video",
         params,
     )
@@ -225,8 +229,8 @@ async def slash_command(
     )
     await do_request(
         interaction,
-        f'{interaction.user.mention} asked me to imagine "{prompt}", this shouldn\'t take too long...',
-        f'{interaction.user.mention} asked me to imagine "{prompt}", here is what I imagined for them.',
+        f'🖌️{interaction.user.mention} asked me to imagine "{prompt}" using SDXL! {random.choice(generation_messages)} 🖌️',
+        f'🖌️ {interaction.user.mention} asked me to imagine "{prompt}" using SDXL! {random.choice(completion_messages)}. 🖌️',
         "sdxl",
         params,
     )

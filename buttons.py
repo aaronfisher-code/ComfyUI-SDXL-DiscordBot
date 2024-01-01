@@ -64,6 +64,13 @@ class Buttons(discord.ui.View):
             btn = ImageButton(f"U{idx + 1}", "⬆️", row, self.upscale_and_send)
             self.add_item(btn)
 
+        # Dynamically add download buttons
+        for idx, _ in enumerate(images):
+            # Determine row based on index, number of alternative buttons, and re-roll row
+            row = (idx + (len(images) * 2) + 2) // 5 + reroll_row
+            btn = ImageButton(f"D{idx + 1}", "💾", row, self.download_image)
+            self.add_item(btn)
+
         # removed until the upscale flow is fixed
         # Add upscale with added detail buttons
         # for idx, _ in enumerate(images):
@@ -73,7 +80,7 @@ class Buttons(discord.ui.View):
 
     async def generate_alternatives_and_send(self, interaction, button):
         index = int(button.label[1:]) - 1  # Extract index from label
-        await interaction.response.send_message("Creating some alternatives, this shouldn't take too long...")
+        await interaction.response.send_message(f"{interaction.user.mention} asked for some alternatives of image #{index + 1}, this shouldn't take too long...")
 
         params = deepcopy(self.params)
         params.workflow_name = SDXL_ALTS_WORKFLOW if self.is_sdxl else SD15_ALTS_WORKFLOW
@@ -95,7 +102,7 @@ class Buttons(discord.ui.View):
 
     async def upscale_and_send(self, interaction, button):
         index = int(button.label[1:]) - 1  # Extract index from label
-        await interaction.response.send_message("Upscaling the image, this shouldn't take too long...")
+        await interaction.response.send_message(f"{interaction.user.mention} asked for an upscale of image #{index + 1}, this shouldn't take too long...")
 
         params = deepcopy(self.params)
         params.workflow_name = UPSCALE_WORKFLOW
@@ -195,6 +202,13 @@ class Buttons(discord.ui.View):
             f"```{build_command(params)}```"
         )
         await interaction.response.send_message(info_str, ephemeral=True)
+
+    async def download_image(self, interaction, button):
+        index = int(button.label[1:]) - 1
+        file_name = f"{get_filename(interaction, self.params)}_{index}.png"
+        fp = f"./out/images_{file_name}"
+        self.images[index].save(fp)
+        await interaction.response.send_message(f"{interaction.user.mention}, here is your image!", file=discord.File(fp=fp, filename=file_name))
 
 
 class AddDetailButtons(discord.ui.View):
