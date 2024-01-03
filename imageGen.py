@@ -6,7 +6,6 @@ from typing import Optional
 
 from PIL import Image
 
-
 from comfy_api import ComfyGenerator as ImageGenerator, upload_image
 
 
@@ -27,6 +26,7 @@ class ImageWorkflow:
     cfg_scale: Optional[float] = None
 
     denoise_strength: Optional[float] = None
+    batch_size: Optional[int] = None
 
     seed: Optional[int] = None
     filename: str = None
@@ -97,6 +97,7 @@ def setup_workflow(workflow, params: ImageWorkflow):
     model_node = config.get(params.workflow_name, "MODEL_NODE").split(",")
     lora_node = config.get(params.workflow_name, "LORA_NODE").split(",")
     llm_model_node = None
+    turbo_lora_node = None
 
     if config.has_option(params.workflow_name, "FILE_INPUT_NODES"):
         file_input_nodes = config.get(params.workflow_name, "FILE_INPUT_NODES").split(",")
@@ -106,7 +107,6 @@ def setup_workflow(workflow, params: ImageWorkflow):
 
     if config.has_option(params.workflow_name, "TURBO_LORA_NODE"):
         turbo_lora_node = config.get(params.workflow_name, "TURBO_LORA_NODE")
-
 
     # Modify the prompt dictionary
     if params.prompt is not None and prompt_nodes[0] != "":
@@ -173,10 +173,10 @@ def setup_workflow(workflow, params: ImageWorkflow):
 
     # maybe set sampler arguments
     sampler_args_given = (
-        params.denoise_strength is not None
-        or params.sampler is not None
-        or params.num_steps is not None
-        or params.cfg_scale is not None
+            params.denoise_strength is not None
+            or params.sampler is not None
+            or params.num_steps is not None
+            or params.cfg_scale is not None
     )
     if sampler_args_given and config.has_option(params.workflow_name, "DENOISE_NODE"):
         denoise_node = config.get(params.workflow_name, "DENOISE_NODE").split(",")
@@ -194,10 +194,10 @@ def setup_workflow(workflow, params: ImageWorkflow):
                 workflow[node]["inputs"]["denoise"] = denoise
 
     # limit batch size to 1 if denoise strength is given ()
-    if params.denoise_strength is not None and config.has_option(params.workflow_name, "LATENT_IMAGE_NODE"):
+    if params.batch_size is not None and config.has_option(params.workflow_name, "LATENT_IMAGE_NODE"):
         latent_image_node = config.get(params.workflow_name, "LATENT_IMAGE_NODE").split(",")
         for node in latent_image_node:
-            workflow[node]["inputs"]["amount"] = 1
+            workflow[node]["inputs"]["amount"] = params.batch_size
 
     if turbo_lora_node is not None and config.get("SDXL_GENERATION_DEFAULTS", "TURBO_ENABLED") == "False":
         if "lora_01" in workflow[turbo_lora_node]["inputs"]:

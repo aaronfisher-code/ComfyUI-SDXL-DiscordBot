@@ -228,6 +228,7 @@ class AddDetailButtons(discord.ui.View):
         params.workflow_name = SDXL_DETAIL_WORKFLOW if self.is_sdxl else SD15_DETAIL_WORKFLOW
         params.denoise_strength = None
         params.seed = random.randint(0, 999999999999999)
+        params.batch_size = 1
 
         images = await generate_alternatives(params, self.images)
         collage_path = create_collage(images)

@@ -1,7 +1,7 @@
 import configparser
 import os
 
-from discord import Interaction
+from discord import Interaction, Attachment
 from imageGen import ImageWorkflow
 
 
@@ -52,8 +52,10 @@ def should_filter(positive_prompt: str, negative_prompt: str) -> bool:
 def unpack_choices(*args):
     return [x is not None and x.value or None for x in args]
 
+
 def get_filename(interaction: Interaction, params: ImageWorkflow):
     return f"{interaction.user.name}_{params.prompt[:10]}_{params.seed}"
+
 
 def build_command(params: ImageWorkflow):
     try:
@@ -77,3 +79,19 @@ def build_command(params: ImageWorkflow):
         print(e)
         return ""
 
+
+async def process_attachment(attachment: Attachment, interaction: Interaction):
+    if attachment.content_type != "image/png" and attachment.content_type != "image/jpeg":
+        await interaction.response.send_message("Error: Please upload a PNG or JPEG image", ephemeral=True)
+        return None
+
+    # check if resolution is too large
+    if attachment.width > 3000 or attachment.height > 3000:
+        await interaction.response.send_message("Error: Image resolution is too large", ephemeral=True)
+        return None
+
+    os.makedirs("./input", exist_ok=True)
+
+    fp = f"./input/{attachment.filename}"
+    await attachment.save(fp)
+    return os.path.abspath(fp)

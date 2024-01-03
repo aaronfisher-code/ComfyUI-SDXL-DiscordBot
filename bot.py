@@ -4,7 +4,7 @@ import random
 import os
 import discord
 
-from discord import app_commands
+from discord import app_commands, Attachment
 from discord.app_commands import Choice, Range
 
 from buttons import Buttons
@@ -29,6 +29,7 @@ from util import (
     should_filter,
     unpack_choices,
     get_filename,
+    process_attachment,
 )
 
 discord.utils.setup_logging()
@@ -131,9 +132,16 @@ async def slash_command(
         num_steps: Range[int, 1, MAX_STEPS] = None,
         cfg_scale: Range[float, 1.0, MAX_CFG] = None,
         seed: int = None,
+        input_file: Attachment = None,
+        denoise_strength: Range[float, 0.01, 1.0] = None
 ):
+    if input_file is not None:
+        fp = await process_attachment(input_file, interaction)
+        if fp is None:
+            return
+
     params = ImageWorkflow(
-        SD15_WORKFLOW,
+        SD15_WORKFLOW if input_file is None else SD15_ALTS_WORKFLOW,
         prompt,
         negative_prompt,
         model or SD15_GENERATION_DEFAULTS.model,
@@ -145,6 +153,8 @@ async def slash_command(
         cfg_scale or SD15_GENERATION_DEFAULTS.cfg_scale,
         seed=seed,
         slash_command="imagine",
+        filename=fp if input_file is not None else None,
+        denoise_strength=denoise_strength or SD15_GENERATION_DEFAULTS.denoise_strength
     )
     await do_request(
         interaction,
@@ -212,9 +222,16 @@ async def slash_command(
         num_steps: Range[int, 1, MAX_STEPS] = None,
         cfg_scale: Range[float, 1.0, MAX_CFG] = None,
         seed: int = None,
+        input_file: Attachment = None,
+        denoise_strength: Range[float, 0.01, 1.0] = None
 ):
+    if input_file is not None:
+        fp = await process_attachment(input_file, interaction)
+        if fp is None:
+            return
+
     params = ImageWorkflow(
-        SDXL_WORKFLOW,
+        SDXL_WORKFLOW if input_file is None else SDXL_ALTS_WORKFLOW,
         prompt,
         negative_prompt,
         model or SDXL_GENERATION_DEFAULTS.model,
@@ -226,6 +243,8 @@ async def slash_command(
         cfg_scale=cfg_scale or SDXL_GENERATION_DEFAULTS.cfg_scale,
         seed=seed,
         slash_command="sdxl",
+        filename=fp if input_file is not None else None,
+        denoise_strength=denoise_strength or SDXL_GENERATION_DEFAULTS.denoise_strength
     )
     await do_request(
         interaction,
