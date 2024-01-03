@@ -1,6 +1,7 @@
 build/
 dist/
 out/
+input/
 __pycache__/
 config.properties
 *.spec

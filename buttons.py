@@ -10,8 +10,93 @@ from discord import ui
 from imageGen import ImageWorkflow, generate_images, upscale_image, generate_alternatives
 from collage_utils import create_collage, create_gif_collage
 from consts import *
-from util import should_filter, get_filename, build_command
+from util import get_filename, build_command
 
+#<editor-fold desc="ButtonDecorators">
+class EditableButton:
+    @discord.ui.button(label="Edit", style=discord.ButtonStyle.blurple, emoji="📝", row=0)
+    async def edit_image(self, interaction, button):
+        modal = EditModal(self.params, self.command)
+        await interaction.response.send_modal(modal)
+
+class RerollableButton:
+    @discord.ui.button(label="Re-roll", style=discord.ButtonStyle.green, emoji="🎲", row=0)
+    async def reroll_image(self, interaction, btn):
+        await interaction.response.send_message(
+            f'{interaction.user.mention} asked me to re-imagine "{self.params.prompt}", this shouldn\'t take too long...'
+        )
+        btn.disabled = True
+        await interaction.message.edit(view=self)
+
+        params = deepcopy(self.params)
+        if self.is_sdxl:
+            params.workflow_name = SDXL_WORKFLOW
+        elif self.is_video:
+            params.workflow_name = VIDEO_WORKFLOW
+        else:
+            params.workflow_name = SD15_WORKFLOW
+        params.filename = None
+        params.seed = random.randint(0, 999999999999999)
+
+        # Generate a new image with the same prompt
+        images, enhanced_prompt = await generate_images(params)
+
+        if self.is_video:
+            collage = create_gif_collage(images)
+            fname = "collage.gif"
+        else:
+            collage = create_collage(images)
+            fname = "collage.png"
+
+        # Construct the final message with user mention
+        final_message = (
+            f'{interaction.user.mention} asked me to re-imagine "{params.prompt}", here is what I imagined for them. '
+            f"Seed: {params.seed}"
+        )
+        buttons = Buttons(params, images, self.author, command=self.command)
+
+        await interaction.channel.send(
+            content=final_message, file=discord.File(fp=collage, filename=fname), view=buttons
+        )
+
+class DeletableButton:
+    def __init__(self, author):
+        self.author = author
+
+    @discord.ui.button(label="Delete", style=discord.ButtonStyle.red, emoji="🗑️", row=1)
+    async def delete_image_post(self, interaction, button):
+        # make sure the user is the one who posted the image
+        if interaction.user.id != self.author.id:
+            return
+
+        await interaction.message.delete()
+
+class InfoableButton:
+    @discord.ui.button(label="Info", style=discord.ButtonStyle.blurple, emoji="ℹ️", row=1)
+    async def image_info(self, interaction, button):
+        params = self.params
+        info_str = (
+            f"prompt: {params.prompt}\n"
+            f"negative prompt: {params.negative_prompt}\n"
+            f"model: {params.model or 'default'}\n"
+            f"loras: {params.loras}\n"
+            f"lora strengths: {params.lora_strengths}\n"
+            f"aspect ratio: {params.aspect_ratio or 'default'}\n"
+            f"sampler: {params.sampler or 'default'}\n"
+            f"num steps: {params.num_steps or 'default'}\n"
+            f"cfg scale: {params.cfg_scale or 'default'}\n"
+            f"seed: {params.seed}\n"
+            f"```{build_command(params)}```"
+        )
+        file = None
+        if params.filename is not None and params.filename != "" and os.path.exists(params.filename):
+            info_str += f"\noriginal file:"
+            file = discord.File(fp=params.filename, filename=params.filename)
+            await interaction.response.send_message(info_str, ephemeral=True, file=file)
+            return
+
+        await interaction.response.send_message(info_str, ephemeral=True)
+#</editor-fold>
 
 class ImageButton(discord.ui.Button):
     def __init__(self, label, emoji, row, callback):
@@ -22,7 +107,7 @@ class ImageButton(discord.ui.Button):
         await self._callback(interaction, self)
 
 
-class Buttons(discord.ui.View):
+class Buttons(discord.ui.View, EditableButton, RerollableButton, DeletableButton, InfoableButton):
     def __init__(
             self,
             params,
@@ -50,7 +135,7 @@ class Buttons(discord.ui.View):
             images = images[:12]  # Adjust to only use the first 12 images
 
         # Determine if re-roll button should be on its own row
-        reroll_row = 1 if total_buttons <= 21 else 0
+        reroll_row = 2 if total_buttons <= 21 else 0
 
         # Dynamically add alternative buttons
         for idx, _ in enumerate(images):
@@ -112,7 +197,7 @@ class Buttons(discord.ui.View):
         upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
         upscaled_image.save(upscaled_image_path)
         final_message = f"{interaction.user.mention} here is your upscaled image"
-        buttons = AddDetailButtons(params, upscaled_image, is_sdxl=self.is_sdxl)
+        buttons = AddDetailButtons(params, upscaled_image, is_sdxl=self.is_sdxl, author=self.author)
         fp = f"{get_filename(interaction, self.params)}_{index}.png"
         await interaction.channel.send(
             content=final_message,
@@ -135,83 +220,6 @@ class Buttons(discord.ui.View):
             content=final_message, file=discord.File(fp=upscaled_image_path, filename="upscaled_image.png")
         )
 
-    @discord.ui.button(label="Edit", style=discord.ButtonStyle.blurple, emoji="📝", row=0)
-    async def edit_image(self, interaction, button):
-        modal = EditModal(self.params, self.command)
-        await interaction.response.send_modal(modal)
-
-    @discord.ui.button(label="Re-roll", style=discord.ButtonStyle.green, emoji="🎲", row=0)
-    async def reroll_image(self, interaction, btn):
-        await interaction.response.send_message(
-            f'{interaction.user.mention} asked me to re-imagine "{self.params.prompt}", this shouldn\'t take too long...'
-        )
-        btn.disabled = True
-        await interaction.message.edit(view=self)
-
-        params = deepcopy(self.params)
-        if self.is_sdxl:
-            params.workflow_name = SDXL_WORKFLOW
-        elif self.is_video:
-            params.workflow_name = VIDEO_WORKFLOW
-        else:
-            params.workflow_name = SD15_WORKFLOW
-        params.filename = None
-        params.seed = random.randint(0, 999999999999999)
-
-        # Generate a new image with the same prompt
-        images, enhanced_prompt = await generate_images(params)
-
-        if self.is_video:
-            collage = create_gif_collage(images)
-            fname = "collage.gif"
-        else:
-            collage = create_collage(images)
-            fname = "collage.png"
-
-        # Construct the final message with user mention
-        final_message = (
-            f'{interaction.user.mention} asked me to re-imagine "{params.prompt}", here is what I imagined for them. '
-            f"Seed: {params.seed}"
-        )
-        buttons = Buttons(params, images, self.author, command=self.command)
-
-        await interaction.channel.send(
-            content=final_message, file=discord.File(fp=collage, filename=fname), view=buttons
-        )
-
-    @discord.ui.button(label="Delete", style=discord.ButtonStyle.red, emoji="🗑️", row=0)
-    async def delete_image_post(self, interaction, button):
-        # make sure the user is the one who posted the image
-        if interaction.user.id != self.author.id:
-            return
-
-        await interaction.message.delete()
-
-    @discord.ui.button(label="Info", style=discord.ButtonStyle.blurple, emoji="ℹ️", row=0)
-    async def image_info(self, interaction, button):
-        params = self.params
-        info_str = (
-            f"prompt: {params.prompt}\n"
-            f"negative prompt: {params.negative_prompt}\n"
-            f"model: {params.model or 'default'}\n"
-            f"loras: {params.loras}\n"
-            f"lora strengths: {params.lora_strengths}\n"
-            f"aspect ratio: {params.aspect_ratio or 'default'}\n"
-            f"sampler: {params.sampler or 'default'}\n"
-            f"num steps: {params.num_steps or 'default'}\n"
-            f"cfg scale: {params.cfg_scale or 'default'}\n"
-            f"seed: {params.seed}\n"
-            f"```{build_command(params)}```"
-        )
-        file = None
-        if params.filename is not None and params.filename is not "" and os.path.exists(params.filename):
-            info_str += f"\noriginal file:"
-            file = discord.File(fp=params.filename, filename=params.filename)
-            await interaction.response.send_message(info_str, ephemeral=True, file=file)
-            return
-
-        await interaction.response.send_message(info_str, ephemeral=True)
-
     async def download_image(self, interaction, button):
         index = int(button.label[1:]) - 1
         file_name = f"{get_filename(interaction, self.params)}_{index}.png"
@@ -222,12 +230,13 @@ class Buttons(discord.ui.View):
                                                 )
 
 
-class AddDetailButtons(discord.ui.View):
-    def __init__(self, params, images, *, timeout=None, is_sdxl=False):
+class AddDetailButtons(discord.ui.View, DeletableButton, InfoableButton):
+    def __init__(self, params, images, *, timeout=None, is_sdxl=False, author=None):
         super().__init__(timeout=timeout)
         self.params = params
         self.images = images
         self.is_sdxl = is_sdxl
+        self.author = author
 
         self.add_item(ImageButton("Add Detail", "🔎", 0, self.add_detail))
 
@@ -248,9 +257,17 @@ class AddDetailButtons(discord.ui.View):
         fp = f"{get_filename(interaction, self.params)}_detail.png"
 
         await interaction.channel.send(content=final_message,
-                                       file=discord.File(fp=collage_path, filename=fp)
+                                       file=discord.File(fp=collage_path, filename=fp),
+                                        view=FinalDetailButtons(params, images, author=self.author)
                                        )
 
+class FinalDetailButtons(discord.ui.View, DeletableButton, InfoableButton):
+    def __init__(self, params, images, *, timeout=None, is_sdxl=False, author=None):
+        super().__init__(timeout=timeout)
+        self.params = params
+        self.images = images
+        self.is_sdxl = is_sdxl
+        self.author = author
 
 class EditModal(ui.Modal, title="Edit Image"):
     def __init__(self, params: ImageWorkflow, command: str):
