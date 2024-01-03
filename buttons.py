@@ -112,9 +112,10 @@ class Buttons(discord.ui.View):
         upscaled_image.save(upscaled_image_path)
         final_message = f"{interaction.user.mention} here is your upscaled image"
         buttons = AddDetailButtons(params, upscaled_image, is_sdxl=self.is_sdxl)
+        fp = f"{get_filename(interaction, self.params)}_{index}.png"
         await interaction.channel.send(
             content=final_message,
-            file=discord.File(fp=upscaled_image_path, filename="upscaled_image.png"),
+            file=discord.File(fp=upscaled_image_path, filename=fp),
             view=buttons
         )
 
@@ -208,7 +209,9 @@ class Buttons(discord.ui.View):
         file_name = f"{get_filename(interaction, self.params)}_{index}.png"
         fp = f"./out/images_{file_name}"
         self.images[index].save(fp)
-        await interaction.response.send_message(f"{interaction.user.mention}, here is your image!", file=discord.File(fp=fp, filename=file_name))
+        await interaction.response.send_message(f"{interaction.user.mention}, here is your image!",
+                                                file=discord.File(fp=fp, filename=file_name)
+                                                )
 
 
 class AddDetailButtons(discord.ui.View):
@@ -234,8 +237,10 @@ class AddDetailButtons(discord.ui.View):
         collage_path = create_collage(images)
         final_message = f"{interaction.user.mention} here is your image with more detail"
 
+        fp = f"{get_filename(interaction, self.params)}_detail{int(button.label[1:]) - 1}.png"
+
         await interaction.channel.send(content=final_message,
-                                       file=discord.File(fp=collage_path, filename="collage.png")
+                                       file=discord.File(fp=collage_path, filename=fp)
                                        )
 
 

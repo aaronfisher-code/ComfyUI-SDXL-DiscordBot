@@ -75,8 +75,17 @@ BASE_ARG_DESCS = {
     "num_steps": f"Number of sampling steps; range [1, {MAX_STEPS}]",
     "cfg_scale": f"Degree to which AI should follow prompt; range [1.0, {MAX_CFG}]",
 }
-IMAGINE_ARG_DESCS = {**BASE_ARG_DESCS, "num_steps": "Number of sampling steps; range [1, 30]"}
-SDXL_ARG_DESCS = BASE_ARG_DESCS
+IMAGINE_ARG_DESCS = {
+    **BASE_ARG_DESCS,
+    "num_steps": "Number of sampling steps; range [1, 30]",
+    "input_file": "Image to use as input for img2img",
+    "denoise_strength": f"Strength of denoising filter during img2img. Only works when input_file is set; range [0.01, 1.0], default {SD15_GENERATION_DEFAULTS.denoise_strength}"
+}
+SDXL_ARG_DESCS = {
+    **BASE_ARG_DESCS,
+    "input_file": "Image to use as input for img2img",
+    "denoise_strength": f"Strength of denoising filter during img2img. Only works when input_file is set; range [0.01, 1.0], default {SDXL_GENERATION_DEFAULTS.denoise_strength}"
+}
 VIDEO_ARG_DESCS = {k: v for k, v in BASE_ARG_DESCS.items() if k != "aspect_ratio"}
 
 BASE_ARG_CHOICES = {

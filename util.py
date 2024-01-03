@@ -74,6 +74,10 @@ def build_command(params: ImageWorkflow):
                     continue
                 command += f" lora{i > 0 and i + 1 or ''}:{str(lora).replace('.safetensors', '')}"
                 command += f" lora_strength{i > 0 and i + 1 or ''}:{params.lora_strengths[i]}"
+        if params.filename is not None:
+            command += f" attachment:[Attachment]"
+        if params.denoise_strength is not None:
+            command += f" denoise_strength:{params.denoise_strength}"
         return command
     except Exception as e:
         print(e)
@@ -85,13 +89,18 @@ async def process_attachment(attachment: Attachment, interaction: Interaction):
         await interaction.response.send_message("Error: Please upload a PNG or JPEG image", ephemeral=True)
         return None
 
-    # check if resolution is too large
-    if attachment.width > 3000 or attachment.height > 3000:
-        await interaction.response.send_message("Error: Image resolution is too large", ephemeral=True)
-        return None
-
     os.makedirs("./input", exist_ok=True)
 
     fp = f"./input/{attachment.filename}"
     await attachment.save(fp)
+
+    if attachment.width > 1024 or attachment.height > 1024:
+        from PIL import Image
+        img = Image.open(fp)
+        if img.width > img.height:
+            img = img.resize((1024, int(img.height * 1024 / img.width)))
+        else:
+            img = img.resize((int(img.width * 1024 / img.height), 1024))
+        img.save(fp)
+
     return os.path.abspath(fp)
