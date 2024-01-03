@@ -237,7 +237,7 @@ class AddDetailButtons(discord.ui.View):
         collage_path = create_collage(images)
         final_message = f"{interaction.user.mention} here is your image with more detail"
 
-        fp = f"{get_filename(interaction, self.params)}_detail{int(button.label[1:]) - 1}.png"
+        fp = f"{get_filename(interaction, self.params)}_detail.png"
 
         await interaction.channel.send(content=final_message,
                                        file=discord.File(fp=collage_path, filename=fp)
