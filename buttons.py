@@ -53,7 +53,7 @@ class RerollableButton:
             f'{interaction.user.mention} asked me to re-imagine "{params.prompt}", here is what I imagined for them. '
             f"Seed: {params.seed}"
         )
-        buttons = Buttons(params, images, self.author, command=self.command)
+        buttons = Buttons(params, images, interaction.user, command=self.command)
 
         await interaction.channel.send(
             content=final_message, file=discord.File(fp=collage, filename=fname), view=buttons
@@ -178,7 +178,7 @@ class Buttons(discord.ui.View, EditableButton, RerollableButton, DeletableButton
         collage_path = create_collage(images)
         final_message = f"{interaction.user.mention} here are your alternative images"
 
-        buttons = Buttons(params, images, self.author, command=self.command)
+        buttons = Buttons(params, images, interaction.user, command=self.command)
 
         # if a gif, set filename as gif, otherwise png
         fname = "collage.gif" if images[0].format == "GIF" else "collage.png"
@@ -197,7 +197,7 @@ class Buttons(discord.ui.View, EditableButton, RerollableButton, DeletableButton
         upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
         upscaled_image.save(upscaled_image_path)
         final_message = f"{interaction.user.mention} here is your upscaled image"
-        buttons = AddDetailButtons(params, upscaled_image, is_sdxl=self.is_sdxl, author=self.author)
+        buttons = AddDetailButtons(params, upscaled_image, is_sdxl=self.is_sdxl, author=interaction.user)
         fp = f"{get_filename(interaction, self.params)}_{index}.png"
         await interaction.channel.send(
             content=final_message,
@@ -258,7 +258,7 @@ class AddDetailButtons(discord.ui.View, DeletableButton, InfoableButton):
 
         await interaction.channel.send(content=final_message,
                                        file=discord.File(fp=collage_path, filename=fp),
-                                        view=FinalDetailButtons(params, images, author=self.author)
+                                        view=FinalDetailButtons(params, images, author=interaction.user)
                                        )
 
 class FinalDetailButtons(discord.ui.View, DeletableButton, InfoableButton):
