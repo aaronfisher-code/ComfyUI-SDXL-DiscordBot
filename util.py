@@ -103,4 +103,12 @@ async def process_attachment(attachment: Attachment, interaction: Interaction):
             img = img.resize((int(img.width * 1024 / img.height), 1024))
         img.save(fp)
 
+    if attachment.width < 1024 and attachment.height < 1024:
+        from PIL import Image
+        img = Image.open(fp)
+        scaling_factor = max(1024 / attachment.width, 1024 / attachment.height)
+
+        img = img.resize((int(attachment.width * scaling_factor), int(attachment.height * scaling_factor)))
+        img.save(fp)
+
     return os.path.abspath(fp)
