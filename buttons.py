@@ -1,3 +1,4 @@
+import os
 import random
 from copy import deepcopy
 from datetime import datetime
@@ -202,6 +203,13 @@ class Buttons(discord.ui.View):
             f"seed: {params.seed}\n"
             f"```{build_command(params)}```"
         )
+        file = None
+        if params.filename is not None and params.filename is not "" and os.path.exists(params.filename):
+            info_str += f"\noriginal file:"
+            file = discord.File(fp=params.filename, filename=params.filename)
+            await interaction.response.send_message(info_str, ephemeral=True, file=file)
+            return
+
         await interaction.response.send_message(info_str, ephemeral=True)
 
     async def download_image(self, interaction, button):

@@ -215,7 +215,7 @@ async def slash_command(
 
 
 @tree.command(name="sdxl", description="Generate an image using SDXL")
-@app_commands.describe(**BASE_ARG_DESCS)
+@app_commands.describe(**SDXL_ARG_DESCS)
 @app_commands.choices(**SDXL_ARG_CHOICES)
 async def slash_command(
         interaction: discord.Interaction,
