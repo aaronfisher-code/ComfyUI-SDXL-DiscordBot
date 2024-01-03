@@ -75,7 +75,7 @@ def build_command(params: ImageWorkflow):
                 command += f" lora{i > 0 and i + 1 or ''}:{str(lora).replace('.safetensors', '')}"
                 command += f" lora_strength{i > 0 and i + 1 or ''}:{params.lora_strengths[i]}"
         if params.filename is not None:
-            command += f" attachment:[Attachment]"
+            command += f" input_file:[Attachment]"
         if params.denoise_strength is not None:
             command += f" denoise_strength:{params.denoise_strength}"
         return command
