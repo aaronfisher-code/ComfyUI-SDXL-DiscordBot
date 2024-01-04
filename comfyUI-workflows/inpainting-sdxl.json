@@ -23,7 +23,7 @@
         0
       ],
       "latent_image": [
-        "15",
+        "37",
         0
       ]
     },
@@ -130,7 +130,7 @@
     "inputs": {
       "amount": 4,
       "samples": [
-        "24",
+        "38",
         0
       ]
     },
@@ -171,7 +171,7 @@
     },
     "class_type": "CR Prompt Text",
     "_meta": {
-      "title": "📝 CR Prompt Text"
+      "title": "⚙️ CR Prompt Text"
     }
   },
   "23": {
@@ -196,27 +196,6 @@
     "class_type": "Lora Loader Stack (rgthree)",
     "_meta": {
       "title": "Lora Loader Stack (rgthree)"
-    }
-  },
-  "24": {
-    "inputs": {
-      "grow_mask_by": 16,
-      "pixels": [
-        "13",
-        0
-      ],
-      "vae": [
-        "4",
-        2
-      ],
-      "mask": [
-        "26",
-        0
-      ]
-    },
-    "class_type": "VAEEncodeForInpaint",
-    "_meta": {
-      "title": "VAE Encode (for Inpainting)"
     }
   },
   "25": {
@@ -256,6 +235,38 @@
     "class_type": "CLIPSeg Model Loader",
     "_meta": {
       "title": "CLIPSeg Model Loader"
+    }
+  },
+  "37": {
+    "inputs": {
+      "samples": [
+        "15",
+        0
+      ],
+      "mask": [
+        "26",
+        0
+      ]
+    },
+    "class_type": "SetLatentNoiseMask",
+    "_meta": {
+      "title": "Set Latent Noise Mask"
+    }
+  },
+  "38": {
+    "inputs": {
+      "pixels": [
+        "13",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
     }
   }
 }
