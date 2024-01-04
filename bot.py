@@ -72,19 +72,23 @@ BASE_ARG_DESCS = {
     "lora_strength": "Strength of LoRA",
     "aspect_ratio": "Aspect ratio of the generated image",
     "sampler": "Sampling algorithm to use",
-    "num_steps": f"Number of sampling steps; range [1, {MAX_STEPS}]",
-    "cfg_scale": f"Degree to which AI should follow prompt; range [1.0, {MAX_CFG}]",
+    "num_steps": f"range [1, {MAX_STEPS}]; Number of sampling steps",
+    "cfg_scale": f"range [1.0, {MAX_CFG}]; Degree to which AI should follow prompt",
 }
 IMAGINE_ARG_DESCS = {
     **BASE_ARG_DESCS,
     "num_steps": "Number of sampling steps; range [1, 30]",
     "input_file": "Image to use as input for img2img",
-    "denoise_strength": f"Strength of denoising filter during img2img. Only works when input_file is set; range [0.01, 1.0], default {SD15_GENERATION_DEFAULTS.denoise_strength}"
+    "denoise_strength": f"range [0.01, 1.0], default {SD15_GENERATION_DEFAULTS.denoise_strength}; Strength of denoising filter during img2img. Only works when input_file is set",
+    "inpainting_prompt": "Detection prompt for inpainting; examples: 'background' or 'person'",
+    "inpainting_detection_threshold": f"range [0, 255], default {SD15_GENERATION_DEFAULTS.inpainting_detection_threshold}; Detection threshold for inpainting. Only works when inpainting_prompt is set"
 }
 SDXL_ARG_DESCS = {
     **BASE_ARG_DESCS,
     "input_file": "Image to use as input for img2img",
-    "denoise_strength": f"Strength of denoising filter during img2img. Only works when input_file is set; range [0.01, 1.0], default {SDXL_GENERATION_DEFAULTS.denoise_strength}"
+    "denoise_strength": f"range [0.01, 1.0], default {SDXL_GENERATION_DEFAULTS.denoise_strength}; Strength of denoising filter during img2img. Only works when input_file is set",
+    "inpainting_prompt": "Detection prompt for inpainting; examples: 'background' or 'person'",
+    "inpainting_detection_threshold": f"range [0, 255], default {SDXL_GENERATION_DEFAULTS.inpainting_detection_threshold}; Detection threshold for inpainting. Only works when inpainting_prompt is set"
 }
 VIDEO_ARG_DESCS = {k: v for k, v in BASE_ARG_DESCS.items() if k != "aspect_ratio"}
 
@@ -142,7 +146,9 @@ async def slash_command(
         cfg_scale: Range[float, 1.0, MAX_CFG] = None,
         seed: int = None,
         input_file: Attachment = None,
-        denoise_strength: Range[float, 0.01, 1.0] = None
+        denoise_strength: Range[float, 0.01, 1.0] = None,
+        inpainting_prompt: str = None,
+        inpainting_detection_threshold: Range[int, 0, 255] = None,
 ):
     if input_file is not None:
         fp = await process_attachment(input_file, interaction)
@@ -150,7 +156,7 @@ async def slash_command(
             return
 
     params = ImageWorkflow(
-        SD15_WORKFLOW if input_file is None else SD15_ALTS_WORKFLOW,
+        SD15_INPAINT_WORKFLOW if inpainting_prompt is not None and input_file is not None else SD15_ALTS_WORKFLOW if input_file is not None else SD15_WORKFLOW,
         prompt,
         negative_prompt,
         model or SD15_GENERATION_DEFAULTS.model,
@@ -163,7 +169,9 @@ async def slash_command(
         seed=seed,
         slash_command="imagine",
         filename=fp if input_file is not None else None,
-        denoise_strength=denoise_strength or SD15_GENERATION_DEFAULTS.denoise_strength
+        denoise_strength=denoise_strength or SD15_GENERATION_DEFAULTS.denoise_strength,
+        inpainting_prompt=inpainting_prompt,
+        inpainting_detection_threshold=inpainting_detection_threshold or SD15_GENERATION_DEFAULTS.inpainting_detection_threshold
     )
     await do_request(
         interaction,
@@ -232,7 +240,9 @@ async def slash_command(
         cfg_scale: Range[float, 1.0, MAX_CFG] = None,
         seed: int = None,
         input_file: Attachment = None,
-        denoise_strength: Range[float, 0.01, 1.0] = None
+        denoise_strength: Range[float, 0.01, 1.0] = None,
+        inpainting_prompt: str = None,
+        inpainting_detection_threshold: Range[int, 0, 255] = None,
 ):
     if input_file is not None:
         fp = await process_attachment(input_file, interaction)
@@ -240,7 +250,7 @@ async def slash_command(
             return
 
     params = ImageWorkflow(
-        SDXL_WORKFLOW if input_file is None else SDXL_ALTS_WORKFLOW,
+        SDXL_INPAINT_WORKFLOW if inpainting_prompt is not None and input_file is not None else SDXL_ALTS_WORKFLOW if input_file is not None else SDXL_WORKFLOW,
         prompt,
         negative_prompt,
         model or SDXL_GENERATION_DEFAULTS.model,
@@ -253,7 +263,9 @@ async def slash_command(
         seed=seed,
         slash_command="sdxl",
         filename=fp if input_file is not None else None,
-        denoise_strength=denoise_strength or SDXL_GENERATION_DEFAULTS.denoise_strength
+        denoise_strength=denoise_strength or SDXL_GENERATION_DEFAULTS.denoise_strength,
+        inpainting_prompt=inpainting_prompt,
+        inpainting_detection_threshold=inpainting_detection_threshold or SDXL_GENERATION_DEFAULTS.inpainting_detection_threshold
     )
     await do_request(
         interaction,

@@ -31,6 +31,8 @@ class ImageWorkflow:
     seed: Optional[int] = None
     filename: str = None
     slash_command: str = None
+    inpainting_prompt: Optional[str] = None
+    inpainting_detection_threshold: Optional[float] = None
 
 
 # Read the configuration
@@ -50,9 +52,12 @@ SD15_GENERATION_DEFAULTS = ImageWorkflow(
     int(config["SD15_GENERATION_DEFAULTS"]["NUM_STEPS"]),
     float(config["SD15_GENERATION_DEFAULTS"]["CFG_SCALE"]),
     float(config["SD15_GENERATION_DEFAULTS"]["DENOISE_STRENGTH"]),
+    int(config["SD15_GENERATION_DEFAULTS"]["BATCH_SIZE"]),  # batch_size
     None,  # seed
     None,  # filename
-    "imagine"  # slash_command
+    "imagine",  # slash_command
+    None,  # inpainting_prompt
+    int(config["SD15_GENERATION_DEFAULTS"]["INPAINTING_DETECTION_THRESHOLD"]),  # inpainting_detection_threshold
 )
 
 SDXL_GENERATION_DEFAULTS = ImageWorkflow(
@@ -67,9 +72,12 @@ SDXL_GENERATION_DEFAULTS = ImageWorkflow(
     int(config["SDXL_GENERATION_DEFAULTS"]["NUM_STEPS"]),
     float(config["SDXL_GENERATION_DEFAULTS"]["CFG_SCALE"]),
     float(config["SDXL_GENERATION_DEFAULTS"]["DENOISE_STRENGTH"]),
+    int(config["SDXL_GENERATION_DEFAULTS"]["BATCH_SIZE"]),  # batch_size
     None,  # seed
     None,  # filename
-    "sdxl"  # slash_command
+    "sdxl",  # slash_command
+    None,  # inpainting_prompt
+    int(config["SDXL_GENERATION_DEFAULTS"]["INPAINTING_DETECTION_THRESHOLD"]),  # inpainting_detection_threshold
 )
 
 VIDEO_GENERATION_DEFAULTS = ImageWorkflow(
@@ -83,6 +91,7 @@ VIDEO_GENERATION_DEFAULTS = ImageWorkflow(
     config["VIDEO_GENERATION_DEFAULTS"]["SAMPLER"],
     int(config["VIDEO_GENERATION_DEFAULTS"]["NUM_STEPS"]),
     float(config["VIDEO_GENERATION_DEFAULTS"]["CFG_SCALE"]),
+    int(config["VIDEO_GENERATION_DEFAULTS"]["BATCH_SIZE"]),  # batch_size
     None,  # denoise_strength
     None,  # seed
     None,  # filename
@@ -98,6 +107,8 @@ def setup_workflow(workflow, params: ImageWorkflow):
     lora_node = config.get(params.workflow_name, "LORA_NODE").split(",")
     llm_model_node = None
     turbo_lora_node = None
+    inpainting_node = None
+    inpainting_threshold_node = None
 
     if config.has_option(params.workflow_name, "FILE_INPUT_NODES"):
         file_input_nodes = config.get(params.workflow_name, "FILE_INPUT_NODES").split(",")
@@ -107,6 +118,10 @@ def setup_workflow(workflow, params: ImageWorkflow):
 
     if config.has_option(params.workflow_name, "TURBO_LORA_NODE"):
         turbo_lora_node = config.get(params.workflow_name, "TURBO_LORA_NODE")
+
+    if config.has_option(params.workflow_name, "INPAINTING_PROMPT_NODE"):
+        inpainting_node = config.get(params.workflow_name, "INPAINTING_PROMPT_NODE")
+        inpainting_threshold_node = config.get(params.workflow_name, "INPAINTING_THRESHOLD_NODE")
 
     # Modify the prompt dictionary
     if params.prompt is not None and prompt_nodes[0] != "":
@@ -204,6 +219,10 @@ def setup_workflow(workflow, params: ImageWorkflow):
             workflow[turbo_lora_node]["inputs"]["lora_01"] = "None"
         elif "switch_1" in workflow[turbo_lora_node]["inputs"]:
             workflow[turbo_lora_node]["inputs"]["switch_1"] = "Off"
+
+    if params.inpainting_prompt is not None and inpainting_node is not None:
+        workflow[inpainting_node]["inputs"]["text"] = params.inpainting_prompt
+        workflow[inpainting_threshold_node]["inputs"]["threshold"] = params.inpainting_detection_threshold
 
     return workflow
 
