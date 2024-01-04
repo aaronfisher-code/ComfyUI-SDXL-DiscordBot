@@ -3,13 +3,19 @@
     "inputs": {
       "path": "final_output_01172_.wav"
     },
-    "class_type": "LoadAudio"
+    "class_type": "LoadAudio",
+    "_meta": {
+      "title": "Load Audio"
+    }
   },
   "2": {
     "inputs": {
       "model_name": "musicgen-small"
     },
-    "class_type": "MusicgenLoader"
+    "class_type": "MusicgenLoader",
+    "_meta": {
+      "title": "Musicgen Loader"
+    }
   },
   "3": {
     "inputs": {
@@ -27,7 +33,10 @@
         0
       ]
     },
-    "class_type": "ConvertAudio"
+    "class_type": "ConvertAudio",
+    "_meta": {
+      "title": "Convert Audio"
+    }
   },
   "4": {
     "inputs": {
@@ -51,7 +60,10 @@
         0
       ]
     },
-    "class_type": "MusicgenGenerate"
+    "class_type": "MusicgenGenerate",
+    "_meta": {
+      "title": "Musicgen Generator"
+    }
   },
   "6": {
     "inputs": {
@@ -66,7 +78,10 @@
         0
       ]
     },
-    "class_type": "SpectrogramImage"
+    "class_type": "SpectrogramImage",
+    "_meta": {
+      "title": "Spectrogram Image"
+    }
   },
   "7": {
     "inputs": {
@@ -81,7 +96,10 @@
         0
       ]
     },
-    "class_type": "Image Resize"
+    "class_type": "Image Resize",
+    "_meta": {
+      "title": "Image Resize"
+    }
   },
   "8": {
     "inputs": {
@@ -100,7 +118,10 @@
         0
       ]
     },
-    "class_type": "CombineImageWithAudio"
+    "class_type": "CombineImageWithAudio",
+    "_meta": {
+      "title": "Combine Image with Audio"
+    }
   },
   "9": {
     "inputs": {
@@ -121,7 +142,10 @@
         0
       ]
     },
-    "class_type": "ClipAudio"
+    "class_type": "ClipAudio",
+    "_meta": {
+      "title": "clip prompt at end of audio"
+    }
   },
   "10": {
     "inputs": {
@@ -134,7 +158,10 @@
         0
       ]
     },
-    "class_type": "Subtract"
+    "class_type": "Subtract",
+    "_meta": {
+      "title": "Subtract (start time of prompt)"
+    }
   },
   "11": {
     "inputs": {
@@ -152,7 +179,10 @@
         0
       ]
     },
-    "class_type": "ClipAudio"
+    "class_type": "ClipAudio",
+    "_meta": {
+      "title": "remove prompt from audio"
+    }
   },
   "14": {
     "inputs": {
@@ -165,7 +195,10 @@
         0
       ]
     },
-    "class_type": "ConcatAudio"
+    "class_type": "ConcatAudio",
+    "_meta": {
+      "title": "combine"
+    }
   },
   "15": {
     "inputs": {
@@ -178,18 +211,27 @@
         0
       ]
     },
-    "class_type": "Sum"
+    "class_type": "Sum",
+    "_meta": {
+      "title": "Sum (total duration)"
+    }
   },
   "17": {
     "inputs": {
-      "Value": 10
+      "Number": 10
     },
-    "class_type": "Float"
+    "class_type": "Float",
+    "_meta": {
+      "title": "audio prompt length"
+    }
   },
   "18": {
     "inputs": {
-      "Value": 10
+      "Number": 10
     },
-    "class_type": "Float"
+    "class_type": "Float",
+    "_meta": {
+      "title": "total generated audio length"
+    }
   }
 }
