@@ -109,7 +109,7 @@
     },
     "class_type": "CR Prompt Text",
     "_meta": {
-      "title": "📝 CR Prompt Text"
+      "title": "⚙️ CR Prompt Text"
     }
   },
   "35": {
@@ -149,7 +149,8 @@
       "denoise": 1,
       "alpha_1": 8,
       "blending_schedule": "cosine",
-      "stop_blending_at_pct": 1,
+      "blending_function": "addition",
+      "normalize_on_mean": false,
       "model": [
         "35",
         0

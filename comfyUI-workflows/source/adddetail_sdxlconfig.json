@@ -465,82 +465,6 @@
       ]
     },
     {
-      "id": 36,
-      "type": "Iterative Mixing KSampler",
-      "pos": [
-        881,
-        36
-      ],
-      "size": {
-        "0": 315,
-        "1": 358
-      },
-      "flags": {},
-      "order": 10,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 67,
-          "slot_index": 0
-        },
-        {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "link": 68,
-          "slot_index": 1
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "link": 69,
-          "slot_index": 2
-        },
-        {
-          "name": "latent_image",
-          "type": "LATENT",
-          "link": 74
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": 79,
-          "widget": {
-            "name": "seed"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            66
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Iterative Mixing KSampler"
-      },
-      "widgets_values": [
-        1094011850506812,
-        "randomize",
-        8,
-        2,
-        "euler_ancestral",
-        "normal",
-        1,
-        8,
-        "cosine",
-        1
-      ],
-      "color": "#232",
-      "bgcolor": "#353"
-    },
-    {
       "id": 37,
       "type": "KSampler",
       "pos": [
@@ -684,6 +608,83 @@
         null,
         null
       ]
+    },
+    {
+      "id": 36,
+      "type": "Iterative Mixing KSampler",
+      "pos": [
+        881,
+        36
+      ],
+      "size": {
+        "0": 315,
+        "1": 358
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 67,
+          "slot_index": 0
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 68,
+          "slot_index": 1
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 69,
+          "slot_index": 2
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 74
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 79,
+          "widget": {
+            "name": "seed"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            66
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Iterative Mixing KSampler"
+      },
+      "widgets_values": [
+        1094011850506812,
+        "randomize",
+        8,
+        2,
+        "euler_ancestral",
+        "normal",
+        1,
+        8,
+        "cosine",
+        "addition",
+        false
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
     }
   ],
   "links": [

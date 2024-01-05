@@ -232,7 +232,7 @@ class AddDetailButtons(discord.ui.View, DeletableButton, InfoableButton):
         self.is_sdxl = is_sdxl
         self.author = author
 
-        if self.params.workflow_name.lower().contains("inpainting") == False:
+        if "inpainting" not in self.params.workflow_name.lower():
             self.add_item(ImageButton("Add Detail", "🔎", 0, self.add_detail))
 
     async def add_detail(self, interaction, button):
