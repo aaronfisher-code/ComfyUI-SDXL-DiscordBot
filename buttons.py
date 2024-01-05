@@ -29,13 +29,7 @@ class RerollableButton:
         await interaction.message.edit(view=self)
 
         params = deepcopy(self.params)
-        if self.is_sdxl:
-            params.workflow_name = SDXL_WORKFLOW
-        elif self.is_video:
-            params.workflow_name = VIDEO_WORKFLOW
-        else:
-            params.workflow_name = SD15_WORKFLOW
-        params.filename = None
+
         params.seed = random.randint(0, 999999999999999)
 
         # Generate a new image with the same prompt
@@ -238,7 +232,8 @@ class AddDetailButtons(discord.ui.View, DeletableButton, InfoableButton):
         self.is_sdxl = is_sdxl
         self.author = author
 
-        self.add_item(ImageButton("Add Detail", "🔎", 0, self.add_detail))
+        if self.params.workflow_name.lower().contains("inpainting") == False:
+            self.add_item(ImageButton("Add Detail", "🔎", 0, self.add_detail))
 
     async def add_detail(self, interaction, button):
         await interaction.response.send_message("Increasing detail in the image, this shouldn't take too long...")
