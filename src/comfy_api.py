@@ -1,14 +1,15 @@
-from collections import defaultdict
 import configparser
 import json
 import logging
-import requests
 import urllib
 import uuid
+from collections import defaultdict
 from io import BytesIO
 
+import requests
 import websockets
 from PIL import Image
+
 
 async def refresh_models():
     global models
@@ -16,6 +17,7 @@ async def refresh_models():
     models = get_models()
     loras = get_loras()
     logger.info("refreshed models.")
+
 
 def queue_prompt(prompt, client_id):
     p = {"prompt": prompt, "client_id": client_id}
@@ -37,8 +39,8 @@ def get_history(prompt_id):
 
 
 def clear_history():
-    p = {'clear': True}
-    data = json.dumps(p).encode('utf-8')
+    p = {"clear": True}
+    data = json.dumps(p).encode("utf-8")
     req = urllib.request.Request("http://{}/history".format(server_address), data=data)
     response = urllib.request.urlopen(req).read()
 

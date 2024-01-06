@@ -53,9 +53,7 @@ def setup_workflow(workflow, params: ImageWorkflow):
             elif "prompt" in workflow[node]["inputs"]:
                 workflow[node]["inputs"]["prompt"] = neg_prompt
 
-    if params.filename is not None and config.has_option(
-            params.workflow_name, "FILE_INPUT_NODES"
-    ):
+    if params.filename is not None and config.has_option(params.workflow_name, "FILE_INPUT_NODES"):
         for node in file_input_nodes:
             workflow[node]["inputs"]["image"] = params.filename
 
@@ -101,12 +99,7 @@ def setup_workflow(workflow, params: ImageWorkflow):
                 workflow[node]["inputs"]["empty_latent_height"] = h
 
     # maybe set sampler arguments
-    sampler_args_given = (
-            params.denoise_strength is not None
-            or params.sampler is not None
-            or params.num_steps is not None
-            or params.cfg_scale is not None
-    )
+    sampler_args_given = params.denoise_strength is not None or params.sampler is not None or params.num_steps is not None or params.cfg_scale is not None
     if sampler_args_given and config.has_option(params.workflow_name, "DENOISE_NODE"):
         denoise_node = config.get(params.workflow_name, "DENOISE_NODE").split(",")
         for node in denoise_node:

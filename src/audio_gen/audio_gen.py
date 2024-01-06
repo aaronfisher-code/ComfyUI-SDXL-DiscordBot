@@ -5,7 +5,6 @@ from typing import Optional
 
 from src.comfy_api import ComfyGenerator
 
-
 # Read the configuration
 config = configparser.ConfigParser()
 config.read("config.properties")

@@ -41,14 +41,14 @@ IMAGINE_ARG_DESCS = {
     "input_file": "Image to use as input for img2img",
     "denoise_strength": f"range [0.01, 1.0], default {SD15_GENERATION_DEFAULTS.denoise_strength}; Strength of denoising filter during img2img. Only works when input_file is set",
     "inpainting_prompt": "Detection prompt for inpainting; examples: 'background' or 'person'",
-    "inpainting_detection_threshold": f"range [0, 255], default {SD15_GENERATION_DEFAULTS.inpainting_detection_threshold}; Detection threshold for inpainting. Only works when inpainting_prompt is set"
+    "inpainting_detection_threshold": f"range [0, 255], default {SD15_GENERATION_DEFAULTS.inpainting_detection_threshold}; Detection threshold for inpainting. Only works when inpainting_prompt is set",
 }
 SDXL_ARG_DESCS = {
     **BASE_ARG_DESCS,
     "input_file": "Image to use as input for img2img",
     "denoise_strength": f"range [0.01, 1.0], default {SDXL_GENERATION_DEFAULTS.denoise_strength}; Strength of denoising filter during img2img. Only works when input_file is set",
     "inpainting_prompt": "Detection prompt for inpainting; examples: 'background' or 'person'",
-    "inpainting_detection_threshold": f"range [0, 255], default {SDXL_GENERATION_DEFAULTS.inpainting_detection_threshold}; Detection threshold for inpainting. Only works when inpainting_prompt is set"
+    "inpainting_detection_threshold": f"range [0, 255], default {SDXL_GENERATION_DEFAULTS.inpainting_detection_threshold}; Detection threshold for inpainting. Only works when inpainting_prompt is set",
 }
 VIDEO_ARG_DESCS = {k: v for k, v in BASE_ARG_DESCS.items() if k != "aspect_ratio"}
 
@@ -68,6 +68,4 @@ SDXL_ARG_CHOICES = {
     "lora2": SDXL_LORA_CHOICES,
     **BASE_ARG_CHOICES,
 }
-VIDEO_ARG_CHOICES = {
-    k: v for k, v in IMAGINE_ARG_CHOICES.items() if k not in {"lora2", "lora3", "aspect_ratio"}
-}
+VIDEO_ARG_CHOICES = {k: v for k, v in IMAGINE_ARG_CHOICES.items() if k not in {"lora2", "lora3", "aspect_ratio"}}

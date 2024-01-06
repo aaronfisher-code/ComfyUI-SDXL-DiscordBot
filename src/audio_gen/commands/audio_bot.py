@@ -6,15 +6,15 @@ import discord
 from discord import app_commands
 from discord.app_commands import Choice, Range
 
-from src.audio_gen.ui.audio_buttons import AudioButtons
-from src.comfy_api import get_tortoise_voices
-from src.consts import *
 from src.audio_gen.audio_gen import (
     generate_audio,
     AudioWorkflow,
     MUSICGEN_DEFAULTS,
     TORTOISE_DEFAULTS,
 )
+from src.audio_gen.ui.audio_buttons import AudioButtons
+from src.comfy_api import get_tortoise_voices
+from src.consts import *
 
 logger = logging.getLogger("bot")
 

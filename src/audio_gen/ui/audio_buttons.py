@@ -1,13 +1,13 @@
-from io import BytesIO
 import random
 from copy import deepcopy
+from io import BytesIO
 
 import discord
 from discord import ui
 
 from src.audio_gen.audio_gen import generate_audio, AudioWorkflow
-from src.image_gen.ui.buttons import ImageButton
 from src.consts import MUSIC_CONTINUE_WORKFLOW
+from src.image_gen.ui.buttons import ImageButton
 
 
 class AudioButtons(discord.ui.View):
@@ -25,9 +25,7 @@ class AudioButtons(discord.ui.View):
 
     @discord.ui.button(label="Re-roll", style=discord.ButtonStyle.green, emoji="🎲", row=0)
     async def reroll(self, interaction, btn):
-        await interaction.response.send_message(
-            f'{interaction.user.mention} asked me to re-imagine "{self.params.prompt}", this shouldn\'t take too long...'
-        )
+        await interaction.response.send_message(f'{interaction.user.mention} asked me to re-imagine "{self.params.prompt}", this shouldn\'t take too long...')
         btn.disabled = True
         await interaction.message.edit(view=self)
 
@@ -82,33 +80,13 @@ class AudioEditModal(ui.Modal, title="Edit/Extend Sound"):
         self.params = params
         self.command = command
 
-        self.prompt = ui.TextInput(
-            label="Prompt",
-            placeholder="Enter a prompt",
-            max_length=256,
-            required=False,
-            default=self.params.prompt or ""
-        )
-        self.cfg = ui.TextInput(
-            label="Guidance Scale",
-            placeholder="Controls audio's conformance to text prompt; default 3.0",
-            default=str(self.params.cfg)
-        )
+        self.prompt = ui.TextInput(label="Prompt", placeholder="Enter a prompt", max_length=256, required=False, default=self.params.prompt or "")
+        self.cfg = ui.TextInput(label="Guidance Scale", placeholder="Controls audio's conformance to text prompt; default 3.0", default=str(self.params.cfg))
         self.temperature = ui.TextInput(
-            label="Temperature",
-            placeholder="Controls randomness during prediction; default 1.0",
-            default=str(self.params.temperature)
+            label="Temperature", placeholder="Controls randomness during prediction; default 1.0", default=str(self.params.temperature)
         )
-        self.top_p = ui.TextInput(
-            label="Top p",
-            placeholder="",
-            default=str(self.params.top_p)
-        )
-        self.top_k = ui.TextInput(
-            label="Top k",
-            placeholder="Number of tokens to ",
-            default=str(self.params.top_k)
-        )
+        self.top_p = ui.TextInput(label="Top p", placeholder="", default=str(self.params.top_p))
+        self.top_k = ui.TextInput(label="Top k", placeholder="Number of tokens to ", default=str(self.params.top_k))
 
         self.add_item(self.prompt)
         self.add_item(self.cfg)
