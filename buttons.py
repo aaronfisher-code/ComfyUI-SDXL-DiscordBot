@@ -7,7 +7,8 @@ import discord
 import discord.ext
 from discord import ui
 
-from imageGen import ImageWorkflow, generate_images, upscale_image, generate_alternatives
+from imageGen import ImageWorkflow, generate_images, upscale_image, generate_alternatives, SDXL_GENERATION_DEFAULTS, \
+    SD15_GENERATION_DEFAULTS
 from collage_utils import create_collage, create_gif_collage
 from consts import *
 from util import get_filename, build_command
@@ -165,6 +166,7 @@ class Buttons(discord.ui.View, EditableButton, RerollableButton, DeletableButton
         params = deepcopy(self.params)
         params.workflow_name = SDXL_ALTS_WORKFLOW if self.is_sdxl else SD15_ALTS_WORKFLOW
         params.seed = random.randint(0, 999999999999999)
+        params.denoise_strength = SDXL_GENERATION_DEFAULTS.denoise_strength if self.is_sdxl else SD15_GENERATION_DEFAULTS.denoise_strength
 
         # TODO: should alternatives use num_steps and cfg_scale from original?
         # Buttons should probably still receive these params for rerolls
