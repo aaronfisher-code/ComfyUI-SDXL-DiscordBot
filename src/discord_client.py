@@ -4,7 +4,7 @@ import discord
 
 from src.comfy_api import refresh_models, clear_history
 from src.image_gen.commands.ImageGenCommands import ImageGenCommands
-from util import setup_config, read_config
+from src.util import setup_config, read_config
 
 discord.utils.setup_logging()
 logger = logging.getLogger("bot")

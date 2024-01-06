@@ -11,7 +11,7 @@ from src.consts import *
 from src.defaults import *
 from src.image_gen.collage_utils import create_collage, create_gif_collage
 from src.image_gen.image_gen import generate_images, upscale_image, generate_alternatives
-from util import get_filename, build_command
+from src.util import get_filename, build_command
 
 
 #<editor-fold desc="ButtonDecorators">

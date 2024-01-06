@@ -10,7 +10,7 @@ from src.consts import *
 from src.image_gen.collage_utils import create_collage
 from src.image_gen.image_gen import generate_images
 from src.image_gen.ui.buttons import Buttons
-from util import process_attachment, unpack_choices, should_filter, get_filename
+from src.util import process_attachment, unpack_choices, should_filter, get_filename
 
 
 class ImageGenCommands():

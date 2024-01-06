@@ -15,16 +15,16 @@ def generate_default_config():
     config = configparser.ConfigParser()
     config["BOT"] = {"TOKEN": "YOUR_DEFAULT_DISCORD_BOT_TOKEN"}
     config["LOCAL"] = {"SERVER_ADDRESS": "YOUR_COMFYUI_URL"}
-    with open("config.properties", "w") as configfile:
+    with open("../config.properties", "w") as configfile:
         config.write(configfile)
 
 
 def setup_config():
-    if not os.path.exists("config.properties"):
+    if not os.path.exists("../config.properties"):
         generate_default_config()
 
-    if not os.path.exists("./out"):
-        os.makedirs("./out")
+    if not os.path.exists("../out"):
+        os.makedirs("../out")
 
     config = read_config()
     token = (
@@ -89,7 +89,7 @@ async def process_attachment(attachment: Attachment, interaction: Interaction):
         await interaction.response.send_message("Error: Please upload a PNG or JPEG image", ephemeral=True)
         return None
 
-    os.makedirs("./input", exist_ok=True)
+    os.makedirs("../input", exist_ok=True)
 
     fp = f"./input/{attachment.filename}"
     await attachment.save(fp)
