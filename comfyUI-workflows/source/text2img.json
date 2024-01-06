@@ -1,79 +1,12 @@
 {
-  "last_node_id": 21,
-  "last_link_id": 13,
+  "last_node_id": 22,
+  "last_link_id": 16,
   "nodes": [
-    {
-      "id": 3,
-      "type": "KSampler",
-      "pos": [
-        1430,
-        130
-      ],
-      "size": [
-        315,
-        262
-      ],
-      "flags": {},
-      "order": 8,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 1
-        },
-        {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "link": 2
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "link": 3
-        },
-        {
-          "name": "latent_image",
-          "type": "LATENT",
-          "link": 4
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": 13,
-          "widget": {
-            "name": "seed"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            7
-          ],
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "KSampler"
-      },
-      "widgets_values": [
-        725790695311097,
-        "randomize",
-        20,
-        8,
-        "ddim",
-        "ddim_uniform",
-        1
-      ]
-    },
     {
       "id": 4,
       "type": "CheckpointLoaderSimple",
       "pos": [
-        100,
+        -300,
         130
       ],
       "size": {
@@ -115,44 +48,6 @@
       ]
     },
     {
-      "id": 6,
-      "type": "CLIPTextEncode",
-      "pos": [
-        930,
-        130
-      ],
-      "size": {
-        "0": 400,
-        "1": 200
-      },
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 5
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            2
-          ],
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CLIPTextEncode"
-      },
-      "widgets_values": [
-        "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,"
-      ]
-    },
-    {
       "id": 7,
       "type": "CLIPTextEncode",
       "pos": [
@@ -164,13 +59,13 @@
         "1": 200
       },
       "flags": {},
-      "order": 7,
+      "order": 8,
       "mode": 0,
       "inputs": [
         {
           "name": "clip",
           "type": "CLIP",
-          "link": 6
+          "link": 16
         }
       ],
       "outputs": [
@@ -202,7 +97,7 @@
         "1": 46
       },
       "flags": {},
-      "order": 9,
+      "order": 10,
       "mode": 0,
       "inputs": [
         {
@@ -229,91 +124,6 @@
       "properties": {
         "Node name for S&R": "VAEDecode"
       }
-    },
-    {
-      "id": 9,
-      "type": "SaveImage",
-      "pos": [
-        2155,
-        130
-      ],
-      "size": {
-        "0": 315,
-        "1": 58
-      },
-      "flags": {},
-      "order": 10,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 9
-        }
-      ],
-      "properties": {},
-      "widgets_values": [
-        "final_output"
-      ]
-    },
-    {
-      "id": 11,
-      "type": "Lora Loader Stack (rgthree)",
-      "pos": [
-        515,
-        130
-      ],
-      "size": {
-        "0": 315,
-        "1": 246
-      },
-      "flags": {},
-      "order": 4,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 10
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 11
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            1
-          ],
-          "shape": 3
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            5,
-            6
-          ],
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Lora Loader Stack (rgthree)"
-      },
-      "widgets_values": [
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1
-      ]
     },
     {
       "id": 13,
@@ -395,8 +205,8 @@
       "id": 21,
       "type": "Latent Upscale by Factor (WAS)",
       "pos": [
-        457,
-        442
+        481,
+        474
       ],
       "size": {
         "0": 315,
@@ -435,8 +245,8 @@
       "id": 12,
       "type": "Seed (rgthree)",
       "pos": [
-        100,
-        358
+        158,
+        418
       ],
       "size": {
         "0": 210,
@@ -453,17 +263,248 @@
             13
           ],
           "shape": 3,
-          "slot_index": 0
+          "slot_index": 0,
+          "dir": 4
         }
       ],
       "properties": {
         "Node name for S&R": "Seed (rgthree)"
       },
       "widgets_values": [
-        609268786121003,
+        216236959510513,
         null,
         null,
         null
+      ]
+    },
+    {
+      "id": 11,
+      "type": "Lora Loader Stack (rgthree)",
+      "pos": [
+        120,
+        130
+      ],
+      "size": {
+        "0": 315,
+        "1": 246
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 10
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ],
+          "shape": 3
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            14
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Lora Loader Stack (rgthree)"
+      },
+      "widgets_values": [
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1
+      ]
+    },
+    {
+      "id": 3,
+      "type": "KSampler",
+      "pos": [
+        1430,
+        130
+      ],
+      "size": {
+        "0": 315,
+        "1": 262
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 2
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 3
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 4
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 13,
+          "widget": {
+            "name": "seed"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            7
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        643596092025133,
+        "randomize",
+        20,
+        8,
+        "ddim",
+        "ddim_uniform",
+        1
+      ]
+    },
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "pos": [
+        2155,
+        130
+      ],
+      "size": [
+        315,
+        270
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 9
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "final_output"
+      ]
+    },
+    {
+      "id": 22,
+      "type": "CLIPSetLastLayer",
+      "pos": [
+        514.2560656738277,
+        209.43989135742163
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            15,
+            16
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPSetLastLayer"
+      },
+      "widgets_values": [
+        -1
+      ]
+    },
+    {
+      "id": 6,
+      "type": "CLIPTextEncode",
+      "pos": [
+        930,
+        130
+      ],
+      "size": {
+        "0": 400,
+        "1": 200
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 15
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            2
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "a dog"
       ]
     }
   ],
@@ -499,22 +540,6 @@
       3,
       3,
       "LATENT"
-    ],
-    [
-      5,
-      11,
-      1,
-      6,
-      0,
-      "CLIP"
-    ],
-    [
-      6,
-      11,
-      1,
-      7,
-      0,
-      "CLIP"
     ],
     [
       7,
@@ -571,6 +596,30 @@
       3,
       4,
       "INT"
+    ],
+    [
+      14,
+      11,
+      1,
+      22,
+      0,
+      "CLIP"
+    ],
+    [
+      15,
+      22,
+      0,
+      6,
+      0,
+      "CLIP"
+    ],
+    [
+      16,
+      22,
+      0,
+      7,
+      0,
+      "CLIP"
     ]
   ],
   "groups": [],

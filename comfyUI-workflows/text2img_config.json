@@ -27,33 +27,45 @@
         0
       ]
     },
-    "class_type": "KSampler"
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
   },
   "4": {
     "inputs": {
       "ckpt_name": "rundiffusionFX_v10.safetensors"
     },
-    "class_type": "CheckpointLoaderSimple"
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
   },
   "6": {
     "inputs": {
-      "text": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,",
+      "text": "a dog",
       "clip": [
-        "11",
-        1
+        "22",
+        0
       ]
     },
-    "class_type": "CLIPTextEncode"
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
   },
   "7": {
     "inputs": {
       "text": "text, watermark",
       "clip": [
-        "11",
-        1
+        "22",
+        0
       ]
     },
-    "class_type": "CLIPTextEncode"
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
   },
   "8": {
     "inputs": {
@@ -66,7 +78,10 @@
         0
       ]
     },
-    "class_type": "VAEDecode"
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
   },
   "9": {
     "inputs": {
@@ -76,7 +91,10 @@
         0
       ]
     },
-    "class_type": "SaveImage"
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
   },
   "11": {
     "inputs": {
@@ -97,19 +115,28 @@
         1
       ]
     },
-    "class_type": "Lora Loader Stack (rgthree)"
+    "class_type": "Lora Loader Stack (rgthree)",
+    "_meta": {
+      "title": "Lora Loader Stack (rgthree)"
+    }
   },
   "12": {
     "inputs": {
-      "seed": 609268786121003
+      "seed": 216236959510513
     },
-    "class_type": "Seed (rgthree)"
+    "class_type": "Seed (rgthree)",
+    "_meta": {
+      "title": "Seed (rgthree)"
+    }
   },
   "13": {
     "inputs": {
       "vae_name": "vae-ft-mse-840000-ema-pruned.ckpt"
     },
-    "class_type": "VAELoader"
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
   },
   "20": {
     "inputs": {
@@ -117,7 +144,10 @@
       "clip_scale": 1,
       "batch_size": 4
     },
-    "class_type": "SDXL Empty Latent Image (rgthree)"
+    "class_type": "SDXL Empty Latent Image (rgthree)",
+    "_meta": {
+      "title": "SDXL Empty Latent Image (rgthree)"
+    }
   },
   "21": {
     "inputs": {
@@ -129,6 +159,22 @@
         0
       ]
     },
-    "class_type": "Latent Upscale by Factor (WAS)"
+    "class_type": "Latent Upscale by Factor (WAS)",
+    "_meta": {
+      "title": "Latent Upscale by Factor (WAS)"
+    }
+  },
+  "22": {
+    "inputs": {
+      "stop_at_clip_layer": -1,
+      "clip": [
+        "11",
+        1
+      ]
+    },
+    "class_type": "CLIPSetLastLayer",
+    "_meta": {
+      "title": "CLIP Set Last Layer"
+    }
   }
 }

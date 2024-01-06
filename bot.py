@@ -169,7 +169,7 @@ async def slash_command(
         seed=seed,
         slash_command="imagine",
         filename=fp if input_file is not None else None,
-        denoise_strength=denoise_strength or SD15_GENERATION_DEFAULTS.denoise_strength,
+        denoise_strength=denoise_strength or SD15_GENERATION_DEFAULTS.denoise_strength if input_file is not None else 1.0,
         inpainting_prompt=inpainting_prompt,
         inpainting_detection_threshold=inpainting_detection_threshold or SD15_GENERATION_DEFAULTS.inpainting_detection_threshold
     )
@@ -263,7 +263,7 @@ async def slash_command(
         seed=seed,
         slash_command="sdxl",
         filename=fp if input_file is not None else None,
-        denoise_strength=denoise_strength or SDXL_GENERATION_DEFAULTS.denoise_strength,
+        denoise_strength=denoise_strength or SDXL_GENERATION_DEFAULTS.denoise_strength if input_file is not None else 1.0,
         inpainting_prompt=inpainting_prompt,
         inpainting_detection_threshold=inpainting_detection_threshold or SDXL_GENERATION_DEFAULTS.inpainting_detection_threshold
     )
