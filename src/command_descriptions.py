@@ -6,8 +6,8 @@ from src.comfy_api import models, loras, samplers
 from src.consts import *
 from src.defaults import *
 
-generation_messages = json.loads(open("generation_messages.json", "r").read())
-completion_messages = json.loads(open("completion_messages.json", "r").read())
+generation_messages = json.loads(open("./data/generation_messages.json", "r").read())
+completion_messages = json.loads(open("./data/completion_messages.json", "r").read())
 
 # These aspect ratio resolution values correspond to the SDXL Empty Latent Image node.
 # A latent modification node in the workflow converts it to the equivalent SD 1.5 resolution values.
