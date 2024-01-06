@@ -6,7 +6,7 @@ from discord.app_commands import Range
 
 from src.comfy_api import refresh_models, logger
 from src.image_gen.collage_utils import create_collage
-from src.image_gen.imageGen import generate_images
+from src.image_gen.image_gen import generate_images
 from src.command_descriptions import *
 
 from src.consts import *
@@ -15,8 +15,7 @@ from util import process_attachment, unpack_choices, should_filter, get_filename
 
 
 class ImageGenCommands():
-    def __init__(self, client, tree: discord.app_commands.CommandTree):
-        self.client = client
+    def __init__(self, tree: discord.app_commands.CommandTree):
         self.tree = tree
 
     def add_commands(self):

@@ -3,7 +3,7 @@ import logging
 import discord
 
 from src.comfy_api import refresh_models, clear_history
-from src.image_gen.commands.image_gen_commands import ImageGenCommands
+from src.image_gen.commands.ImageGenCommands import ImageGenCommands
 from util import setup_config, read_config
 
 discord.utils.setup_logging()
@@ -14,6 +14,7 @@ TOKEN = setup_config()
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 tree = discord.app_commands.CommandTree(client)
+
 
 @client.event
 async def on_ready():
@@ -26,16 +27,18 @@ async def on_ready():
 def start_bot():
     if c := read_config():
         if c["BOT"]["MUSIC_ENABLED"].lower() == "true":
-            from src.audio_gen.commands.audio_bot import music_command
+            from src.audio_gen.commands.audio_bot import MusicGenCommand
 
-            tree.add_command(music_command)
+            music_gen = MusicGenCommand(tree)
+            music_gen.add_commands()
 
         if c["BOT"]["SPEECH_ENABLED"].lower() == "true":
-            from src.audio_gen.commands.audio_bot import speech_command
+            from src.audio_gen.commands.audio_bot import SpeechGenCommand
 
-            tree.add_command(speech_command)
+            speech_gen = SpeechGenCommand(tree)
+            speech_gen.add_commands()
 
-    command_test = ImageGenCommands(client, tree)
+    command_test = ImageGenCommands(tree)
     command_test.add_commands()
     # run the bot
     client.run(TOKEN, log_handler=None)

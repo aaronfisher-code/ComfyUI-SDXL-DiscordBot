@@ -4,7 +4,7 @@ from discord.app_commands import Choice
 
 from src.comfy_api import models, loras, samplers
 from src.consts import *
-from src.image_gen.defaults import *
+from src.defaults import *
 
 generation_messages = json.loads(open("generation_messages.json", "r").read())
 completion_messages = json.loads(open("completion_messages.json", "r").read())
