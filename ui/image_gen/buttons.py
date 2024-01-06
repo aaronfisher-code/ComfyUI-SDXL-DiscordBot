@@ -7,11 +7,11 @@ import discord
 import discord.ext
 from discord import ui
 
-from imageGen import ImageWorkflow, generate_images, upscale_image, generate_alternatives, SDXL_GENERATION_DEFAULTS, \
-    SD15_GENERATION_DEFAULTS
-from collage_utils import create_collage, create_gif_collage
+from image_gen.imageGen import ImageWorkflow, generate_images, upscale_image, generate_alternatives
+from image_gen.collage_utils import create_collage, create_gif_collage
 from consts import *
 from util import get_filename, build_command
+from image_gen.defaults import *
 
 #<editor-fold desc="ButtonDecorators">
 class EditableButton:

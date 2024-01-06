@@ -5,9 +5,9 @@ from copy import deepcopy
 import discord
 from discord import ui
 
-from audio_gen import generate_audio, AudioWorkflow
-from buttons import ImageButton
-from consts import MUSIC_WORKFLOW, MUSIC_CONTINUE_WORKFLOW, TORTOISE_WORKFLOW
+from audio_gen.audio_gen import generate_audio, AudioWorkflow
+from ui.image_gen.buttons import ImageButton
+from consts import MUSIC_CONTINUE_WORKFLOW
 
 
 class AudioButtons(discord.ui.View):

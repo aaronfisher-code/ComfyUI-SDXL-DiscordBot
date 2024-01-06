@@ -1,102 +1,16 @@
 import configparser
 import json
 import tempfile
-from dataclasses import dataclass
-from typing import Optional
 
 from PIL import Image
 
 from comfy_api import ComfyGenerator as ImageGenerator, upload_image
-
-
-@dataclass
-class ImageWorkflow:
-    workflow_name: str
-
-    prompt: str
-    negative_prompt: Optional[str] = None
-
-    model: Optional[str] = None
-    loras: Optional[list[str]] = None
-    lora_strengths: Optional[list[float]] = None
-
-    aspect_ratio: Optional[str] = None
-    sampler: Optional[str] = None
-    num_steps: Optional[int] = None
-    cfg_scale: Optional[float] = None
-
-    denoise_strength: Optional[float] = None
-    batch_size: Optional[int] = None
-
-    seed: Optional[int] = None
-    filename: str = None
-    slash_command: str = None
-    inpainting_prompt: Optional[str] = None
-    inpainting_detection_threshold: Optional[float] = None
-
+from image_gen.ImageWorkflow import ImageWorkflow
 
 # Read the configuration
 config = configparser.ConfigParser()
 config.read("config.properties")
 server_address = config["LOCAL"]["SERVER_ADDRESS"]
-
-SD15_GENERATION_DEFAULTS = ImageWorkflow(
-    None,  # workflow name
-    None,  # prompt
-    None,  # negative_prompt
-    config["SD15_GENERATION_DEFAULTS"]["MODEL"],
-    None,  # loras
-    None,  # lora_strengths TODO add lora and lora strength defaults
-    config["SD15_GENERATION_DEFAULTS"]["ASPECT_RATIO"],
-    config["SD15_GENERATION_DEFAULTS"]["SAMPLER"],
-    int(config["SD15_GENERATION_DEFAULTS"]["NUM_STEPS"]),
-    float(config["SD15_GENERATION_DEFAULTS"]["CFG_SCALE"]),
-    float(config["SD15_GENERATION_DEFAULTS"]["DENOISE_STRENGTH"]),
-    int(config["SD15_GENERATION_DEFAULTS"]["BATCH_SIZE"]),  # batch_size
-    None,  # seed
-    None,  # filename
-    "imagine",  # slash_command
-    None,  # inpainting_prompt
-    int(config["SD15_GENERATION_DEFAULTS"]["INPAINTING_DETECTION_THRESHOLD"]),  # inpainting_detection_threshold
-)
-
-SDXL_GENERATION_DEFAULTS = ImageWorkflow(
-    None,  # workflow name
-    None,  # prompt
-    None,  # negative_prompt
-    config["SDXL_GENERATION_DEFAULTS"]["MODEL"],
-    None,  # loras
-    None,  # lora_strengths
-    config["SDXL_GENERATION_DEFAULTS"]["ASPECT_RATIO"],
-    config["SDXL_GENERATION_DEFAULTS"]["SAMPLER"],
-    int(config["SDXL_GENERATION_DEFAULTS"]["NUM_STEPS"]),
-    float(config["SDXL_GENERATION_DEFAULTS"]["CFG_SCALE"]),
-    float(config["SDXL_GENERATION_DEFAULTS"]["DENOISE_STRENGTH"]),
-    int(config["SDXL_GENERATION_DEFAULTS"]["BATCH_SIZE"]),  # batch_size
-    None,  # seed
-    None,  # filename
-    "sdxl",  # slash_command
-    None,  # inpainting_prompt
-    int(config["SDXL_GENERATION_DEFAULTS"]["INPAINTING_DETECTION_THRESHOLD"]),  # inpainting_detection_threshold
-)
-
-VIDEO_GENERATION_DEFAULTS = ImageWorkflow(
-    None,  # workflow name
-    None,  # prompt
-    None,  # negative_prompt
-    config["VIDEO_GENERATION_DEFAULTS"]["MODEL"],
-    None,  # loras
-    None,  # lora_strengths
-    None,  # aspect_ratio
-    config["VIDEO_GENERATION_DEFAULTS"]["SAMPLER"],
-    int(config["VIDEO_GENERATION_DEFAULTS"]["NUM_STEPS"]),
-    float(config["VIDEO_GENERATION_DEFAULTS"]["CFG_SCALE"]),
-    int(config["VIDEO_GENERATION_DEFAULTS"]["BATCH_SIZE"]),  # batch_size
-    None,  # denoise_strength
-    None,  # seed
-    None,  # filename
-    "video"  # slash_command
-)
 
 
 def setup_workflow(workflow, params: ImageWorkflow):

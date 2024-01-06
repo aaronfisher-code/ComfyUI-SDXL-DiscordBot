@@ -6,10 +6,10 @@ import discord
 from discord import app_commands
 from discord.app_commands import Choice, Range
 
-from audio_buttons import AudioButtons
+from ui.audio.audio_buttons import AudioButtons
 from comfy_api import get_tortoise_voices
 from consts import *
-from audio_gen import (
+from audio_gen.audio_gen import (
     generate_audio,
     AudioWorkflow,
     MUSICGEN_DEFAULTS,

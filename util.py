@@ -2,7 +2,7 @@ import configparser
 import os
 
 from discord import Interaction, Attachment
-from imageGen import ImageWorkflow
+from image_gen.imageGen import ImageWorkflow
 
 
 def read_config():

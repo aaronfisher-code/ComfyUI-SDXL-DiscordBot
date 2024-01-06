@@ -10,13 +10,12 @@ from io import BytesIO
 import websockets
 from PIL import Image
 
-
-logger = logging.getLogger(__name__)
-
-config = configparser.ConfigParser()
-config.read("config.properties")
-server_address = config["LOCAL"]["SERVER_ADDRESS"]
-
+async def refresh_models():
+    global models
+    global loras
+    models = get_models()
+    loras = get_loras()
+    logger.info("refreshed models.")
 
 def queue_prompt(prompt, client_id):
     p = {"prompt": prompt, "client_id": client_id}
@@ -147,3 +146,13 @@ class ComfyGenerator:
         if self.ws:
             await self.ws.close()
 
+
+logger = logging.getLogger(__name__)
+
+config = configparser.ConfigParser()
+config.read("config.properties")
+server_address = config["LOCAL"]["SERVER_ADDRESS"]
+
+models = get_models()
+loras = get_loras()
+samplers = get_samplers()
