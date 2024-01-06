@@ -1,6 +1,6 @@
 import configparser
 
-from image_gen.ImageWorkflow import ImageWorkflow
+from src.image_gen.ImageWorkflow import ImageWorkflow
 
 # Read the configuration
 config = configparser.ConfigParser()

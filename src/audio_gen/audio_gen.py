@@ -3,7 +3,7 @@ import json
 from dataclasses import dataclass
 from typing import Optional
 
-from comfy_api import ComfyGenerator
+from src.comfy_api import ComfyGenerator
 
 
 # Read the configuration

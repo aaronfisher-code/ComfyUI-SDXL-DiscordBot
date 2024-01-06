@@ -2,8 +2,8 @@ import logging
 
 import discord
 
-from comfy_api import refresh_models, clear_history
-from image_gen.image_gen_commands import ImageGenCommands
+from src.comfy_api import refresh_models, clear_history
+from src.image_gen.commands.image_gen_commands import ImageGenCommands
 from util import setup_config, read_config
 
 discord.utils.setup_logging()
@@ -26,12 +26,12 @@ async def on_ready():
 def start_bot():
     if c := read_config():
         if c["BOT"]["MUSIC_ENABLED"].lower() == "true":
-            from commands.audio_bot import music_command
+            from src.audio_gen.commands.audio_bot import music_command
 
             tree.add_command(music_command)
 
         if c["BOT"]["SPEECH_ENABLED"].lower() == "true":
-            from commands.audio_bot import speech_command
+            from src.audio_gen.commands.audio_bot import speech_command
 
             tree.add_command(speech_command)
 

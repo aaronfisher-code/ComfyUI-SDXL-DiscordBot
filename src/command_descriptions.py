@@ -2,9 +2,9 @@ import json
 
 from discord.app_commands import Choice
 
-from comfy_api import models, loras, samplers
-from consts import *
-from image_gen.defaults import *
+from src.comfy_api import models, loras, samplers
+from src.consts import *
+from src.image_gen.defaults import *
 
 generation_messages = json.loads(open("generation_messages.json", "r").read())
 completion_messages = json.loads(open("completion_messages.json", "r").read())

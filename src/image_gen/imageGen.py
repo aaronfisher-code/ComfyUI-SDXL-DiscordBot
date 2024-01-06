@@ -4,8 +4,8 @@ import tempfile
 
 from PIL import Image
 
-from comfy_api import ComfyGenerator as ImageGenerator, upload_image
-from image_gen.ImageWorkflow import ImageWorkflow
+from src.comfy_api import ComfyGenerator as ImageGenerator, upload_image
+from src.image_gen.ImageWorkflow import ImageWorkflow
 
 # Read the configuration
 config = configparser.ConfigParser()

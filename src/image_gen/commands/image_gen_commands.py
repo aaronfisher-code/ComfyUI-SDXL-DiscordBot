@@ -4,13 +4,13 @@ import discord
 from discord import app_commands, Attachment
 from discord.app_commands import Range
 
-from comfy_api import refresh_models, logger
-from image_gen.collage_utils import create_collage
-from image_gen.imageGen import generate_images
+from src.comfy_api import refresh_models, logger
+from src.image_gen.collage_utils import create_collage
+from src.image_gen.imageGen import generate_images
 from src.command_descriptions import *
 
-from consts import *
-from ui.image_gen.buttons import Buttons
+from src.consts import *
+from src.image_gen.ui.buttons import Buttons
 from util import process_attachment, unpack_choices, should_filter, get_filename
 
 
