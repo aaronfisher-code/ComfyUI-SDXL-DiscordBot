@@ -4,16 +4,21 @@ import tempfile
 
 from PIL import Image
 
-from src.comfy_api import ComfyGenerator as ImageGenerator, upload_image
+from src.comfy_api import ComfyGenerator as ImageGenerator, upload_image, clear_cache
 from src.image_gen.ImageWorkflow import ImageWorkflow
 
 # Read the configuration
 config = configparser.ConfigParser()
 config.read("config.properties")
 server_address = config["LOCAL"]["SERVER_ADDRESS"]
+previous_workflow = None
 
 
 def setup_workflow(workflow, params: ImageWorkflow):
+    global previous_workflow
+    if previous_workflow is not None and params.workflow_name != previous_workflow:
+        clear_cache()
+
     prompt_nodes = config.get(params.workflow_name, "PROMPT_NODES").split(",")
     neg_prompt_nodes = config.get(params.workflow_name, "NEG_PROMPT_NODES").split(",")
     rand_seed_nodes = config.get(params.workflow_name, "RAND_SEED_NODES").split(",")
@@ -130,6 +135,8 @@ def setup_workflow(workflow, params: ImageWorkflow):
     if params.inpainting_prompt is not None and inpainting_node is not None:
         workflow[inpainting_node]["inputs"]["text"] = params.inpainting_prompt
         workflow[inpainting_threshold_node]["inputs"]["threshold"] = params.inpainting_detection_threshold
+
+    previous_workflow = params.workflow_name
 
     return workflow
 

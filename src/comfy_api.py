@@ -38,10 +38,25 @@ def get_history(prompt_id):
         return json.loads(response.read())
 
 
+def get_queue():
+    with urllib.request.urlopen("http://{}/queue".format(server_address)) as response:
+        return json.loads(response.read())
+
+
 def clear_history():
     p = {"clear": True}
     data = json.dumps(p).encode("utf-8")
     req = urllib.request.Request("http://{}/history".format(server_address), data=data)
+    response = urllib.request.urlopen(req).read()
+
+
+def clear_cache():
+    queue = get_queue()
+    if len(queue["queue_running"]) > 0 or len(queue["queue_pending"]) > 0:
+        return
+    p = {"free_memory": True}
+    data = json.dumps(p).encode("utf-8")
+    req = urllib.request.Request("http://{}/free".format(server_address), data=data)
     response = urllib.request.urlopen(req).read()
 
 
