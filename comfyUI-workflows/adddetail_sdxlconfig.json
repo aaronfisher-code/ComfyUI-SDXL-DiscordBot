@@ -12,8 +12,8 @@
     "inputs": {
       "text": "text, watermark",
       "clip": [
-        "35",
-        1
+        "41",
+        0
       ]
     },
     "class_type": "CLIPTextEncode",
@@ -94,8 +94,8 @@
         0
       ],
       "clip": [
-        "35",
-        1
+        "41",
+        0
       ]
     },
     "class_type": "CLIPTextEncodeSDXL",
@@ -109,7 +109,7 @@
     },
     "class_type": "CR Prompt Text",
     "_meta": {
-      "title": "⚙️ CR Prompt Text"
+      "title": "CR Prompt Text"
     }
   },
   "35": {
@@ -245,6 +245,19 @@
     "class_type": "Seed (rgthree)",
     "_meta": {
       "title": "Seed (rgthree)"
+    }
+  },
+  "41": {
+    "inputs": {
+      "stop_at_clip_layer": -1,
+      "clip": [
+        "35",
+        1
+      ]
+    },
+    "class_type": "CLIPSetLastLayer",
+    "_meta": {
+      "title": "CLIP Set Last Layer"
     }
   }
 }

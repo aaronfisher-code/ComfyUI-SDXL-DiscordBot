@@ -26,3 +26,4 @@ class ImageWorkflow:
     slash_command: str = None
     inpainting_prompt: Optional[str] = None
     inpainting_detection_threshold: Optional[float] = None
+    clip_skip: Optional[int] = None

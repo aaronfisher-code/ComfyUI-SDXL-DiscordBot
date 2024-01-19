@@ -27,23 +27,32 @@
         0
       ]
     },
-    "class_type": "KSampler"
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
   },
   "4": {
     "inputs": {
       "ckpt_name": "xl/dreamshaperXL10_alpha2Xl10.safetensors"
     },
-    "class_type": "CheckpointLoaderSimple"
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
   },
   "7": {
     "inputs": {
       "text": "text, watermark",
       "clip": [
-        "23",
-        1
+        "24",
+        0
       ]
     },
-    "class_type": "CLIPTextEncode"
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
   },
   "8": {
     "inputs": {
@@ -56,7 +65,10 @@
         2
       ]
     },
-    "class_type": "VAEDecode"
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
   },
   "9": {
     "inputs": {
@@ -66,7 +78,10 @@
         0
       ]
     },
-    "class_type": "SaveImage"
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
   },
   "11": {
     "inputs": {
@@ -87,20 +102,29 @@
         1
       ]
     },
-    "class_type": "Lora Loader Stack (rgthree)"
+    "class_type": "Lora Loader Stack (rgthree)",
+    "_meta": {
+      "title": "Lora Loader Stack (rgthree)"
+    }
   },
   "12": {
     "inputs": {
       "seed": 61126062341422
     },
-    "class_type": "Seed (rgthree)"
+    "class_type": "Seed (rgthree)",
+    "_meta": {
+      "title": "Seed (rgthree)"
+    }
   },
   "13": {
     "inputs": {
       "image": "example.png",
-      "choose file to upload": "image"
+      "upload": "image"
     },
-    "class_type": "LoadImage"
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
   },
   "14": {
     "inputs": {
@@ -113,7 +137,10 @@
         2
       ]
     },
-    "class_type": "VAEEncode"
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
   },
   "15": {
     "inputs": {
@@ -123,7 +150,10 @@
         0
       ]
     },
-    "class_type": "RepeatLatentBatch"
+    "class_type": "RepeatLatentBatch",
+    "_meta": {
+      "title": "Repeat Latent Batch"
+    }
   },
   "17": {
     "inputs": {
@@ -142,23 +172,32 @@
         0
       ],
       "clip": [
-        "23",
-        1
+        "24",
+        0
       ]
     },
-    "class_type": "CLIPTextEncodeSDXL"
+    "class_type": "CLIPTextEncodeSDXL",
+    "_meta": {
+      "title": "CLIPTextEncodeSDXL"
+    }
   },
   "21": {
     "inputs": {
       "prompt": "a dog"
     },
-    "class_type": "CR Prompt Text"
+    "class_type": "CR Prompt Text",
+    "_meta": {
+      "title": "CR Prompt Text"
+    }
   },
   "22": {
     "inputs": {
       "prompt": "a dog"
     },
-    "class_type": "CR Prompt Text"
+    "class_type": "CR Prompt Text",
+    "_meta": {
+      "title": "CR Prompt Text"
+    }
   },
   "23": {
     "inputs": {
@@ -179,6 +218,22 @@
         1
       ]
     },
-    "class_type": "Lora Loader Stack (rgthree)"
+    "class_type": "Lora Loader Stack (rgthree)",
+    "_meta": {
+      "title": "Lora Loader Stack (rgthree)"
+    }
+  },
+  "24": {
+    "inputs": {
+      "stop_at_clip_layer": -1,
+      "clip": [
+        "23",
+        1
+      ]
+    },
+    "class_type": "CLIPSetLastLayer",
+    "_meta": {
+      "title": "CLIP Set Last Layer"
+    }
   }
 }

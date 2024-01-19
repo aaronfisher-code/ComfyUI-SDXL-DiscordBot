@@ -104,7 +104,7 @@
     },
     "class_type": "ADE_EmptyLatentImageLarge",
     "_meta": {
-      "title": "Empty Latent Image (Big Batch) 🎭🅐🅓"
+      "title": "Empty Latent Image (Big Batch)"
     }
   },
   "123": {
@@ -170,7 +170,7 @@
     },
     "class_type": "ADE_AnimateDiffLoaderWithContext",
     "_meta": {
-      "title": "AnimateDiff Loader 🎭🅐🅓"
+      "title": "AnimateDiff Loader"
     }
   },
   "145": {
@@ -183,7 +183,7 @@
     },
     "class_type": "ADE_AnimateDiffUniformContextOptions",
     "_meta": {
-      "title": "Uniform Context Options 🎭🅐🅓"
+      "title": "Uniform Context Options"
     }
   },
   "147": {
@@ -194,7 +194,7 @@
     },
     "class_type": "ADE_AnimateDiffModelSettingsSimple",
     "_meta": {
-      "title": "EXP Motion Model Settings (Simple) 🎭🅐🅓"
+      "title": "EXP Motion Model Settings (Simple)"
     }
   },
   "148": {
@@ -212,7 +212,7 @@
     },
     "class_type": "VHS_VideoCombine",
     "_meta": {
-      "title": "Video Combine 🎥🅥🅗🅢"
+      "title": "Video Combine"
     }
   }
 }

@@ -24,6 +24,7 @@ def setup_workflow(workflow, params: ImageWorkflow):
     rand_seed_nodes = config.get(params.workflow_name, "RAND_SEED_NODES").split(",")
     model_node = config.get(params.workflow_name, "MODEL_NODE").split(",")
     lora_node = config.get(params.workflow_name, "LORA_NODE").split(",")
+    clip_skip_node = config.get(params.workflow_name, "CLIP_SKIP_NODE")
     llm_model_node = None
     turbo_lora_node = None
     inpainting_node = None
@@ -135,6 +136,9 @@ def setup_workflow(workflow, params: ImageWorkflow):
     if params.inpainting_prompt is not None and inpainting_node is not None:
         workflow[inpainting_node]["inputs"]["text"] = params.inpainting_prompt
         workflow[inpainting_threshold_node]["inputs"]["threshold"] = params.inpainting_detection_threshold
+
+    if clip_skip_node is not None:
+        workflow[clip_skip_node]["inputs"]["stop_at_clip_layer"] = params.clip_skip
 
     previous_workflow = params.workflow_name
 

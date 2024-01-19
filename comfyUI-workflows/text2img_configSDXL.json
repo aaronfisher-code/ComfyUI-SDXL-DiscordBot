@@ -3,87 +3,41 @@
     "inputs": {
       "filename_prefix": "final_output",
       "images": [
-        "63",
-        3
+        "77",
+        0
       ]
     },
-    "class_type": "SaveImage"
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
   },
   "12": {
     "inputs": {
-      "seed": 60653817836735
+      "seed": -1
     },
-    "class_type": "Seed (rgthree)"
+    "class_type": "Seed (rgthree)",
+    "_meta": {
+      "title": "Seed (rgthree)"
+    }
   },
   "21": {
     "inputs": {
       "prompt": "a dog"
     },
-    "class_type": "CR Prompt Text"
+    "class_type": "CR Prompt Text",
+    "_meta": {
+      "title": "CR Prompt Text"
+    }
   },
   "40": {
     "inputs": {
       "prompt": "child, children, loli, kid, kids"
     },
-    "class_type": "CR Prompt Text"
-  },
-  "63": {
-    "inputs": {
-      "noise_seed": [
-        "12",
-        0
-      ],
-      "steps": 8,
-      "cfg": 2,
-      "sampler_name": "euler_ancestral",
-      "scheduler": "normal",
-      "start_at_step": 0,
-      "refine_at_step": -1,
-      "preview_method": "none",
-      "vae_decode": "true",
-      "sdxl_tuple": [
-        "65",
-        0
-      ],
-      "latent_image": [
-        "65",
-        1
-      ],
-      "optional_vae": [
-        "65",
-        2
-      ]
-    },
-    "class_type": "KSampler SDXL (Eff.)"
-  },
-  "65": {
-    "inputs": {
-      "base_ckpt_name": "xl/protovisionxl.safetensors",
-      "base_clip_skip": -1,
-      "refiner_ckpt_name": "None",
-      "refiner_clip_skip": -2,
-      "positive_ascore": 6,
-      "negative_ascore": 2,
-      "vae_name": "sdxl_vae.safetensors",
-      "positive": [
-        "21",
-        0
-      ],
-      "negative": [
-        "40",
-        0
-      ],
-      "token_normalization": "none",
-      "weight_interpretation": "comfy",
-      "empty_latent_width": 1024,
-      "empty_latent_height": 1024,
-      "batch_size": 4,
-      "lora_stack": [
-        "68",
-        0
-      ]
-    },
-    "class_type": "Eff. Loader SDXL"
+    "class_type": "CR Prompt Text",
+    "_meta": {
+      "title": "⚙CR Prompt Text"
+    }
   },
   "67": {
     "inputs": {
@@ -100,7 +54,10 @@
       "model_weight_3": 1,
       "clip_weight_3": 1
     },
-    "class_type": "CR LoRA Stack"
+    "class_type": "CR LoRA Stack",
+    "_meta": {
+      "title": "CR LoRA Stack"
+    }
   },
   "68": {
     "inputs": {
@@ -121,6 +78,165 @@
         0
       ]
     },
-    "class_type": "CR LoRA Stack"
+    "class_type": "CR LoRA Stack",
+    "_meta": {
+      "title": "CR LoRA Stack"
+    }
+  },
+  "69": {
+    "inputs": {
+      "ckpt_name": "xl/hdwl_mix.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "70": {
+    "inputs": {
+      "model": [
+        "69",
+        0
+      ],
+      "clip": [
+        "69",
+        1
+      ],
+      "lora_stack": [
+        "68",
+        0
+      ]
+    },
+    "class_type": "CR Apply LoRA Stack",
+    "_meta": {
+      "title": "CR Apply LoRA Stack"
+    }
+  },
+  "71": {
+    "inputs": {
+      "stop_at_clip_layer": -1,
+      "clip": [
+        "70",
+        1
+      ]
+    },
+    "class_type": "CLIPSetLastLayer",
+    "_meta": {
+      "title": "CLIP Set Last Layer"
+    }
+  },
+  "72": {
+    "inputs": {
+      "seed": [
+        "12",
+        0
+      ],
+      "steps": 8,
+      "cfg": 2,
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "denoise": 1,
+      "model": [
+        "70",
+        0
+      ],
+      "positive": [
+        "73",
+        0
+      ],
+      "negative": [
+        "75",
+        0
+      ],
+      "latent_image": [
+        "76",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "73": {
+    "inputs": {
+      "width": [
+        "76",
+        1
+      ],
+      "height": [
+        "76",
+        2
+      ],
+      "crop_w": 0,
+      "crop_h": 0,
+      "target_width": [
+        "76",
+        1
+      ],
+      "target_height": [
+        "76",
+        2
+      ],
+      "text_g": [
+        "21",
+        0
+      ],
+      "text_l": [
+        "21",
+        0
+      ],
+      "clip": [
+        "71",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncodeSDXL",
+    "_meta": {
+      "title": "CLIPTextEncodeSDXL"
+    }
+  },
+  "75": {
+    "inputs": {
+      "text": [
+        "40",
+        0
+      ],
+      "clip": [
+        "71",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "76": {
+    "inputs": {
+      "dimensions": "1024 x 1024  (square)",
+      "clip_scale": 2,
+      "batch_size": 4
+    },
+    "class_type": "SDXL Empty Latent Image (rgthree)",
+    "_meta": {
+      "title": "SDXL Empty Latent Image (rgthree)"
+    }
+  },
+  "77": {
+    "inputs": {
+      "samples": [
+        "72",
+        0
+      ],
+      "vae": [
+        "69",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
   }
 }

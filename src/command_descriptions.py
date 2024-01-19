@@ -42,6 +42,7 @@ IMAGINE_ARG_DESCS = {
     "denoise_strength": f"range [0.01, 1.0], default {SD15_GENERATION_DEFAULTS.denoise_strength}; Strength of denoising filter during img2img. Only works when input_file is set",
     "inpainting_prompt": "Detection prompt for inpainting; examples: 'background' or 'person'",
     "inpainting_detection_threshold": f"range [0, 255], default {SD15_GENERATION_DEFAULTS.inpainting_detection_threshold}; Detection threshold for inpainting. Only works when inpainting_prompt is set",
+    "clip_skip": f"default: {SD15_GENERATION_DEFAULTS.clip_skip}",
 }
 SDXL_ARG_DESCS = {
     **BASE_ARG_DESCS,
@@ -49,6 +50,7 @@ SDXL_ARG_DESCS = {
     "denoise_strength": f"range [0.01, 1.0], default {SDXL_GENERATION_DEFAULTS.denoise_strength}; Strength of denoising filter during img2img. Only works when input_file is set",
     "inpainting_prompt": "Detection prompt for inpainting; examples: 'background' or 'person'",
     "inpainting_detection_threshold": f"range [0, 255], default {SDXL_GENERATION_DEFAULTS.inpainting_detection_threshold}; Detection threshold for inpainting. Only works when inpainting_prompt is set",
+    "clip_skip": f"default: {SDXL_GENERATION_DEFAULTS.clip_skip}",
 }
 VIDEO_ARG_DESCS = {k: v for k, v in BASE_ARG_DESCS.items() if k != "aspect_ratio"}
 

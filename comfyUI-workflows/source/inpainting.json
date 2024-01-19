@@ -1,6 +1,6 @@
 {
-  "last_node_id": 38,
-  "last_link_id": 73,
+  "last_node_id": 39,
+  "last_link_id": 76,
   "nodes": [
     {
       "id": 8,
@@ -14,7 +14,7 @@
         "1": 46
       },
       "flags": {},
-      "order": 15,
+      "order": 16,
       "mode": 0,
       "inputs": [
         {
@@ -46,8 +46,8 @@
       "id": 11,
       "type": "Lora Loader Stack (rgthree)",
       "pos": [
-        -312,
-        424
+        -710,
+        420
       ],
       "size": {
         "0": 315,
@@ -150,7 +150,7 @@
         "1": 270
       },
       "flags": {},
-      "order": 16,
+      "order": 17,
       "mode": 0,
       "inputs": [
         {
@@ -299,13 +299,13 @@
         "1": 180.6060791015625
       },
       "flags": {},
-      "order": 11,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
           "name": "clip",
           "type": "CLIP",
-          "link": 37
+          "link": 76
         }
       ],
       "outputs": [
@@ -375,13 +375,13 @@
         "1": 180.6060791015625
       },
       "flags": {},
-      "order": 12,
+      "order": 13,
       "mode": 0,
       "inputs": [
         {
           "name": "clip",
           "type": "CLIP",
-          "link": 67,
+          "link": 75,
           "slot_index": 0
         },
         {
@@ -411,67 +411,6 @@
       ]
     },
     {
-      "id": 23,
-      "type": "Lora Loader Stack (rgthree)",
-      "pos": [
-        40,
-        418
-      ],
-      "size": {
-        "0": 315,
-        "1": 246
-      },
-      "flags": {},
-      "order": 8,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 33
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 34
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            35
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            37,
-            67
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Lora Loader Stack (rgthree)"
-      },
-      "widgets_values": [
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1
-      ]
-    },
-    {
       "id": 3,
       "type": "KSampler",
       "pos": [
@@ -483,7 +422,7 @@
         "1": 593.6389770507812
       },
       "flags": {},
-      "order": 14,
+      "order": 15,
       "mode": 0,
       "inputs": [
         {
@@ -543,8 +482,8 @@
       "id": 4,
       "type": "CheckpointLoaderSimple",
       "pos": [
-        -693,
-        458
+        -1090,
+        450
       ],
       "size": {
         "0": 315,
@@ -721,7 +660,7 @@
         "1": 46
       },
       "flags": {},
-      "order": 13,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
@@ -751,6 +690,106 @@
       "properties": {
         "Node name for S&R": "SetLatentNoiseMask"
       }
+    },
+    {
+      "id": 23,
+      "type": "Lora Loader Stack (rgthree)",
+      "pos": [
+        -360,
+        410
+      ],
+      "size": {
+        "0": 315,
+        "1": 246
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 33
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 34
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            35
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            74
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Lora Loader Stack (rgthree)"
+      },
+      "widgets_values": [
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1
+      ]
+    },
+    {
+      "id": 39,
+      "type": "CLIPSetLastLayer",
+      "pos": [
+        13.174780312499252,
+        438.5831959667963
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 74
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            75,
+            76
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPSetLastLayer"
+      },
+      "widgets_values": [
+        -1
+      ]
     }
   ],
   "links": [
@@ -835,14 +874,6 @@
       "MODEL"
     ],
     [
-      37,
-      23,
-      1,
-      7,
-      0,
-      "CLIP"
-    ],
-    [
       40,
       13,
       0,
@@ -881,14 +912,6 @@
       36,
       1,
       "STRING"
-    ],
-    [
-      67,
-      23,
-      1,
-      36,
-      0,
-      "CLIP"
     ],
     [
       68,
@@ -937,6 +960,30 @@
       3,
       3,
       "LATENT"
+    ],
+    [
+      74,
+      23,
+      1,
+      39,
+      0,
+      "CLIP"
+    ],
+    [
+      75,
+      39,
+      0,
+      36,
+      0,
+      "CLIP"
+    ],
+    [
+      76,
+      39,
+      0,
+      7,
+      0,
+      "CLIP"
     ]
   ],
   "groups": [],

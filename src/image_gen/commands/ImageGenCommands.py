@@ -45,6 +45,7 @@ class ImageGenCommands():
                 denoise_strength: Range[float, 0.01, 1.0] = None,
                 inpainting_prompt: str = None,
                 inpainting_detection_threshold: Range[int, 0, 255] = None,
+                clip_skip: Range[int, -2, -1] = None,
         ):
             if input_file is not None:
                 fp = await process_attachment(input_file, interaction)
@@ -67,7 +68,8 @@ class ImageGenCommands():
                 filename=fp if input_file is not None else None,
                 denoise_strength=denoise_strength or SD15_GENERATION_DEFAULTS.denoise_strength if input_file is not None else 1.0,
                 inpainting_prompt=inpainting_prompt,
-                inpainting_detection_threshold=inpainting_detection_threshold or SD15_GENERATION_DEFAULTS.inpainting_detection_threshold
+                inpainting_detection_threshold=inpainting_detection_threshold or SD15_GENERATION_DEFAULTS.inpainting_detection_threshold,
+                clip_skip=clip_skip or SD15_GENERATION_DEFAULTS.clip_skip
             )
             await self.__do_request(
                 interaction,
@@ -93,6 +95,7 @@ class ImageGenCommands():
                 num_steps: Range[int, 1, MAX_STEPS] = None,
                 cfg_scale: Range[float, 1.0, MAX_CFG] = None,
                 seed: int = None,
+                clip_skip: Range[int, -2, -1] = None,
         ):
             params = ImageWorkflow(
                 VIDEO_WORKFLOW,
@@ -107,6 +110,7 @@ class ImageGenCommands():
                 cfg_scale=cfg_scale or VIDEO_GENERATION_DEFAULTS.cfg_scale,
                 seed=seed,
                 slash_command="video",
+                clip_skip=clip_skip or VIDEO_GENERATION_DEFAULTS.clip_skip
             )
             await self.__do_request(
                 interaction,
@@ -137,6 +141,7 @@ class ImageGenCommands():
                 denoise_strength: Range[float, 0.01, 1.0] = None,
                 inpainting_prompt: str = None,
                 inpainting_detection_threshold: Range[int, 0, 255] = None,
+                clip_skip: Range[int, -2, -1] = None,
         ):
             if input_file is not None:
                 fp = await process_attachment(input_file, interaction)
@@ -159,7 +164,8 @@ class ImageGenCommands():
                 filename=fp if input_file is not None else None,
                 denoise_strength=denoise_strength or SDXL_GENERATION_DEFAULTS.denoise_strength if input_file is not None else 1.0,
                 inpainting_prompt=inpainting_prompt,
-                inpainting_detection_threshold=inpainting_detection_threshold or SDXL_GENERATION_DEFAULTS.inpainting_detection_threshold
+                inpainting_detection_threshold=inpainting_detection_threshold or SDXL_GENERATION_DEFAULTS.inpainting_detection_threshold,
+                clip_skip=clip_skip or SDXL_GENERATION_DEFAULTS.clip_skip
             )
             await self.__do_request(
                 interaction,

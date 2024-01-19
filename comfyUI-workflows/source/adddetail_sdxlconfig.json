@@ -1,13 +1,13 @@
 {
-  "last_node_id": 40,
-  "last_link_id": 83,
+  "last_node_id": 41,
+  "last_link_id": 86,
   "nodes": [
     {
       "id": 11,
       "type": "Lora Loader Stack (rgthree)",
       "pos": [
-        -689,
-        375
+        -1020,
+        370
       ],
       "size": {
         "0": 315,
@@ -63,72 +63,6 @@
       ]
     },
     {
-      "id": 17,
-      "type": "CLIPTextEncodeSDXL",
-      "pos": [
-        142,
-        57
-      ],
-      "size": {
-        "0": 400,
-        "1": 270.0000305175781
-      },
-      "flags": {},
-      "order": 9,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 64,
-          "slot_index": 0
-        },
-        {
-          "name": "text_g",
-          "type": "STRING",
-          "link": 31,
-          "widget": {
-            "name": "text_g"
-          },
-          "slot_index": 1
-        },
-        {
-          "name": "text_l",
-          "type": "STRING",
-          "link": 81,
-          "widget": {
-            "name": "text_l"
-          },
-          "slot_index": 2
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            68,
-            70
-          ],
-          "shape": 3,
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CLIPTextEncodeSDXL"
-      },
-      "widgets_values": [
-        4096,
-        4096,
-        0,
-        0,
-        4096,
-        4096,
-        "CLIP_G",
-        "CLIP_L"
-      ]
-    },
-    {
       "id": 7,
       "type": "CLIPTextEncode",
       "pos": [
@@ -140,13 +74,13 @@
         "1": 180.6060791015625
       },
       "flags": {},
-      "order": 8,
+      "order": 10,
       "mode": 0,
       "inputs": [
         {
           "name": "clip",
           "type": "CLIP",
-          "link": 63
+          "link": 86
         }
       ],
       "outputs": [
@@ -260,7 +194,7 @@
         "1": 46
       },
       "flags": {},
-      "order": 12,
+      "order": 13,
       "mode": 0,
       "inputs": [
         {
@@ -301,7 +235,7 @@
         "1": 626.17333984375
       },
       "flags": {},
-      "order": 13,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
@@ -319,8 +253,8 @@
       "id": 4,
       "type": "CheckpointLoaderSimple",
       "pos": [
-        -1085,
-        371
+        -1410,
+        370
       ],
       "size": {
         "0": 315,
@@ -403,68 +337,6 @@
       ]
     },
     {
-      "id": 35,
-      "type": "Lora Loader Stack (rgthree)",
-      "pos": [
-        -290,
-        373
-      ],
-      "size": {
-        "0": 315,
-        "1": 246
-      },
-      "flags": {},
-      "order": 7,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 60
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 61
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            67,
-            82
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            63,
-            64
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Lora Loader Stack (rgthree)"
-      },
-      "widgets_values": [
-        "xl/LCMTurboMix_Euler_A_fix.safetensors",
-        1,
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1
-      ]
-    },
-    {
       "id": 37,
       "type": "KSampler",
       "pos": [
@@ -476,7 +348,7 @@
         "1": 474
       },
       "flags": {},
-      "order": 11,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
@@ -621,7 +493,7 @@
         "1": 358
       },
       "flags": {},
-      "order": 10,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
@@ -685,6 +557,173 @@
       ],
       "color": "#232",
       "bgcolor": "#353"
+    },
+    {
+      "id": 35,
+      "type": "Lora Loader Stack (rgthree)",
+      "pos": [
+        -620,
+        370
+      ],
+      "size": {
+        "0": 315,
+        "1": 246
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 60
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 61
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            67,
+            82
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            84
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Lora Loader Stack (rgthree)"
+      },
+      "widgets_values": [
+        "xl/LCMTurboMix_Euler_A_fix.safetensors",
+        1,
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1
+      ]
+    },
+    {
+      "id": 17,
+      "type": "CLIPTextEncodeSDXL",
+      "pos": [
+        145,
+        27
+      ],
+      "size": {
+        "0": 400,
+        "1": 270.0000305175781
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 85,
+          "slot_index": 0
+        },
+        {
+          "name": "text_g",
+          "type": "STRING",
+          "link": 31,
+          "widget": {
+            "name": "text_g"
+          },
+          "slot_index": 1
+        },
+        {
+          "name": "text_l",
+          "type": "STRING",
+          "link": 81,
+          "widget": {
+            "name": "text_l"
+          },
+          "slot_index": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            68,
+            70
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncodeSDXL"
+      },
+      "widgets_values": [
+        4096,
+        4096,
+        0,
+        0,
+        4096,
+        4096,
+        "CLIP_G",
+        "CLIP_L"
+      ]
+    },
+    {
+      "id": 41,
+      "type": "CLIPSetLastLayer",
+      "pos": [
+        -240,
+        385
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 84
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            85,
+            86
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPSetLastLayer"
+      },
+      "widgets_values": [
+        -1
+      ]
     }
   ],
   "links": [
@@ -726,22 +765,6 @@
       1,
       35,
       1,
-      "CLIP"
-    ],
-    [
-      63,
-      35,
-      1,
-      7,
-      0,
-      "CLIP"
-    ],
-    [
-      64,
-      35,
-      1,
-      17,
-      0,
       "CLIP"
     ],
     [
@@ -871,6 +894,30 @@
       37,
       4,
       "INT"
+    ],
+    [
+      84,
+      35,
+      1,
+      41,
+      0,
+      "CLIP"
+    ],
+    [
+      85,
+      41,
+      0,
+      17,
+      0,
+      "CLIP"
+    ],
+    [
+      86,
+      41,
+      0,
+      7,
+      0,
+      "CLIP"
     ]
   ],
   "groups": [],

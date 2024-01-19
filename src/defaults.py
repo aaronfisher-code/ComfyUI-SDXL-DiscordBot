@@ -24,6 +24,7 @@ SD15_GENERATION_DEFAULTS = ImageWorkflow(
     "imagine",  # slash_command
     None,  # inpainting_prompt
     int(config["SD15_GENERATION_DEFAULTS"]["INPAINTING_DETECTION_THRESHOLD"]),  # inpainting_detection_threshold
+    int(config["SDXL_GENERATION_DEFAULTS"]["CLIP_SKIP"]),  # clip_skip
 )
 
 SDXL_GENERATION_DEFAULTS = ImageWorkflow(
@@ -44,6 +45,7 @@ SDXL_GENERATION_DEFAULTS = ImageWorkflow(
     "sdxl",  # slash_command
     None,  # inpainting_prompt
     int(config["SDXL_GENERATION_DEFAULTS"]["INPAINTING_DETECTION_THRESHOLD"]),  # inpainting_detection_threshold
+    int(config["SDXL_GENERATION_DEFAULTS"]["CLIP_SKIP"]),  # clip_skip
 )
 
 VIDEO_GENERATION_DEFAULTS = ImageWorkflow(
@@ -61,5 +63,6 @@ VIDEO_GENERATION_DEFAULTS = ImageWorkflow(
     None,  # denoise_strength
     None,  # seed
     None,  # filename
-    "video"  # slash_command
+    "video",  # slash_command
+    clip_skip=int(config["SDXL_GENERATION_DEFAULTS"]["CLIP_SKIP"]),  # clip_skip
 )

@@ -1,6 +1,6 @@
 {
-  "last_node_id": 23,
-  "last_link_id": 37,
+  "last_node_id": 24,
+  "last_link_id": 40,
   "nodes": [
     {
       "id": 8,
@@ -14,7 +14,7 @@
         "1": 46
       },
       "flags": {},
-      "order": 12,
+      "order": 13,
       "mode": 0,
       "inputs": [
         {
@@ -54,7 +54,7 @@
         "1": 270
       },
       "flags": {},
-      "order": 13,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
@@ -122,13 +122,13 @@
         "1": 180.6060791015625
       },
       "flags": {},
-      "order": 10,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
           "name": "clip",
           "type": "CLIP",
-          "link": 37
+          "link": 40
         }
       ],
       "outputs": [
@@ -199,13 +199,13 @@
         "1": 270.0000305175781
       },
       "flags": {},
-      "order": 9,
+      "order": 10,
       "mode": 0,
       "inputs": [
         {
           "name": "clip",
           "type": "CLIP",
-          "link": 36,
+          "link": 39,
           "slot_index": 0
         },
         {
@@ -261,7 +261,7 @@
       ],
       "size": {
         "0": 210,
-        "1": 78.17271423339844
+        "1": 96
       },
       "flags": {},
       "order": 0,
@@ -275,6 +275,12 @@
           ],
           "shape": 3,
           "slot_index": 0
+        },
+        {
+          "name": "show_help",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
         }
       ],
       "properties": {
@@ -293,7 +299,7 @@
       ],
       "size": {
         "0": 210,
-        "1": 78.17271423339844
+        "1": 96
       },
       "flags": {},
       "order": 1,
@@ -307,6 +313,12 @@
           ],
           "shape": 3,
           "slot_index": 0
+        },
+        {
+          "name": "show_help",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
         }
       ],
       "properties": {
@@ -338,7 +350,8 @@
             21
           ],
           "shape": 3,
-          "slot_index": 0
+          "slot_index": 0,
+          "dir": 4
         }
       ],
       "properties": {
@@ -394,8 +407,8 @@
       "id": 4,
       "type": "CheckpointLoaderSimple",
       "pos": [
-        -693,
-        458
+        -1110,
+        460
       ],
       "size": {
         "0": 315,
@@ -442,8 +455,8 @@
       "id": 11,
       "type": "Lora Loader Stack (rgthree)",
       "pos": [
-        -312,
-        424
+        -720,
+        430
       ],
       "size": {
         "0": 315,
@@ -499,67 +512,6 @@
       ]
     },
     {
-      "id": 23,
-      "type": "Lora Loader Stack (rgthree)",
-      "pos": [
-        40,
-        418
-      ],
-      "size": {
-        "0": 315,
-        "1": 246
-      },
-      "flags": {},
-      "order": 7,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 33
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 34
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            35
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            36,
-            37
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Lora Loader Stack (rgthree)"
-      },
-      "widgets_values": [
-        "xl/LCMTurboMix_Euler_A_fix.safetensors",
-        1,
-        "None",
-        1,
-        "None",
-        1,
-        "None",
-        1
-      ]
-    },
-    {
       "id": 3,
       "type": "KSampler",
       "pos": [
@@ -571,7 +523,7 @@
         "1": 593.6389770507812
       },
       "flags": {},
-      "order": 11,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
@@ -625,6 +577,106 @@
         "euler_ancestral",
         "normal",
         0.8
+      ]
+    },
+    {
+      "id": 23,
+      "type": "Lora Loader Stack (rgthree)",
+      "pos": [
+        -370,
+        420
+      ],
+      "size": {
+        "0": 315,
+        "1": 246
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 33
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 34
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            35
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            38
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Lora Loader Stack (rgthree)"
+      },
+      "widgets_values": [
+        "xl/LCMTurboMix_Euler_A_fix.safetensors",
+        1,
+        "None",
+        1,
+        "None",
+        1,
+        "None",
+        1
+      ]
+    },
+    {
+      "id": 24,
+      "type": "CLIPSetLastLayer",
+      "pos": [
+        7,
+        441
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 38
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            39,
+            40
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPSetLastLayer"
+      },
+      "widgets_values": [
+        -1
       ]
     }
   ],
@@ -766,17 +818,25 @@
       "MODEL"
     ],
     [
-      36,
+      38,
       23,
       1,
+      24,
+      0,
+      "CLIP"
+    ],
+    [
+      39,
+      24,
+      0,
       17,
       0,
       "CLIP"
     ],
     [
-      37,
-      23,
-      1,
+      40,
+      24,
+      0,
       7,
       0,
       "CLIP"

@@ -45,8 +45,8 @@
     "inputs": {
       "text": "text, watermark",
       "clip": [
-        "23",
-        1
+        "39",
+        0
       ]
     },
     "class_type": "CLIPTextEncode",
@@ -145,7 +145,7 @@
     },
     "class_type": "CR Prompt Text",
     "_meta": {
-      "title": "⚙️ CR Prompt Text"
+      "title": "CR Prompt Text"
     }
   },
   "23": {
@@ -218,8 +218,8 @@
         0
       ],
       "clip": [
-        "23",
-        1
+        "39",
+        0
       ]
     },
     "class_type": "CLIPTextEncode",
@@ -257,6 +257,19 @@
     "class_type": "SetLatentNoiseMask",
     "_meta": {
       "title": "Set Latent Noise Mask"
+    }
+  },
+  "39": {
+    "inputs": {
+      "stop_at_clip_layer": -1,
+      "clip": [
+        "23",
+        1
+      ]
+    },
+    "class_type": "CLIPSetLastLayer",
+    "_meta": {
+      "title": "CLIP Set Last Layer"
     }
   }
 }
