@@ -22,9 +22,9 @@ def setup_workflow(workflow, params: ImageWorkflow):
     prompt_nodes = config.get(params.workflow_name, "PROMPT_NODES").split(",")
     neg_prompt_nodes = config.get(params.workflow_name, "NEG_PROMPT_NODES").split(",")
     rand_seed_nodes = config.get(params.workflow_name, "RAND_SEED_NODES").split(",")
-    model_node = config.get(params.workflow_name, "MODEL_NODE").split(",")
-    lora_node = config.get(params.workflow_name, "LORA_NODE").split(",")
-    clip_skip_node = config.get(params.workflow_name, "CLIP_SKIP_NODE")
+    model_node = config.get(params.workflow_name, "MODEL_NODE").split(",") if config.has_option(params.workflow_name, "MODEL_NODE") else []
+    lora_node = config.get(params.workflow_name, "LORA_NODE").split(",") if config.has_option(params.workflow_name, "LORA_NODE") else []
+    clip_skip_node = config.get(params.workflow_name, "CLIP_SKIP_NODE") if config.has_option(params.workflow_name, "CLIP_SKIP_NODE") else None
     llm_model_node = None
     turbo_lora_node = None
     inpainting_node = None

@@ -27,6 +27,8 @@ SAMPLER_CHOICES = [Choice(name=s, value=s) for s in samplers[0]]
 BASE_ARG_DESCS = {
     "prompt": "Prompt for the image being generated",
     "negative_prompt": "Prompt for what you want to steer the AI away from",
+}
+IMAGE_GEN_DESCS = {
     "model": "Model checkpoint to use",
     "lora": "LoRA to apply",
     "lora_strength": "Strength of LoRA",
@@ -37,6 +39,7 @@ BASE_ARG_DESCS = {
 }
 IMAGINE_ARG_DESCS = {
     **BASE_ARG_DESCS,
+    **IMAGE_GEN_DESCS,
     "num_steps": "Number of sampling steps; range [1, 30]",
     "input_file": "Image to use as input for img2img",
     "denoise_strength": f"range [0.01, 1.0], default {SD15_GENERATION_DEFAULTS.denoise_strength}; Strength of denoising filter during img2img. Only works when input_file is set",
@@ -46,13 +49,15 @@ IMAGINE_ARG_DESCS = {
 }
 SDXL_ARG_DESCS = {
     **BASE_ARG_DESCS,
+    **IMAGE_GEN_DESCS,
     "input_file": "Image to use as input for img2img",
     "denoise_strength": f"range [0.01, 1.0], default {SDXL_GENERATION_DEFAULTS.denoise_strength}; Strength of denoising filter during img2img. Only works when input_file is set",
     "inpainting_prompt": "Detection prompt for inpainting; examples: 'background' or 'person'",
     "inpainting_detection_threshold": f"range [0, 255], default {SDXL_GENERATION_DEFAULTS.inpainting_detection_threshold}; Detection threshold for inpainting. Only works when inpainting_prompt is set",
     "clip_skip": f"default: {SDXL_GENERATION_DEFAULTS.clip_skip}",
 }
-VIDEO_ARG_DESCS = {k: v for k, v in BASE_ARG_DESCS.items() if k != "aspect_ratio"}
+VIDEO_ARG_DESCS = {**BASE_ARG_DESCS} | {k: v for k, v in IMAGE_GEN_DESCS.items() if k != "aspect_ratio"}
+CASCADE_ARG_DESCS = {**BASE_ARG_DESCS}
 
 BASE_ARG_CHOICES = {
     "aspect_ratio": ASPECT_RATIO_CHOICES,
