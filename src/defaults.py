@@ -48,6 +48,27 @@ SDXL_GENERATION_DEFAULTS = ImageWorkflow(
     int(config["SDXL_GENERATION_DEFAULTS"]["CLIP_SKIP"]),  # clip_skip
 )
 
+CASCADE_GENERATION_DEFAULTS = ImageWorkflow(
+    None,  # workflow name
+    None,  # prompt
+    None,  # negative_prompt
+    config["CASCADE_GENERATION_DEFAULTS"]["MODEL"],
+    None,  # loras
+    None,  # lora_strengths
+    None,  # aspect_ratio
+    config["CASCADE_GENERATION_DEFAULTS"]["SAMPLER"],
+    int(config["CASCADE_GENERATION_DEFAULTS"]["NUM_STEPS"]),
+    float(config["CASCADE_GENERATION_DEFAULTS"]["CFG_SCALE"]),
+    int(config["CASCADE_GENERATION_DEFAULTS"]["BATCH_SIZE"]),  # batch_size
+    None,  # denoise_strength
+    None,  # seed
+    None,  # filename
+    "cascade",  # slash_command
+    None,  # inpainting_prompt
+    int(config["SDXL_GENERATION_DEFAULTS"]["INPAINTING_DETECTION_THRESHOLD"]),  # inpainting_detection_threshold
+    int(config["SDXL_GENERATION_DEFAULTS"]["CLIP_SKIP"]),  # clip_skip
+)
+
 VIDEO_GENERATION_DEFAULTS = ImageWorkflow(
     None,  # workflow name
     None,  # prompt

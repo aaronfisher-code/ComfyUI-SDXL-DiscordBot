@@ -34,7 +34,7 @@
   },
   "6": {
     "inputs": {
-      "text": "evening sunset scenery blue sky nature, glass bottle with a fizzy ice cold freezing rainbow liquid in it",
+      "text": "a photo of a cat ",
       "clip": [
         "41",
         1
@@ -47,7 +47,7 @@
   },
   "7": {
     "inputs": {
-      "text": "text, watermark",
+      "text": "",
       "clip": [
         "41",
         1
@@ -90,7 +90,7 @@
   "33": {
     "inputs": {
       "seed": [
-        "49",
+        "48",
         0
       ],
       "steps": 10,
@@ -180,16 +180,7 @@
   },
   "48": {
     "inputs": {
-      "seed": -1
-    },
-    "class_type": "Seed (rgthree)",
-    "_meta": {
-      "title": "Seed (rgthree)"
-    }
-  },
-  "49": {
-    "inputs": {
-      "seed": -1
+      "seed": 533406450594214
     },
     "class_type": "Seed (rgthree)",
     "_meta": {

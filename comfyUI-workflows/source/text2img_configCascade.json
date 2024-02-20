@@ -1,6 +1,6 @@
 {
   "last_node_id": 49,
-  "last_link_id": 116,
+  "last_link_id": 117,
   "nodes": [
     {
       "id": 36,
@@ -14,7 +14,7 @@
         "1": 46
       },
       "flags": {},
-      "order": 12,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
@@ -55,7 +55,7 @@
         "1": 26
       },
       "flags": {},
-      "order": 10,
+      "order": 9,
       "mode": 0,
       "inputs": [
         {
@@ -150,157 +150,6 @@
       "bgcolor": "#653"
     },
     {
-      "id": 7,
-      "type": "CLIPTextEncode",
-      "pos": [
-        96,
-        528
-      ],
-      "size": {
-        "0": 432,
-        "1": 96
-      },
-      "flags": {},
-      "order": 9,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 112
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            108
-          ],
-          "slot_index": 0
-        }
-      ],
-      "title": "CLIP Text Encode (Negative Prompt)",
-      "properties": {
-        "Node name for S&R": "CLIPTextEncode"
-      },
-      "widgets_values": [
-        "text, watermark"
-      ],
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 3,
-      "type": "KSampler",
-      "pos": [
-        552,
-        293
-      ],
-      "size": [
-        315,
-        262
-      ],
-      "flags": {},
-      "order": 11,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 110,
-          "slot_index": 0
-        },
-        {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "link": 107
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "link": 108
-        },
-        {
-          "name": "latent_image",
-          "type": "LATENT",
-          "link": 82
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": 115,
-          "widget": {
-            "name": "seed"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            88
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "KSampler"
-      },
-      "widgets_values": [
-        421807188692218,
-        "randomize",
-        20,
-        4,
-        "euler_ancestral",
-        "simple",
-        1
-      ]
-    },
-    {
-      "id": 6,
-      "type": "CLIPTextEncode",
-      "pos": [
-        96,
-        287
-      ],
-      "size": {
-        "0": 432,
-        "1": 192
-      },
-      "flags": {},
-      "order": 8,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 111
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            107,
-            109
-          ],
-          "slot_index": 0
-        }
-      ],
-      "title": "CLIP Text Encode (Positive Prompt)",
-      "properties": {
-        "Node name for S&R": "CLIPTextEncode"
-      },
-      "widgets_values": [
-        "evening sunset scenery blue sky nature, glass bottle with a fizzy ice cold freezing rainbow liquid in it"
-      ],
-      "color": "#232",
-      "bgcolor": "#353"
-    },
-    {
       "id": 8,
       "type": "VAEDecode",
       "pos": [
@@ -312,7 +161,7 @@
         "1": 46
       },
       "flags": {},
-      "order": 14,
+      "order": 13,
       "mode": 0,
       "inputs": [
         {
@@ -492,7 +341,7 @@
         "1": 1000.2752075195312
       },
       "flags": {},
-      "order": 15,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
@@ -507,40 +356,46 @@
       ]
     },
     {
-      "id": 48,
-      "type": "Seed (rgthree)",
+      "id": 6,
+      "type": "CLIPTextEncode",
       "pos": [
-        174,
-        931
+        96,
+        287
       ],
       "size": {
-        "0": 210,
-        "1": 130
+        "0": 432,
+        "1": 192
       },
       "flags": {},
-      "order": 6,
+      "order": 7,
       "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 111
+        }
+      ],
       "outputs": [
         {
-          "name": "SEED",
-          "type": "INT",
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
           "links": [
-            115
+            107,
+            109
           ],
-          "shape": 3,
-          "dir": 4,
           "slot_index": 0
         }
       ],
+      "title": "CLIP Text Encode (Positive Prompt)",
       "properties": {
-        "Node name for S&R": "Seed (rgthree)"
+        "Node name for S&R": "CLIPTextEncode"
       },
       "widgets_values": [
-        -1,
-        null,
-        null,
-        null
-      ]
+        "a photo of a cat "
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
     },
     {
       "id": 33,
@@ -554,7 +409,7 @@
         262
       ],
       "flags": {},
-      "order": 13,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
@@ -581,7 +436,7 @@
         {
           "name": "seed",
           "type": "INT",
-          "link": 116,
+          "link": 117,
           "widget": {
             "name": "seed"
           }
@@ -601,7 +456,7 @@
         "Node name for S&R": "KSampler"
       },
       "widgets_values": [
-        589874914328721,
+        -1,
         "randomize",
         10,
         1.1,
@@ -611,25 +466,26 @@
       ]
     },
     {
-      "id": 49,
+      "id": 48,
       "type": "Seed (rgthree)",
       "pos": [
-        984,
-        695
+        174,
+        931
       ],
       "size": {
         "0": 210,
         "1": 130
       },
       "flags": {},
-      "order": 7,
+      "order": 6,
       "mode": 0,
       "outputs": [
         {
           "name": "SEED",
           "type": "INT",
           "links": [
-            116
+            115,
+            117
           ],
           "shape": 3,
           "dir": 4,
@@ -640,10 +496,119 @@
         "Node name for S&R": "Seed (rgthree)"
       },
       "widgets_values": [
-        -1,
+        533406450594214,
         null,
         null,
         null
+      ]
+    },
+    {
+      "id": 7,
+      "type": "CLIPTextEncode",
+      "pos": [
+        96,
+        528
+      ],
+      "size": {
+        "0": 432,
+        "1": 96
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 112
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            108
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "CLIP Text Encode (Negative Prompt)",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 3,
+      "type": "KSampler",
+      "pos": [
+        552,
+        293
+      ],
+      "size": {
+        "0": 315,
+        "1": 262
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 110,
+          "slot_index": 0
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 107
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 108
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 82
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 115,
+          "widget": {
+            "name": "seed"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            88
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        224542637314250,
+        "randomize",
+        20,
+        4,
+        "euler_ancestral",
+        "simple",
+        1
       ]
     }
   ],
@@ -785,8 +750,8 @@
       "INT"
     ],
     [
-      116,
-      49,
+      117,
+      48,
       0,
       33,
       4,

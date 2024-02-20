@@ -185,11 +185,17 @@ class ImageGenCommands:
 
         @self.tree.command(name="cascade", description="Use Stable Cascade to generate an image")
         @app_commands.describe(**CASCADE_ARG_DESCS)
-        async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None):
+        async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, seed: int = None):
             params = ImageWorkflow(
                 CASCADE_WORKFLOW,
                 prompt,
                 negative_prompt,
+                CASCADE_GENERATION_DEFAULTS.model,
+                sampler=CASCADE_GENERATION_DEFAULTS.sampler,
+                num_steps=CASCADE_GENERATION_DEFAULTS.num_steps,
+                cfg_scale=CASCADE_GENERATION_DEFAULTS.cfg_scale,
+                batch_size=CASCADE_GENERATION_DEFAULTS.batch_size,
+                seed=seed,
             )
 
             await self.__do_request(

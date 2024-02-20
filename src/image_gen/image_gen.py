@@ -52,7 +52,7 @@ def setup_workflow(workflow, params: ImageWorkflow):
                 workflow[node]["inputs"]["prompt"] = params.prompt
 
     if neg_prompt_nodes[0] != "":
-        neg_prompt = (params.negative_prompt or "") + ", (children, child, kids, kid, teens, teen:1.3)"
+        neg_prompt = (params.negative_prompt or "")
         for node in neg_prompt_nodes:
             if "text" in workflow[node]["inputs"]:
                 workflow[node]["inputs"]["text"] = neg_prompt
@@ -67,7 +67,7 @@ def setup_workflow(workflow, params: ImageWorkflow):
         for node in rand_seed_nodes:
             workflow[node]["inputs"]["seed"] = params.seed
 
-    if params.model is not None and model_node[0] != "":
+    if model_node is not None and params.model is not None and len(model_node) != 0 and model_node[0] != "":
         for node in model_node:
             if "ckpt_name" in workflow[node]["inputs"]:
                 workflow[node]["inputs"]["ckpt_name"] = params.model
@@ -141,6 +141,8 @@ def setup_workflow(workflow, params: ImageWorkflow):
         workflow[clip_skip_node]["inputs"]["stop_at_clip_layer"] = params.clip_skip
 
     previous_workflow = params.workflow_name
+
+    print(params.workflow_name, workflow)
 
     return workflow
 
