@@ -170,6 +170,9 @@ config = configparser.ConfigParser()
 config.read("config.properties")
 server_address = config["LOCAL"]["SERVER_ADDRESS"]
 
-models = get_models()
-loras = get_loras()
-samplers = get_samplers()
+models = [[]]
+loras = [[]]
+samplers = [[]]
+# models = get_models()
+# loras = get_loras()
+# samplers = get_samplers()

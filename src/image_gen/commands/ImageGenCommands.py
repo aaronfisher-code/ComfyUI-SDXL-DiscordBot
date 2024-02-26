@@ -4,11 +4,11 @@ import discord
 from discord import app_commands, Attachment
 from discord.app_commands import Range
 
-from src.comfy_api import refresh_models, logger
+#from src.comfy_api import refresh_models, logger
 from src.command_descriptions import *
 from src.consts import *
 from src.image_gen.collage_utils import create_collage
-from src.image_gen.image_gen import generate_images
+# from src.image_gen.image_gen import generate_images
 from src.image_gen.ui.buttons import Buttons
 from src.util import process_attachment, unpack_choices, should_filter, get_filename
 
@@ -20,7 +20,7 @@ class ImageGenCommands:
     def add_commands(self):
         @self.tree.command(name="refresh", description="Refresh the list of models and loras")
         async def slash_command(interaction: discord.Interaction):
-            await refresh_models()
+            #await refresh_models()
             await interaction.response.send_message("Refreshed models and loras", ephemeral=True)
 
         @self.tree.command(name="imagine", description="Generate an image based on input text")
@@ -164,6 +164,7 @@ class ImageGenCommands:
                 unpack_choices(lora, lora2),
                 [lora_strength, lora_strength2],
                 aspect_ratio or SDXL_GENERATION_DEFAULTS.aspect_ratio,
+                batch_size=SDXL_GENERATION_DEFAULTS.batch_size,
                 sampler=sampler or SDXL_GENERATION_DEFAULTS.sampler,
                 num_steps=num_steps or SDXL_GENERATION_DEFAULTS.num_steps,
                 cfg_scale=cfg_scale or SDXL_GENERATION_DEFAULTS.cfg_scale,
@@ -185,7 +186,16 @@ class ImageGenCommands:
 
         @self.tree.command(name="cascade", description="Use Stable Cascade to generate an image")
         @app_commands.describe(**CASCADE_ARG_DESCS)
-        async def slash_command(interaction: discord.Interaction, prompt: str, negative_prompt: str = None, seed: int = None):
+        async def slash_command(
+                interaction: discord.Interaction,
+                prompt: str,
+                negative_prompt: str = None,
+                num_steps: Range[int, 1, MAX_STEPS] = None,
+                cfg_scale: Range[float, 1.0, MAX_CFG] = None,
+                seed: int = None,
+                input_file: Attachment = None,
+                denoise_strength: Range[float, 0.01, 1.0] = None,
+        ):
             params = ImageWorkflow(
                 CASCADE_WORKFLOW,
                 prompt,
@@ -232,7 +242,9 @@ class ImageGenCommands:
         if params.seed is None:
             params.seed = random.randint(0, 999999999999999)
 
-        images, enhanced_prompt = await generate_images(params)
+        from src.image_gen.sd_workflows import do_txt2img_a
+        images = await do_txt2img_a(params)
+            #await generate_images(params)
 
         final_message = f"{completion_message}\n Seed: {params.seed}"
         buttons = Buttons(params, images, interaction.user, command=command_name)

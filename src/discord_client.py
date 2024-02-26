@@ -1,9 +1,6 @@
+import asyncio
 import logging
-
 import discord
-
-from src.comfy_api import refresh_models, clear_history
-from src.image_gen.commands.ImageGenCommands import ImageGenCommands
 from src.util import setup_config, read_config
 
 discord.utils.setup_logging()
@@ -15,16 +12,16 @@ intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 tree = discord.app_commands.CommandTree(client)
 
-
 @client.event
 async def on_ready():
-    await refresh_models()
-    clear_history()
+    # from src.comfy_api import refresh_models, clear_history
+    # await refresh_models()
+    # clear_history()
     cmds = await tree.sync()
     logger.info("synced %d commands: %s.", len(cmds), ", ".join(c.name for c in cmds))
 
-
 def start_bot():
+    from src.image_gen.commands.ImageGenCommands import ImageGenCommands
     if c := read_config():
         if c["BOT"]["MUSIC_ENABLED"].lower() == "true":
             from src.audio_gen.commands.audio_bot import MusicGenCommand

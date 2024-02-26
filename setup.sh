@@ -15,3 +15,12 @@ if [ ! -f config.properties ]; then
 else
     echo "found existing config.properties; not overwriting"
 fi
+
+# set install location variable
+export EMBEDDED_COMFY_LOCATION="$(pwd)/embedded_comfy"
+comfyui --cwd=EMBEDDED_COMFY_LOCATION --create_directories
+
+cd EMBEDDED_COMFY_LOCATION/custom_nodes
+git clone https://github.com/Chaoses-Ib/ComfyScript.git
+cd ComfyScript
+python -m pip install -e ".[default]"
