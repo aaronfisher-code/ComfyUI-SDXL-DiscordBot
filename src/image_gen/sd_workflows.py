@@ -167,12 +167,12 @@ class UpscaleWorkflow:
 #     workflow.sample(seed, steps, cfg_scale, sampler_name, scheduler, denoise_strength)
 #     return workflow
 
-async def do_txt2img_a(params: ImageWorkflow):
-    workflow = SDXLWorkflow(Checkpoints.xl_juggernautXL_version6Rundiffusion, params.clip_skip)
-    workflow.create_latents((1024, 1024), params.batch_size)
-    workflow.condition_prompts(params.prompt, "")
-    workflow.sample(params.seed, params.num_steps, params.cfg_scale, params.sampler, "normal")
-    images = workflow.decode_and_save('final_output')
-    results = images.wait()
-    image_batch = [await results.get(i) for i in range(params.batch_size)]
-    return image_batch
+# async def do_txt2img_a(params: ImageWorkflow):
+#     workflow = SDXLWorkflow(Checkpoints.xl_juggernautXL_version6Rundiffusion, params.clip_skip)
+#     workflow.create_latents(params.dimensions, params.batch_size)
+#     workflow.condition_prompts(params.prompt, params.negative_prompt)
+#     workflow.sample(params.seed, params.num_steps, params.cfg_scale, params.sampler, "normal")
+#     images = workflow.decode_and_save('final_output')
+#     results = images.wait()
+#     image_batch = [await results.get(i) for i in range(params.batch_size)]
+#     return image_batch

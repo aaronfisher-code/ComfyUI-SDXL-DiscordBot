@@ -152,11 +152,11 @@ class ImageGenCommands:
                 ModelType.SDXL,
                 WorkflowType.txt2img if input_file is None else WorkflowType.img2img,
                 prompt,
-                negative_prompt,
+                negative_prompt or "",
                 model or SDXL_GENERATION_DEFAULTS.model,
                 unpack_choices(lora, lora2),
                 [lora_strength, lora_strength2],
-                dimensions=sd_aspect_ratios[aspect_ratio] if aspect_ratio else SDXL_GENERATION_DEFAULTS.dimensions,
+                dimensions=sd_aspect_ratios[aspect_ratio] if aspect_ratio else sd_aspect_ratios[SDXL_GENERATION_DEFAULTS.dimensions],
                 batch_size=SDXL_GENERATION_DEFAULTS.batch_size,
                 sampler=sampler or SDXL_GENERATION_DEFAULTS.sampler,
                 num_steps=num_steps or SDXL_GENERATION_DEFAULTS.num_steps,
@@ -247,8 +247,8 @@ class ImageGenCommands:
         if params.seed is None:
             params.seed = random.randint(0, 999999999999999)
 
-        from src.image_gen.sd_workflows import do_txt2img_a
-        images = await do_txt2img_a(params)
+        from src.comfy_workflows import do_workflow
+        images = await do_workflow(params)
             #await generate_images(params)
 
         final_message = f"{completion_message}\n Seed: {params.seed}"
