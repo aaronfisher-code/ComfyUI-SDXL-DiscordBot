@@ -1,13 +1,14 @@
 import configparser
 
-from src.image_gen.ImageWorkflow import ImageWorkflow
+from src.image_gen.ImageWorkflow import *
 
 # Read the configuration
 config = configparser.ConfigParser()
 config.read("config.properties")
 
 SD15_GENERATION_DEFAULTS = ImageWorkflow(
-    None,  # workflow name
+    ModelType.SD15, # model_type
+    None, # workflow_type
     None,  # prompt
     None,  # negative_prompt
     config["SD15_GENERATION_DEFAULTS"]["MODEL"],
@@ -28,7 +29,8 @@ SD15_GENERATION_DEFAULTS = ImageWorkflow(
 )
 
 SDXL_GENERATION_DEFAULTS = ImageWorkflow(
-    None,  # workflow name
+    ModelType.SDXL,  # model_type
+    None,  # workflow type
     None,  # prompt
     None,  # negative_prompt
     config["SDXL_GENERATION_DEFAULTS"]["MODEL"],
@@ -49,7 +51,8 @@ SDXL_GENERATION_DEFAULTS = ImageWorkflow(
 )
 
 CASCADE_GENERATION_DEFAULTS = ImageWorkflow(
-    None,  # workflow name
+    ModelType.CASCADE,  # model_type
+    None,  # workflow type
     None,  # prompt
     None,  # negative_prompt
     config["CASCADE_GENERATION_DEFAULTS"]["MODEL"],
@@ -70,7 +73,8 @@ CASCADE_GENERATION_DEFAULTS = ImageWorkflow(
 )
 
 VIDEO_GENERATION_DEFAULTS = ImageWorkflow(
-    None,  # workflow name
+    ModelType.VIDEO,  # model_type
+    None,  # workflow type
     None,  # prompt
     None,  # negative_prompt
     config["VIDEO_GENERATION_DEFAULTS"]["MODEL"],

@@ -1,6 +1,8 @@
 import asyncio
 import logging
+
 import discord
+
 from src.util import setup_config, read_config
 
 discord.utils.setup_logging()
@@ -14,6 +16,17 @@ tree = discord.app_commands.CommandTree(client)
 
 @client.event
 async def on_ready():
+    from src.comfyscript_utils import server_is_started
+    while not server_is_started():
+        print("waiting for comfy server to start")
+        await asyncio.sleep(1)
+
+    await asyncio.sleep(1)
+    print("server start")
+    from src.image_gen.commands.ImageGenCommands import ImageGenCommands
+    commands = ImageGenCommands(tree)
+    commands.add_commands()
+    logger.info("ComfyUI is ready. Initialized commands.")
     # from src.comfy_api import refresh_models, clear_history
     # await refresh_models()
     # clear_history()
@@ -21,7 +34,6 @@ async def on_ready():
     logger.info("synced %d commands: %s.", len(cmds), ", ".join(c.name for c in cmds))
 
 def start_bot():
-    from src.image_gen.commands.ImageGenCommands import ImageGenCommands
     if c := read_config():
         if c["BOT"]["MUSIC_ENABLED"].lower() == "true":
             from src.audio_gen.commands.audio_bot import MusicGenCommand
@@ -35,7 +47,5 @@ def start_bot():
             speech_gen = SpeechGenCommand(tree)
             speech_gen.add_commands()
 
-    command_test = ImageGenCommands(tree)
-    command_test.add_commands()
     # run the bot
     client.run(TOKEN, log_handler=None)

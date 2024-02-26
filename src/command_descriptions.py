@@ -2,9 +2,13 @@ import json
 
 from discord.app_commands import Choice
 
-from src.comfy_api import models, loras, samplers
+from src.comfyscript_utils import get_models, get_loras, get_samplers
 from src.consts import *
 from src.defaults import *
+
+models = get_models()
+loras = get_loras()
+samplers = get_samplers()
 
 generation_messages = json.loads(open("./data/generation_messages.json", "r").read())
 completion_messages = json.loads(open("./data/completion_messages.json", "r").read())
@@ -12,17 +16,17 @@ completion_messages = json.loads(open("./data/completion_messages.json", "r").re
 # These aspect ratio resolution values correspond to the SDXL Empty Latent Image node.
 # A latent modification node in the workflow converts it to the equivalent SD 1.5 resolution values.
 ASPECT_RATIO_CHOICES = [
-    Choice(name="1:1", value="1024 x 1024  (square)"),
-    Choice(name="7:9 portrait", value=" 896 x 1152  (portrait)"),
-    Choice(name="4:7 portrait", value=" 768 x 1344  (portrait)"),
-    Choice(name="9:7 landscape", value="1152 x 896   (landscape)"),
-    Choice(name="7:4 landscape", value="1344 x 768   (landscape)"),
+    Choice(name="1:1", value="1:1"),
+    Choice(name="3:4 portrait", value="3:4 portrait"),
+    Choice(name="9:16 portrait", value="9:16 portrait"),
+    Choice(name="4:3 landscape", value="4:3 landscape"),
+    Choice(name="16:9 landscape", value="16:9 landscape"),
 ]
-SD15_MODEL_CHOICES = [Choice(name=m.replace(".safetensors", ""), value=m) for m in models[0] if "xl" not in m.lower()][:25]
-SD15_LORA_CHOICES = [Choice(name=l.replace(".safetensors", ""), value=l) for l in loras[0] if "xl" not in l.lower()][:25]
-SDXL_MODEL_CHOICES = [Choice(name=m.replace(".safetensors", ""), value=m) for m in models[0] if "xl" in m.lower() and "refiner" not in m.lower()][:25]
-SDXL_LORA_CHOICES = [Choice(name=l.replace(".safetensors", ""), value=l) for l in loras[0] if "xl" in l.lower()][:25]
-SAMPLER_CHOICES = [Choice(name=s, value=s) for s in samplers[0]]
+SD15_MODEL_CHOICES = [Choice(name=m.replace(".safetensors", ""), value=m) for m in models if "xl" not in m.lower()][:25]
+SD15_LORA_CHOICES = [Choice(name=l.replace(".safetensors", ""), value=l) for l in loras if "xl" not in l.lower()][:25]
+SDXL_MODEL_CHOICES = [Choice(name=m.replace(".safetensors", ""), value=m) for m in models if "xl" in m.lower() and "refiner" not in m.lower()][:25]
+SDXL_LORA_CHOICES = [Choice(name=l.replace(".safetensors", ""), value=l) for l in loras if "xl" in l.lower()][:25]
+SAMPLER_CHOICES = [Choice(name=s, value=s) for s in samplers]
 
 BASE_ARG_DESCS = {
     "prompt": "Prompt for the image being generated",

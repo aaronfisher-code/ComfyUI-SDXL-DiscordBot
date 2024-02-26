@@ -77,7 +77,7 @@ class InfoableButton:
             f"model: {params.model or 'default'}\n"
             f"loras: {params.loras}\n"
             f"lora strengths: {params.lora_strengths}\n"
-            f"aspect ratio: {params.aspect_ratio or 'default'}\n"
+            f"aspect ratio: {params.dimensions or 'default'}\n"
             f"sampler: {params.sampler or 'default'}\n"
             f"num steps: {params.num_steps or 'default'}\n"
             f"cfg scale: {params.cfg_scale or 'default'}\n"

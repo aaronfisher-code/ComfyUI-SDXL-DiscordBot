@@ -12,14 +12,6 @@ load("http://127.0.0.1:8123")
 from comfy_script.runtime.nodes import *
 from src.image_gen.ImageWorkflow import ImageWorkflow
 
-sd_aspect_ratios = {
-    "1:1": (1024, 1024),
-    "3:4 portrait": (896, 1152),
-    "9:16 portrait": (768, 1344),
-    "4:3 landscape": (1152, 896),
-    "16:9 landscape": (1344, 768),
-}
-
 
 @dataclasses.dataclass
 class Lora:
@@ -131,49 +123,49 @@ class UpscaleWorkflow:
         return SaveImage(self.image, file_path)
 
 
-def do_txt2img(
-        workflow: SDWorkflow,
-        prompt: str,
-        negative_prompt: str,
-        steps: int,
-        cfg_scale: float,
-        seed: int,
-        model: str,
-        dimensions: tuple[int, int],
-        batches: int,
-        sampler_name: str,
-        scheduler: str,
-        clip_skip: int,
-        loras: Optional[list[Lora]]
-):
-    workflow.load_model(model, clip_skip, loras)
-    workflow.create_latents(*dimensions, batches)
-    workflow.condition_prompts(prompt, negative_prompt)
-    workflow.sample(seed, steps, cfg_scale, sampler_name, scheduler)
-    return workflow
-
-
-def do_img2img(
-        workflow: SDWorkflow,
-        image_input: Image,
-        prompt: str,
-        negative_prompt: str,
-        steps: int,
-        cfg_scale: float,
-        seed: int,
-        model: str,
-        batches: int,
-        sampler_name: str,
-        scheduler: str,
-        denoise_strength: float,
-        clip_skip: int,
-        loras: Optional[list[Lora]] = None
-):
-    workflow.load_model(model, clip_skip, loras)
-    workflow.create_img2img_latents(image_input, batches)
-    workflow.condition_prompts(prompt, negative_prompt)
-    workflow.sample(seed, steps, cfg_scale, sampler_name, scheduler, denoise_strength)
-    return workflow
+# def do_txt2img(
+#         workflow: SDWorkflow,
+#         prompt: str,
+#         negative_prompt: str,
+#         steps: int,
+#         cfg_scale: float,
+#         seed: int,
+#         model: str,
+#         dimensions: tuple[int, int],
+#         batches: int,
+#         sampler_name: str,
+#         scheduler: str,
+#         clip_skip: int,
+#         loras: Optional[list[Lora]]
+# ):
+#     workflow.load_model(model, clip_skip, loras)
+#     workflow.create_latents(*dimensions, batches)
+#     workflow.condition_prompts(prompt, negative_prompt)
+#     workflow.sample(seed, steps, cfg_scale, sampler_name, scheduler)
+#     return workflow
+#
+#
+# def do_img2img(
+#         workflow: SDWorkflow,
+#         image_input: Image,
+#         prompt: str,
+#         negative_prompt: str,
+#         steps: int,
+#         cfg_scale: float,
+#         seed: int,
+#         model: str,
+#         batches: int,
+#         sampler_name: str,
+#         scheduler: str,
+#         denoise_strength: float,
+#         clip_skip: int,
+#         loras: Optional[list[Lora]] = None
+# ):
+#     workflow.load_model(model, clip_skip, loras)
+#     workflow.create_img2img_latents(image_input, batches)
+#     workflow.condition_prompts(prompt, negative_prompt)
+#     workflow.sample(seed, steps, cfg_scale, sampler_name, scheduler, denoise_strength)
+#     return workflow
 
 async def do_txt2img_a(params: ImageWorkflow):
     workflow = SDXLWorkflow(Checkpoints.xl_juggernautXL_version6Rundiffusion, params.clip_skip)

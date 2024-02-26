@@ -4,11 +4,9 @@ import discord
 from discord import app_commands, Attachment
 from discord.app_commands import Range
 
-#from src.comfy_api import refresh_models, logger
 from src.command_descriptions import *
 from src.consts import *
 from src.image_gen.collage_utils import create_collage
-# from src.image_gen.image_gen import generate_images
 from src.image_gen.ui.buttons import Buttons
 from src.util import process_attachment, unpack_choices, should_filter, get_filename
 
@@ -53,20 +51,17 @@ class ImageGenCommands:
                     return
 
             params = ImageWorkflow(
-                SD15_INPAINT_WORKFLOW
-                if inpainting_prompt is not None and input_file is not None
-                else SD15_ALTS_WORKFLOW
-                if input_file is not None
-                else SD15_WORKFLOW,
+                ModelType.SD15,
+                WorkflowType.txt2img if input_file is None else WorkflowType.img2img,
                 prompt,
                 negative_prompt,
                 model or SD15_GENERATION_DEFAULTS.model,
                 unpack_choices(lora, lora2),
                 [lora_strength, lora_strength2],
-                aspect_ratio or SD15_GENERATION_DEFAULTS.aspect_ratio,
                 sampler or SD15_GENERATION_DEFAULTS.sampler,
                 num_steps or SD15_GENERATION_DEFAULTS.num_steps,
                 cfg_scale or SD15_GENERATION_DEFAULTS.cfg_scale,
+                dimensions=sd_aspect_ratios[aspect_ratio or SD15_GENERATION_DEFAULTS.aspect_ratio],
                 seed=seed,
                 slash_command="imagine",
                 filename=fp if input_file is not None else None,
@@ -102,7 +97,8 @@ class ImageGenCommands:
             clip_skip: Range[int, -2, -1] = None,
         ):
             params = ImageWorkflow(
-                VIDEO_WORKFLOW,
+                ModelType.VIDEO,
+                WorkflowType.txt2img,
                 prompt,
                 negative_prompt,
                 model or VIDEO_GENERATION_DEFAULTS.model,
@@ -153,17 +149,14 @@ class ImageGenCommands:
                     return
 
             params = ImageWorkflow(
-                SDXL_INPAINT_WORKFLOW
-                if inpainting_prompt is not None and input_file is not None
-                else SDXL_ALTS_WORKFLOW
-                if input_file is not None
-                else SDXL_WORKFLOW,
+                ModelType.SDXL,
+                WorkflowType.txt2img if input_file is None else WorkflowType.img2img,
                 prompt,
                 negative_prompt,
                 model or SDXL_GENERATION_DEFAULTS.model,
                 unpack_choices(lora, lora2),
                 [lora_strength, lora_strength2],
-                aspect_ratio or SDXL_GENERATION_DEFAULTS.aspect_ratio,
+                dimensions=sd_aspect_ratios[aspect_ratio] if aspect_ratio else SDXL_GENERATION_DEFAULTS.dimensions,
                 batch_size=SDXL_GENERATION_DEFAULTS.batch_size,
                 sampler=sampler or SDXL_GENERATION_DEFAULTS.sampler,
                 num_steps=num_steps or SDXL_GENERATION_DEFAULTS.num_steps,
@@ -190,22 +183,34 @@ class ImageGenCommands:
                 interaction: discord.Interaction,
                 prompt: str,
                 negative_prompt: str = None,
+                aspect_ratio: str = None,
                 num_steps: Range[int, 1, MAX_STEPS] = None,
                 cfg_scale: Range[float, 1.0, MAX_CFG] = None,
                 seed: int = None,
                 input_file: Attachment = None,
+                input_file2: Attachment = None,
                 denoise_strength: Range[float, 0.01, 1.0] = None,
+                inpainting_prompt: str = None,
+                inpainting_detection_threshold: Range[int, 0, 255] = None,
+                clip_skip: Range[int, -2, -1] = None,
         ):
             params = ImageWorkflow(
-                CASCADE_WORKFLOW,
+                ModelType.CASCADE,
+                WorkflowType.txt2img if input_file is None else WorkflowType.image_mashup if input_file is not None and input_file2 is not None else WorkflowType.img2img,
                 prompt,
                 negative_prompt,
                 CASCADE_GENERATION_DEFAULTS.model,
                 sampler=CASCADE_GENERATION_DEFAULTS.sampler,
-                num_steps=CASCADE_GENERATION_DEFAULTS.num_steps,
-                cfg_scale=CASCADE_GENERATION_DEFAULTS.cfg_scale,
+                num_steps=num_steps or CASCADE_GENERATION_DEFAULTS.num_steps,
+                cfg_scale=cfg_scale or CASCADE_GENERATION_DEFAULTS.cfg_scale,
+                denoise_strength=denoise_strength or CASCADE_GENERATION_DEFAULTS.denoise_strength,
                 batch_size=CASCADE_GENERATION_DEFAULTS.batch_size,
                 seed=seed,
+                filename=input_file.filename if input_file is not None else None,
+                filename2=input_file2.filename if input_file2 is not None else None,
+                inpainting_prompt=inpainting_prompt,
+                inpainting_detection_threshold=inpainting_detection_threshold or CASCADE_GENERATION_DEFAULTS.inpainting_detection_threshold,
+                clip_skip=clip_skip or CASCADE_GENERATION_DEFAULTS.clip_skip,
             )
 
             await self.__do_request(

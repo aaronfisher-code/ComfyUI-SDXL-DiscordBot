@@ -3,6 +3,5 @@ import subprocess
 
 
 def run_comfy_client():
-
     comfy_path = "embedded_comfy"
     subprocess.Popen(["comfyui", "--port", "8123", "--listen", "localhost", "--verbose", f"--cwd={os.path.join(os.getcwd(), comfy_path)}"])
