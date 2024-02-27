@@ -5,3 +5,5 @@ input/
 __pycache__/
 config.properties
 *.spec
+/embedded_comfy/
+/venv/
