@@ -50,3 +50,5 @@ class ImageWorkflow:
     inpainting_detection_threshold: Optional[float] = None
     clip_skip: Optional[int] = None
     filename2: Optional[str] = None
+    use_accelerator_lora: Optional[bool] = None
+    accelerator_lora_name: Optional[str] = None

@@ -1,16 +1,11 @@
 import dataclasses
 from typing import Optional
 
-import PIL.Image
-from comfy.cli_args_types import Configuration
-from comfy.client.embedded_comfy_client import EmbeddedComfyClient
-
 from comfy_script.runtime import *
 
-load("http://127.0.0.1:8123")
+load("http://127.0.0.1:8188")
 
 from comfy_script.runtime.nodes import *
-from src.image_gen.ImageWorkflow import ImageWorkflow
 
 
 @dataclasses.dataclass
@@ -27,6 +22,8 @@ class SDWorkflow:
         model, clip, vae = CheckpointLoaderSimple(model_name)
         if loras:
             for lora in loras:
+                if lora.name == None or lora.name == "None":
+                    continue
                 model, clip = LoraLoader(model, clip, lora.name, lora.strength, lora.strength)
         clip = CLIPSetLastLayer(clip, clip_skip)
         self.model = model

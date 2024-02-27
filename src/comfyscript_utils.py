@@ -1,8 +1,11 @@
+import configparser
 import time
 
 import comfy_script.runtime
 from comfy_script.runtime import load
-load("http://localhost:8123")
+config = configparser.ConfigParser()
+config.read("config.properties")
+load(f"http://localhost:{config['EMBEDDED']['SERVER_PORT']}")
 
 def server_is_started() -> bool:
 

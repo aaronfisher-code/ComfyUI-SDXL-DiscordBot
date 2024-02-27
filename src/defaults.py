@@ -48,6 +48,9 @@ SDXL_GENERATION_DEFAULTS = ImageWorkflow(
     None,  # inpainting_prompt
     int(config["SDXL_GENERATION_DEFAULTS"]["INPAINTING_DETECTION_THRESHOLD"]),  # inpainting_detection_threshold
     int(config["SDXL_GENERATION_DEFAULTS"]["CLIP_SKIP"]),  # clip_skip
+    None,   # filename2
+    config["SDXL_GENERATION_DEFAULTS"]["ACCELERATOR_ENABLED"],
+    config["SDXL_GENERATION_DEFAULTS"]["ACCELERATOR_LORA_NAME"],
 )
 
 CASCADE_GENERATION_DEFAULTS = ImageWorkflow(
@@ -58,10 +61,11 @@ CASCADE_GENERATION_DEFAULTS = ImageWorkflow(
     config["CASCADE_GENERATION_DEFAULTS"]["MODEL"],
     None,  # loras
     None,  # lora_strengths
-    None,  # aspect_ratio
+    config["CASCADE_GENERATION_DEFAULTS"]["ASPECT_RATIO"],  # aspect_ratio
     config["CASCADE_GENERATION_DEFAULTS"]["SAMPLER"],
     int(config["CASCADE_GENERATION_DEFAULTS"]["NUM_STEPS"]),
     float(config["CASCADE_GENERATION_DEFAULTS"]["CFG_SCALE"]),
+    1.0,
     int(config["CASCADE_GENERATION_DEFAULTS"]["BATCH_SIZE"]),  # batch_size
     None,  # denoise_strength
     None,  # seed
