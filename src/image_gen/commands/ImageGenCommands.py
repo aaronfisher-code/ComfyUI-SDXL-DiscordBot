@@ -243,31 +243,35 @@ class ImageGenCommands:
         command_name: str,
         params: ImageWorkflow,
     ):
-        if should_filter(params.prompt, params.negative_prompt):
-            logger.info(
-                "Prompt or negative prompt contains a blocked word, not generating image. Prompt: %s, Negative Prompt: %s",
-                params.prompt,
-                params.negative_prompt,
-            )
-            await interaction.response.send_message(
-                f"The prompt {params.prompt} or negative prompt {params.negative_prompt} contains a blocked word, not generating image.",
-                ephemeral=True,
-            )
-            return
+        try:
+            if should_filter(params.prompt, params.negative_prompt):
+                logger.info(
+                    "Prompt or negative prompt contains a blocked word, not generating image. Prompt: %s, Negative Prompt: %s",
+                    params.prompt,
+                    params.negative_prompt,
+                )
+                await interaction.response.send_message(
+                    f"The prompt {params.prompt} or negative prompt {params.negative_prompt} contains a blocked word, not generating image.",
+                    ephemeral=True,
+                )
+                return
 
-        # Send an initial message
-        await interaction.response.send_message(intro_message)
+            # Send an initial message
+            await interaction.response.send_message(intro_message)
 
-        if params.seed is None:
-            params.seed = random.randint(0, 999999999999999)
+            if params.seed is None:
+                params.seed = random.randint(0, 999999999999999)
 
-        from src.comfy_workflows import do_workflow
-        images = await do_workflow(params)
+            from src.comfy_workflows import do_workflow
+            images = await do_workflow(params)
 
-        final_message = f"{completion_message}\n Seed: {params.seed}"
-        buttons = Buttons(params, images, interaction.user, command=command_name)
+            final_message = f"{completion_message}\n Seed: {params.seed}"
+            buttons = Buttons(params, images, interaction.user, command=command_name)
 
-        file_name = get_filename(interaction, params)
+            file_name = get_filename(interaction, params)
 
-        fname = f"{file_name}.gif" if "GIF" in images[0].format else f"{file_name}.png"
-        await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename=fname), view=buttons)
+            fname = f"{file_name}.gif" if "GIF" in images[0].format else f"{file_name}.png"
+            await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename=fname), view=buttons)
+        except Exception as e:
+            logger.exception("Error generating image")
+            await interaction.response.send_message(f"Error generating image: {e}", ephemeral=True)
