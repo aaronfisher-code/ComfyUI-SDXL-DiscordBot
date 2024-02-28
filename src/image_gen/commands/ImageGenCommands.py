@@ -182,6 +182,7 @@ class ImageGenCommands:
 
         @self.tree.command(name="cascade", description="Use Stable Cascade to generate an image")
         @app_commands.describe(**CASCADE_ARG_DESCS)
+        @app_commands.choices(**CASCADE_ARG_CHOICES)
         async def slash_command(
                 interaction: discord.Interaction,
                 prompt: str,

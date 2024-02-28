@@ -1,11 +1,10 @@
-@REM @ECHO OFF
+@ECHO OFF
 IF NOT EXIST venv (
     python -m venv --copies venv
     echo created new virtualenv
 )
 
-@REM conda activate comfybot-embedded
-@REM call venv\Scripts\activate
+call venv\Scripts\activate
 pip install -r requirements.txt
 
 IF NOT EXIST config.properties (

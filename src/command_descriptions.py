@@ -61,7 +61,18 @@ SDXL_ARG_DESCS = {
     "clip_skip": f"default: {SDXL_GENERATION_DEFAULTS.clip_skip}",
 }
 VIDEO_ARG_DESCS = {**BASE_ARG_DESCS} | {k: v for k, v in IMAGE_GEN_DESCS.items() if k != "aspect_ratio"}
-CASCADE_ARG_DESCS = {**BASE_ARG_DESCS}
+CASCADE_ARG_DESCS = {
+    **BASE_ARG_DESCS,
+    "aspect_ratio": "Aspect ratio of the generated image",
+    "num_steps": f"range [1, {MAX_STEPS}]; Number of sampling steps",
+    "cfg_scale": f"range [1.0, {MAX_CFG}]; Degree to which AI should follow prompt",
+    "input_file": "Image to use as input for img2img",
+    "input_file2": "Image to use for mashup, must have input_file set too",
+    "denoise_strength": f"range [0.01, 1.0], default {CASCADE_GENERATION_DEFAULTS.denoise_strength}; Strength of denoising filter during img2img. Only works when input_file is set",
+    "inpainting_prompt": "Detection prompt for inpainting; examples: 'background' or 'person'",
+    "inpainting_detection_threshold": f"range [0, 255], default {CASCADE_GENERATION_DEFAULTS.inpainting_detection_threshold}; Detection threshold for inpainting. Only works when inpainting_prompt is set",
+    "clip_skip": f"default: {CASCADE_GENERATION_DEFAULTS.clip_skip}",
+ }
 
 BASE_ARG_CHOICES = {
     "aspect_ratio": ASPECT_RATIO_CHOICES,
@@ -78,5 +89,8 @@ SDXL_ARG_CHOICES = {
     "lora": SDXL_LORA_CHOICES,
     "lora2": SDXL_LORA_CHOICES,
     **BASE_ARG_CHOICES,
+}
+CASCADE_ARG_CHOICES= {
+    "aspect_ratio": ASPECT_RATIO_CHOICES,
 }
 VIDEO_ARG_CHOICES = {k: v for k, v in IMAGINE_ARG_CHOICES.items() if k not in {"lora2", "lora3", "aspect_ratio"}}
