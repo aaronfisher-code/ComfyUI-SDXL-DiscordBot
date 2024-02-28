@@ -20,11 +20,12 @@ set ROOT_DIR=%cd%
 set EMBEDDED_COMFY_LOCATION="%ROOT_DIR%\embedded_comfy"
 
 IF NOT EXIST %EMBEDDED_COMFY_LOCATION% (
-    mkdir %EMBEDDED_COMFY_LOCATION%
+    git clone https://github.com/comfyanonymous/ComfyUI.git %EMBEDDED_COMFY_LOCATION%
     echo created embedded comfy directory
 )
 
-comfyui --cwd=%EMBEDDED_COMFY_LOCATION% --create_directories --quick-test-for-ci
+cd %EMBEDDED_COMFY_LOCATION%
+pip install -r requirements.txt -U
 
 cd %EMBEDDED_COMFY_LOCATION%\custom_nodes
 IF NOT EXIST ComfyScript (
@@ -34,17 +35,28 @@ IF NOT EXIST ComfyScript (
 cd ComfyScript
 python -m pip install -e ".[default]"
 
-cd %EMBEDDED_COMFY_LOCATION%\checkpoints
+cd %EMBEDDED_COMFY_LOCATION%\custom_nodes
+IF NOT EXIST was-node-suite-comfyui (
+    git clone https://github.com/WASasquatch/was-node-suite-comfyui.git
+    echo cloned was node suite
+)
+cd was-node-suite-comfyui
+python -m pip install -r requirements.txt -U
+
+cd %EMBEDDED_COMFY_LOCATION%/models/checkpoints
 mkdir xl
 mkdir 15
 mkdir cascade
 
-cd %EMBEDDED_COMFY_LOCATION%\loras
+cd %EMBEDDED_COMFY_LOCATION%/models/loras
 mkdir xl
 mkdir 15
 mkdir cascade
 
-cd %EMBEDDED_COMFY_LOCATION%\controlnet
+cd %EMBEDDED_COMFY_LOCATION%/models/controlnet
 mkdir xl
 mkdir 15
 mkdir cascade
+
+cd %EMBEDDED_COMFY_LOCATION%
+python main.py --quick-test-for-ci

@@ -22,7 +22,7 @@ async def _do_img2img(params: ImageWorkflow, model_type: ModelType, loras: list[
     image_input = LoadImage(params.filename)[0]
     workflow.create_img2img_latents(image_input, params.batch_size)
     if params.inpainting_prompt:
-        workflow.mask_for_inpainting(params.inpainting_prompt, params.inpainting_detection_threshold)
+        workflow.mask_for_inpainting(image_input, params.inpainting_prompt, params.inpainting_detection_threshold)
     workflow.condition_prompts(params.prompt, params.negative_prompt or "")
     workflow.sample(params.seed, params.num_steps, params.cfg_scale, params.sampler, "normal", params.denoise_strength)
     images = workflow.decode_and_save('final_output')
