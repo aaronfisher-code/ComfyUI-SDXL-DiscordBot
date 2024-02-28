@@ -24,7 +24,7 @@ IF NOT EXIST %EMBEDDED_COMFY_LOCATION% (
 )
 
 cd %EMBEDDED_COMFY_LOCATION%
-pip install -r requirements.txt -U
+pip install -r requirements.txt -U --extra-index-url https://download.pytorch.org/whl/cu121
 
 cd %EMBEDDED_COMFY_LOCATION%\custom_nodes
 IF NOT EXIST ComfyScript (

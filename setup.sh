@@ -25,7 +25,7 @@ if [ ! -d "$EMBEDDED_COMFY_LOCATION" ]; then
 fi
 
 cd "$EMBEDDED_COMFY_LOCATION"
-pip install -r requirements.txt -U
+pip install -r requirements.txt -U --extra-index-url https://download.pytorch.org/whl/cu121
 
 cd "$EMBEDDED_COMFY_LOCATION/custom_nodes"
 if [ ! -d ComfyScript ]; then
@@ -33,7 +33,7 @@ if [ ! -d ComfyScript ]; then
     echo "cloned ComfyScript"
 fi
 cd ComfyScript
-python -m pip install -e ".[default]"
+pip install -e ".[default]"
 
 cd "$EMBEDDED_COMFY_LOCATION/custom_nodes"
 if [ ! -d was-node-suite-comfyui ]; then
@@ -41,7 +41,7 @@ if [ ! -d was-node-suite-comfyui ]; then
     echo "cloned was node suite"
 fi
 cd was-node-suite-comfyui
-python -m pip install -r requirements.txt -U
+pip install -r requirements.txt -U
 
 cd "$EMBEDDED_COMFY_LOCATION/custom_nodes"
 if [ ! -d ComfyUI_Comfyroll_CustomNodes ]; then
