@@ -64,6 +64,17 @@ async def _do_image_mashup(params: ImageWorkflow, model_type: ModelType, loras: 
     image_batch = [await results.get(i) for i in range(params.batch_size)]
     return image_batch
 
+async def _do_video(params: ImageWorkflow, loras: list[Lora]):
+    workflow = SD15Workflow(params.model, params.clip_skip, loras)
+    workflow.setup_for_animate_diff()
+    workflow.create_latents(params.dimensions, 32)
+    workflow.condition_prompts(params.prompt, params.negative_prompt or "")
+    workflow.sample(params.seed, params.num_steps, params.cfg_scale, params.sampler, "normal")
+    images = workflow.decode()
+    video = workflow.animate_diff_combine(images)
+    results = await video._wait()
+    return await results.get(0)
+
 
 async def do_workflow(params: ImageWorkflow):
     loras = [Lora(lora, strength) for lora, strength in zip(params.loras, params.lora_strengths)] if params.loras else []
@@ -82,5 +93,7 @@ async def do_workflow(params: ImageWorkflow):
             return await _do_add_detail(params, params.model_type, loras)
         case WorkflowType.image_mashup:
             return await _do_image_mashup(params, params.model_type, loras)
+        case WorkflowType.video:
+            return await _do_video(params, loras)
         case _:
             raise ValueError(f"Invalid workflow type: {params.workflow_type}")

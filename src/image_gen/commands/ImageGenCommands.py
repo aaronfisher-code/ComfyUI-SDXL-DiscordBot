@@ -1,3 +1,4 @@
+import logging
 import random
 
 import discord
@@ -10,6 +11,7 @@ from src.image_gen.collage_utils import create_collage
 from src.image_gen.ui.buttons import Buttons
 from src.util import process_attachment, unpack_choices, should_filter, get_filename
 
+logger = logging.getLogger("bot")
 
 class ImageGenCommands:
     def __init__(self, tree: discord.app_commands.CommandTree):
@@ -50,6 +52,9 @@ class ImageGenCommands:
                 if fp is None:
                     return
 
+            dimensions = sd_aspect_ratios[aspect_ratio] if aspect_ratio else sd_aspect_ratios[SD15_GENERATION_DEFAULTS.dimensions]
+            dimensions = (dimensions[0] / 2, dimensions[1] / 2)
+
             params = ImageWorkflow(
                 ModelType.SD15,
                 WorkflowType.txt2img if input_file is None else WorkflowType.img2img,
@@ -58,7 +63,7 @@ class ImageGenCommands:
                 model or SD15_GENERATION_DEFAULTS.model,
                 unpack_choices(lora, lora2),
                 [lora_strength, lora_strength2],
-                sd_aspect_ratios[aspect_ratio] if aspect_ratio else sd_aspect_ratios[SD15_GENERATION_DEFAULTS.dimensions],
+                dimensions,
                 sampler or SD15_GENERATION_DEFAULTS.sampler,
                 num_steps or SD15_GENERATION_DEFAULTS.num_steps,
                 cfg_scale or SD15_GENERATION_DEFAULTS.cfg_scale,
@@ -99,13 +104,13 @@ class ImageGenCommands:
         ):
             params = ImageWorkflow(
                 ModelType.VIDEO,
-                WorkflowType.txt2img,
+                WorkflowType.video,
                 prompt,
                 negative_prompt,
                 model or VIDEO_GENERATION_DEFAULTS.model,
                 unpack_choices(lora, lora2),
                 [lora_strength, lora_strength2],
-                None,
+                (512, 512),
                 sampler=sampler or VIDEO_GENERATION_DEFAULTS.sampler,
                 num_steps=num_steps or VIDEO_GENERATION_DEFAULTS.num_steps,
                 cfg_scale=cfg_scale or VIDEO_GENERATION_DEFAULTS.cfg_scale,
@@ -244,35 +249,35 @@ class ImageGenCommands:
         command_name: str,
         params: ImageWorkflow,
     ):
-        try:
-            if should_filter(params.prompt, params.negative_prompt):
-                logger.info(
-                    "Prompt or negative prompt contains a blocked word, not generating image. Prompt: %s, Negative Prompt: %s",
-                    params.prompt,
-                    params.negative_prompt,
-                )
-                await interaction.response.send_message(
-                    f"The prompt {params.prompt} or negative prompt {params.negative_prompt} contains a blocked word, not generating image.",
-                    ephemeral=True,
-                )
-                return
+        # try:
+        if should_filter(params.prompt, params.negative_prompt):
+            logger.info(
+                "Prompt or negative prompt contains a blocked word, not generating image. Prompt: %s, Negative Prompt: %s",
+                params.prompt,
+                params.negative_prompt,
+            )
+            await interaction.response.send_message(
+                f"The prompt {params.prompt} or negative prompt {params.negative_prompt} contains a blocked word, not generating image.",
+                ephemeral=True,
+            )
+            return
 
-            # Send an initial message
-            await interaction.response.send_message(intro_message)
+        # Send an initial message
+        await interaction.response.send_message(intro_message)
 
-            if params.seed is None:
-                params.seed = random.randint(0, 999999999999999)
+        if params.seed is None:
+            params.seed = random.randint(0, 999999999999999)
 
-            from src.comfy_workflows import do_workflow
-            images = await do_workflow(params)
+        from src.comfy_workflows import do_workflow
+        images = await do_workflow(params)
 
-            final_message = f"{completion_message}\n Seed: {params.seed}"
-            buttons = Buttons(params, images, interaction.user, command=command_name)
+        final_message = f"{completion_message}\n Seed: {params.seed}"
+        buttons = Buttons(params, images, interaction.user, command=command_name)
 
-            file_name = get_filename(interaction, params)
+        file_name = get_filename(interaction, params)
 
-            fname = f"{file_name}.gif" if "GIF" in images[0].format else f"{file_name}.png"
-            await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename=fname), view=buttons)
-        except Exception as e:
-            logger.exception("Error generating image")
-            await interaction.response.send_message(f"Error generating image: {e}", ephemeral=True)
+        fname = f"{file_name}.gif" if "GIF" in images[0].format else f"{file_name}.png"
+        await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename=fname), view=buttons)
+        # except Exception as e:
+        #     logger.error("Error generating image: %s for command %s with params %s", e, command_name, params)
+        #     await interaction.channel.send(f"{interaction.user.mention} `Error generating image: {e} for command {command_name}`")

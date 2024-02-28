@@ -41,6 +41,14 @@ class SDWorkflow:
             latent = RepeatLatentBatch(latent, batches)
         self.latents = [latent]
 
+    def setup_for_animate_diff(self):
+        context_options = ADEAnimateDiffUniformContextOptions(16, 2, 4, 'uniform', False, 'flat', False, 0, 1, None, None)
+        motion_model_settings = ADEAnimateDiffModelSettingsSimple(0, None, 1, 1)
+        self.model = ADEAnimateDiffLoaderWithContext(self.model, 'mm-Stabilized_mid.pth', 'sqrt_linear (AnimateDiff)', context_options, None, motion_model_settings, None, 1, False, None)
+
+    def animate_diff_combine(self, images: Image):
+        return VHSVideoCombine(images, 8, 0, 'final_output', 'image/gif', False, True, None, None)
+
     def condition_prompts(self, positive_prompt: str, negative_prompt: str):
         self.conditioning = CLIPTextEncode(positive_prompt, self.clip)
         self.negative_conditioning = CLIPTextEncode(negative_prompt, self.clip)
