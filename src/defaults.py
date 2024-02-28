@@ -95,3 +95,18 @@ VIDEO_GENERATION_DEFAULTS = ImageWorkflow(
     "video",  # slash_command
     clip_skip=int(config["SDXL_GENERATION_DEFAULTS"]["CLIP_SKIP"]),  # clip_skip
 )
+
+ADD_DETAIL_DEFAULTS = ImageWorkflow(
+    None,
+    WorkflowType.add_detail,
+    None,
+    denoise_strength=float(config["ADD_DETAIL_DEFAULTS"]["DENOISE_STRENGTH"]),
+    batch_size=int(config["ADD_DETAIL_DEFAULTS"]["BATCH_SIZE"]),
+)
+
+UPSCALE_DEFAULTS = ImageWorkflow(
+    None,
+    WorkflowType.upscale,
+    None,
+    model=config["UPSCALE_DEFAULTS"]["MODEL"],
+)

@@ -113,8 +113,8 @@ class UpscaleWorkflow:
     def pass_image(self, image):
         self.image = image
 
-    def upscale(self, rescale_factor: float):
-        self.image, _ = CRUpscaleImage(self.image, UpscaleModels.RealESRGAN_x4plus, 'rescale', rescale_factor, 1024, CRUpscaleImage.resampling_method.lanczos, True, 8)
+    def upscale(self, model: str, rescale_factor: float):
+        self.image, _ = CRUpscaleImage(self.image, model, 'rescale', rescale_factor, 1024, CRUpscaleImage.resampling_method.lanczos, True, 8)
 
     def save(self, file_path: str):
         return SaveImage(self.image, file_path)

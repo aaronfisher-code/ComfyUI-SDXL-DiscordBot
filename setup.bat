@@ -43,6 +43,12 @@ IF NOT EXIST was-node-suite-comfyui (
 cd was-node-suite-comfyui
 python -m pip install -r requirements.txt -U
 
+cd %EMBEDDED_COMFY_LOCATION%\custom_nodes
+if NOT EXIST ComfyUI_Comfyroll_CustomNodes (
+    git clone https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes.git
+    ECHO cloned ComfyUI_Comfyroll_CustomNodes
+)
+
 cd %EMBEDDED_COMFY_LOCATION%/models/checkpoints
 mkdir xl
 mkdir 15

@@ -7,10 +7,10 @@ import discord
 import discord.ext
 from discord import ui
 
+from src.comfy_workflows import do_workflow
 from src.consts import *
 from src.defaults import *
 from src.image_gen.collage_utils import create_collage, create_gif_collage
-from src.image_gen.image_gen import generate_images, upscale_image, generate_alternatives
 from src.util import get_filename, build_command
 
 
@@ -35,7 +35,7 @@ class RerollableButton:
         params.seed = random.randint(0, 999999999999999)
 
         # Generate a new image with the same prompt
-        images, enhanced_prompt = await generate_images(params)
+        images = await do_workflow(params)
 
         if self.is_video:
             collage = create_gif_collage(images)
@@ -82,14 +82,21 @@ class InfoableButton:
             f"num steps: {params.num_steps or 'default'}\n"
             f"cfg scale: {params.cfg_scale or 'default'}\n"
             f"seed: {params.seed}\n"
+            f"clip skip: {params.clip_skip}\n"
+            f"aspect_ratio: {params.dimensions}\n"
             f"```{build_command(params)}```"
         )
-        file = None
+        files = []
         if params.filename is not None and params.filename != "" and os.path.exists(params.filename):
             info_str += f"\noriginal file:"
-            file = discord.File(fp=params.filename, filename=params.filename)
-            await interaction.response.send_message(info_str, ephemeral=True, file=file)
-            return
+            files.append(discord.File(fp=params.filename, filename=params.filename))
+
+        if params.filename2 is not None and params.filename2 != "" and os.path.exists(params.filename2):
+            info_str += f"\noriginal file 2:"
+            files.append(discord.File(fp=params.filename2, filename=params.filename2))
+
+        if files:
+            await interaction.response.send_message(info_str, files=files, ephemeral=True)
 
         await interaction.response.send_message(info_str, ephemeral=True)
 #</editor-fold>
@@ -135,43 +142,36 @@ class Buttons(discord.ui.View, EditableButton, RerollableButton, DeletableButton
 
         # Dynamically add alternative buttons
         for idx, _ in enumerate(images):
-            row = (idx + 1) // 5 + reroll_row  # Determine row based on index and re-roll row
+            row = (idx + 1) // 5 + reroll_row
             btn = ImageButton(f"V{idx + 1}", "♻️", row, self.generate_alternatives_and_send)
             self.add_item(btn)
 
         # Dynamically add upscale buttons
         for idx, _ in enumerate(images):
-            # Determine row based on index, number of alternative buttons, and re-roll row
             row = (idx + len(images) + 1) // 5 + reroll_row
             btn = ImageButton(f"U{idx + 1}", "⬆️", row, self.upscale_and_send)
             self.add_item(btn)
 
         # Dynamically add download buttons
         for idx, _ in enumerate(images):
-            # Determine row based on index, number of alternative buttons, and re-roll row
             row = (idx + (len(images) * 2) + 2) // 5 + reroll_row
             btn = ImageButton(f"D{idx + 1}", "💾", row, self.download_image)
             self.add_item(btn)
-
-        # removed until the upscale flow is fixed
-        # Add upscale with added detail buttons
-        # for idx, _ in enumerate(images):
-        #    row = (idx + (len(images) * 2) + 2) // 5 + reroll_row
-        #    btn = ImageButton(f"U{idx + 1}", "🔎", row, self.upscale_and_send_with_detail)
-        #    self.add_item(btn)
 
     async def generate_alternatives_and_send(self, interaction, button):
         index = int(button.label[1:]) - 1  # Extract index from label
         await interaction.response.send_message(f"{interaction.user.mention} asked for some alternatives of image #{index + 1}, this shouldn't take too long...")
 
         params = deepcopy(self.params)
-        params.workflow_name = SDXL_ALTS_WORKFLOW if self.is_sdxl else SD15_ALTS_WORKFLOW
+        params.workflow_type = WorkflowType.img2img
         params.seed = random.randint(0, 999999999999999)
         params.denoise_strength = SDXL_GENERATION_DEFAULTS.denoise_strength if self.is_sdxl else SD15_GENERATION_DEFAULTS.denoise_strength
 
         # TODO: should alternatives use num_steps and cfg_scale from original?
         # Buttons should probably still receive these params for rerolls
-        images = await generate_alternatives(params, self.images[index])
+        params.filename = os.path.join(os.getcwd(), f"out/images_{get_filename(interaction, self.params)}_{index}.png")
+        self.images[index].save(fp=params.filename)
+        images = await do_workflow(params)
         collage_path = create_collage(images)
         final_message = f"{interaction.user.mention} here are your alternative images"
 
@@ -188,8 +188,13 @@ class Buttons(discord.ui.View, EditableButton, RerollableButton, DeletableButton
         await interaction.response.send_message(f"{interaction.user.mention} asked for an upscale of image #{index + 1}, this shouldn't take too long...")
 
         params = deepcopy(self.params)
-        params.workflow_name = UPSCALE_WORKFLOW
-        upscaled_image = await upscale_image(self.images[index])
+        params.workflow_type = WorkflowType.upscale
+        params.batch_size = UPSCALE_DEFAULTS.batch_size
+
+        params.filename = os.path.join(os.getcwd(), f"out/images_{get_filename(interaction, self.params)}_{index}.png")
+        self.images[index].save(fp=params.filename)
+        upscaled_image = await do_workflow(params)
+
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
         upscaled_image.save(upscaled_image_path)
@@ -200,21 +205,6 @@ class Buttons(discord.ui.View, EditableButton, RerollableButton, DeletableButton
             content=final_message,
             file=discord.File(fp=upscaled_image_path, filename=fp),
             view=buttons
-        )
-
-    async def upscale_and_send_with_detail(self, interaction, button):
-        index = int(button.label[1:]) - 1
-        await interaction.response.send_message(
-            "Upscaling and increasing detail in the image, this shouldn't take too long..."
-        )
-
-        upscaled_image = await upscale_image(self.images[index])
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        upscaled_image_path = f"./out/upscaledImage_{timestamp}.png"
-        upscaled_image.save(upscaled_image_path)
-        final_message = f"{interaction.user.mention} here is your upscaled image"
-        await interaction.channel.send(
-            content=final_message, file=discord.File(fp=upscaled_image_path, filename="upscaled_image.png")
         )
 
     async def download_image(self, interaction, button):
@@ -235,7 +225,7 @@ class AddDetailButtons(discord.ui.View, DeletableButton, InfoableButton):
         self.is_sdxl = is_sdxl
         self.author = author
 
-        if "inpainting" not in self.params.workflow_name.lower():
+        if self.params.inpainting_prompt is None:
             self.add_item(ImageButton("Add Detail", "🔎", 0, self.add_detail))
 
     async def add_detail(self, interaction, button):
@@ -243,12 +233,14 @@ class AddDetailButtons(discord.ui.View, DeletableButton, InfoableButton):
 
         # do img2img
         params = deepcopy(self.params)
-        params.workflow_name = SDXL_DETAIL_WORKFLOW if self.is_sdxl else SD15_DETAIL_WORKFLOW
-        params.denoise_strength = None
+        params.workflow_type = WorkflowType.add_detail
+        params.denoise_strength = ADD_DETAIL_DEFAULTS.denoise_strength
         params.seed = random.randint(0, 999999999999999)
         params.batch_size = 1
 
-        images = await generate_alternatives(params, self.images)
+        params.filename = os.path.join(os.getcwd(), f"out/images_{get_filename(interaction, self.params)}_{params.seed}.png")
+        self.images.save(fp=params.filename)
+        images = await do_workflow(params)
         collage_path = create_collage(images)
         final_message = f"{interaction.user.mention} here is your image with more detail"
 
@@ -320,7 +312,7 @@ class EditModal(ui.Modal, title="Edit Image"):
         if params.seed is None:
             params.seed = random.randint(0, 999999999999999)
 
-        images, enhanced_prompt = await generate_images(params)
+        images = await do_workflow(params)
 
         # Construct the final message with user mention
         final_message = f"{interaction.user.mention} asked me to re-imagine \"{self.prompt}\", here is what I imagined for them. Seed: {self.params.seed}"
