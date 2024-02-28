@@ -52,6 +52,19 @@ async def _do_add_detail(params: ImageWorkflow, model_type: ModelType, loras: li
     return image_batch
 
 
+async def _do_image_mashup(params: ImageWorkflow, model_type: ModelType, loras: list[Lora]):
+    workflow = model_type_to_workflow[model_type](params.model, params.clip_skip, loras)
+    image_inputs = [LoadImage(filename)[0] for filename in [params.filename, params.filename2]]
+    workflow.create_latents(params.dimensions, params.batch_size)
+    workflow.condition_prompts(params.prompt, params.negative_prompt or "")
+    workflow.unclip_encode(image_inputs)
+    workflow.sample(params.seed, params.num_steps, params.cfg_scale, params.sampler, "normal")
+    images = workflow.decode_and_save('final_output')
+    results = await images._wait()
+    image_batch = [await results.get(i) for i in range(params.batch_size)]
+    return image_batch
+
+
 async def do_workflow(params: ImageWorkflow):
     loras = [Lora(lora, strength) for lora, strength in zip(params.loras, params.lora_strengths)] if params.loras else []
 
@@ -67,5 +80,7 @@ async def do_workflow(params: ImageWorkflow):
             return await _do_upscale(params)
         case WorkflowType.add_detail:
             return await _do_add_detail(params, params.model_type, loras)
+        case WorkflowType.image_mashup:
+            return await _do_image_mashup(params, params.model_type, loras)
         case _:
             raise ValueError(f"Invalid workflow type: {params.workflow_type}")
