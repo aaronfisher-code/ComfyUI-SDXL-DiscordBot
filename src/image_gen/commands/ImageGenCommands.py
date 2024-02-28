@@ -197,6 +197,16 @@ class ImageGenCommands:
                 inpainting_detection_threshold: Range[int, 0, 255] = None,
                 clip_skip: Range[int, -2, -1] = None,
         ):
+            if input_file is not None:
+                fp = await process_attachment(input_file, interaction)
+                if fp is None:
+                    return
+
+            if input_file2 is not None:
+                fp2 = await process_attachment(input_file2, interaction)
+                if fp2 is None:
+                    return
+
             params = ImageWorkflow(
                 ModelType.CASCADE,
                 WorkflowType.txt2img if input_file is None else WorkflowType.image_mashup if input_file is not None and input_file2 is not None else WorkflowType.img2img,
@@ -210,8 +220,8 @@ class ImageGenCommands:
                 denoise_strength=denoise_strength or CASCADE_GENERATION_DEFAULTS.denoise_strength,
                 batch_size=CASCADE_GENERATION_DEFAULTS.batch_size,
                 seed=seed,
-                filename=input_file.filename if input_file is not None else None,
-                filename2=input_file2.filename if input_file2 is not None else None,
+                filename=fp if input_file is not None else None,
+                filename2=fp2 if input_file2 is not None else None,
                 inpainting_prompt=inpainting_prompt,
                 inpainting_detection_threshold=inpainting_detection_threshold or CASCADE_GENERATION_DEFAULTS.inpainting_detection_threshold,
                 clip_skip=clip_skip or CASCADE_GENERATION_DEFAULTS.clip_skip,

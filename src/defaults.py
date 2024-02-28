@@ -65,9 +65,8 @@ CASCADE_GENERATION_DEFAULTS = ImageWorkflow(
     config["CASCADE_GENERATION_DEFAULTS"]["SAMPLER"],
     int(config["CASCADE_GENERATION_DEFAULTS"]["NUM_STEPS"]),
     float(config["CASCADE_GENERATION_DEFAULTS"]["CFG_SCALE"]),
-    1.0,
+    float(config["CASCADE_GENERATION_DEFAULTS"]["DENOISE_STRENGTH"]),
     int(config["CASCADE_GENERATION_DEFAULTS"]["BATCH_SIZE"]),  # batch_size
-    None,  # denoise_strength
     None,  # seed
     None,  # filename
     "cascade",  # slash_command

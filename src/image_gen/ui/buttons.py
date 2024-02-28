@@ -97,6 +97,7 @@ class InfoableButton:
 
         if files:
             await interaction.response.send_message(info_str, files=files, ephemeral=True)
+            return
 
         await interaction.response.send_message(info_str, ephemeral=True)
 #</editor-fold>
