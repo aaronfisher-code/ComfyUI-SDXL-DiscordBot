@@ -176,6 +176,7 @@ class ImageGenCommands:
                 clip_skip=clip_skip or SDXL_GENERATION_DEFAULTS.clip_skip,
                 use_accelerator_lora=SDXL_GENERATION_DEFAULTS.use_accelerator_lora,
                 accelerator_lora_name=SDXL_GENERATION_DEFAULTS.accelerator_lora_name,
+                scheduler=SDXL_GENERATION_DEFAULTS.scheduler,
             )
             await self.__do_request(
                 interaction,
@@ -276,7 +277,7 @@ class ImageGenCommands:
 
             file_name = get_filename(interaction, params)
 
-            fname = f"{file_name}.gif" if "GIF" in images.format else f"{file_name}.png"
+            fname = f"{file_name}.gif" if "GIF" in images[0].format else f"{file_name}.png"
             await interaction.channel.send(content=final_message, file=discord.File(fp=create_collage(images), filename=fname), view=buttons)
         except Exception as e:
             logger.exception("Error generating image: %s for command %s with params %s", e, command_name, params)
