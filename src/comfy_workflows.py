@@ -72,8 +72,8 @@ async def _do_video(params: ImageWorkflow, loras: list[Lora]):
     workflow.sample(params.seed, params.num_steps, params.cfg_scale, params.sampler, "normal")
     images = workflow.decode()
     video = workflow.animate_diff_combine(images)
-    results = await video._wait()
-    return await results.get(0)
+    results = video.wait()
+    return [await results._output()]
 
 
 async def do_workflow(params: ImageWorkflow):
