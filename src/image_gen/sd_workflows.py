@@ -2,8 +2,9 @@ import dataclasses
 from typing import Optional
 
 from comfy_script.runtime import *
+from src.util import get_server_address
 
-load("http://127.0.0.1:8188")
+load(get_server_address())
 
 from comfy_script.runtime.nodes import *
 

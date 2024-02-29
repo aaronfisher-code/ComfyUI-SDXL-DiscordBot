@@ -18,6 +18,9 @@ IF NOT EXIST config.properties (
 set ROOT_DIR=%cd%
 set EMBEDDED_COMFY_LOCATION="%ROOT_DIR%\embedded_comfy"
 
+mkdir input
+mkdir out
+
 IF NOT EXIST %EMBEDDED_COMFY_LOCATION% (
     git clone https://github.com/comfyanonymous/ComfyUI.git %EMBEDDED_COMFY_LOCATION%
     echo created embedded comfy directory

@@ -31,7 +31,7 @@ async def _do_img2img(params: ImageWorkflow, model_type: ModelType, loras: list[
     image_batch = [await results.get(i) for i in range(params.batch_size)]
     return image_batch
 
-async def _do_upscale(params: ImageWorkflow):
+async def _do_upscale(params: ImageWorkflow, model_type: ModelType, loras: list[Lora]):
     workflow = UpscaleWorkflow()
     workflow.load_image(params.filename)
     workflow.upscale(UPSCALE_DEFAULTS.model, 2.0)
@@ -64,16 +64,27 @@ async def _do_image_mashup(params: ImageWorkflow, model_type: ModelType, loras: 
     image_batch = [await results.get(i) for i in range(params.batch_size)]
     return image_batch
 
-async def _do_video(params: ImageWorkflow, loras: list[Lora]):
-    workflow = SD15Workflow(params.model, params.clip_skip, loras)
-    workflow.setup_for_animate_diff()
-    workflow.create_latents(params.dimensions, 32)
-    workflow.condition_prompts(params.prompt, params.negative_prompt or "")
-    workflow.sample(params.seed, params.num_steps, params.cfg_scale, params.sampler, "normal")
-    images = workflow.decode()
-    video = workflow.animate_diff_combine(images)
-    results = video.wait()
-    return [await results._output()]
+async def _do_video(params: ImageWorkflow, model_type: ModelType, loras: list[Lora]):
+    raise NotImplementedError("Video generation is under construction...")
+    # workflow = SD15Workflow(params.model, params.clip_skip, loras)
+    # workflow.setup_for_animate_diff()
+    # workflow.create_latents(params.dimensions, 32)
+    # workflow.condition_prompts(params.prompt, params.negative_prompt or "")
+    # workflow.sample(params.seed, params.num_steps, params.cfg_scale, params.sampler, "normal")
+    # images = workflow.decode()
+    # video = workflow.animate_diff_combine(images)
+    # results = video.wait()
+    # return [await results._output()]
+
+
+workflow_type_to_method = {
+    WorkflowType.txt2img: _do_txt2img,
+    WorkflowType.img2img: _do_img2img,
+    WorkflowType.upscale: _do_upscale,
+    WorkflowType.add_detail: _do_add_detail,
+    WorkflowType.image_mashup: _do_image_mashup,
+    WorkflowType.video: _do_video,
+}
 
 
 async def do_workflow(params: ImageWorkflow):
@@ -82,19 +93,4 @@ async def do_workflow(params: ImageWorkflow):
     if params.use_accelerator_lora:
         loras.append(Lora(params.accelerator_lora_name, 1.0))
 
-    match params.workflow_type:
-        case WorkflowType.txt2img:
-            return await _do_txt2img(params, params.model_type, loras)
-        case WorkflowType.img2img:
-            return await _do_img2img(params, params.model_type, loras)
-        case WorkflowType.upscale:
-            return await _do_upscale(params)
-        case WorkflowType.add_detail:
-            return await _do_add_detail(params, params.model_type, loras)
-        case WorkflowType.image_mashup:
-            return await _do_image_mashup(params, params.model_type, loras)
-        case WorkflowType.video:
-            raise NotImplementedError("Video workflow is not implemented yet.")
-            # return await _do_video(params, loras)
-        case _:
-            raise ValueError(f"Invalid workflow type: {params.workflow_type}")
+    return await workflow_type_to_method[params.workflow_type](params, params.model_type, loras)

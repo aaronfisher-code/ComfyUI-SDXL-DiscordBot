@@ -2,7 +2,6 @@ import configparser
 import os
 
 from discord import Interaction, Attachment
-#from src.image_gen.image_gen import ImageWorkflow
 from src.image_gen import ImageWorkflow
 
 
@@ -113,3 +112,13 @@ async def process_attachment(attachment: Attachment, interaction: Interaction):
         img.save(fp)
 
     return os.path.abspath(fp)
+
+def get_server_address():
+    import configparser
+    config = configparser.ConfigParser()
+    config.read("config.properties")
+
+    if config["BOT"]["USE_EMBEDDED_COMFY"].lower() == "true":
+        return f"http://localhost:{config['EMBEDDED']['SERVER_PORT']}"
+    else:
+        return config['LOCAL']['SERVER_ADDRESS']

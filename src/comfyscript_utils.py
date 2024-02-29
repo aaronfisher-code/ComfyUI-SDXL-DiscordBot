@@ -1,15 +1,14 @@
 import asyncio
-import configparser
 
 from comfy_script.runtime import load
+from src.util import get_server_address
+
 
 async def server_is_started() -> bool:
     # TODO: this sucks, redo it
     while True:
         try:
-            config = configparser.ConfigParser()
-            config.read("config.properties")
-            load(f"http://localhost:{config['EMBEDDED']['SERVER_PORT']}")
+            load(get_server_address())
             break
         except:
             await asyncio.sleep(3)

@@ -19,6 +19,8 @@ fi
 ROOT_DIR=$(pwd)
 EMBEDDED_COMFY_LOCATION="$ROOT_DIR/embedded_comfy"
 
+mkdir -p input out
+
 if [ ! -d "$EMBEDDED_COMFY_LOCATION" ]; then
     git clone https://github.com/comfyanonymous/ComfyUI.git "$EMBEDDED_COMFY_LOCATION"
     echo "created embedded comfy directory"
@@ -58,12 +60,12 @@ if [ ! -d ComfyUI_Comfyroll_CustomNodes ]; then
     echo "cloned ComfyUI_Comfyroll_CustomNodes"
 fi
 
-if [ ! -d ComfyUI-AnimateDiff-Evolved]; then
+if [ ! -d ComfyUI-AnimateDiff-Evolved ]; then
   git clone https://github.com/Kosinkadink/ComfyUI-AnimateDiff-Evolved.git
   echo "cloned ComfyUI-AnimateDiff-Evolved"
 fi
 
-if [ ! -d ComfyUI-VideoHelperSuite]; then
+if [ ! -d ComfyUI-VideoHelperSuite ]; then
   git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git
   echo "cloned ComfyUI-VideoHelperSuite"
 fi
