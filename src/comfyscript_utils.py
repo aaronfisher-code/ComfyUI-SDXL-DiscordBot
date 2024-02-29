@@ -11,7 +11,7 @@ async def server_is_started() -> bool:
             load(f"http://localhost:{config['EMBEDDED']['SERVER_PORT']}")
             break
         except:
-            asyncio.sleep(3)
+            await asyncio.sleep(3)
     # do api call to check if server is started
     from comfy_script.runtime import client
     try:
