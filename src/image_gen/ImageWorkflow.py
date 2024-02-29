@@ -53,3 +53,4 @@ class ImageWorkflow:
     filename2: Optional[str] = None
     use_accelerator_lora: Optional[bool] = None
     accelerator_lora_name: Optional[str] = None
+    scheduler: Optional[str] = None
