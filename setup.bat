@@ -1,4 +1,9 @@
 @ECHO OFF
+:: TORCH_CUDA_INDEX_URL=https://download.pytorch.org/whl/cu118  :: for cuda 11.8
+:: CUDA_VER=11.8
+set TORCH_CUDA_INDEX_URL=https://download.pytorch.org/whl/cu121
+set CUDA_VER=12.1
+
 IF NOT EXIST venv (
     python -m venv --copies venv
     echo created new virtualenv
@@ -27,7 +32,7 @@ IF NOT EXIST %EMBEDDED_COMFY_LOCATION% (
 )
 
 cd %EMBEDDED_COMFY_LOCATION%
-pip install -r requirements.txt -U --extra-index-url https://download.pytorch.org/whl/cu121
+pip install -r requirements.txt -U --extra-index-url %TORCH_CUDA_INDEX_URL%
 
 cd %EMBEDDED_COMFY_LOCATION%\custom_nodes
 IF NOT EXIST ComfyScript (
@@ -42,7 +47,7 @@ IF NOT EXIST %EMBEDDED_COMFY_LOCATION%/ComfyUI_Ib_CustomNodes (
     echo cloned ComfyUI_Ib_CustomNodes
 )
 cd %EMBEDDED_COMFY_LOCATION%/ComfyUI_Ib_CustomNodes
-python -m pip install -r requirements.txt -U
+python -m pip install -r requirements.txt -U --extra-index-url %TORCH_CUDA_INDEX_URL%
 
 cd %EMBEDDED_COMFY_LOCATION%\custom_nodes
 IF NOT EXIST was-node-suite-comfyui (
@@ -50,7 +55,7 @@ IF NOT EXIST was-node-suite-comfyui (
     echo cloned was node suite
 )
 cd was-node-suite-comfyui
-python -m pip install -r requirements.txt -U
+python -m pip install -r requirements.txt -U --extra-index-url %TORCH_CUDA_INDEX_URL%
 
 cd %EMBEDDED_COMFY_LOCATION%\custom_nodes
 if NOT EXIST ComfyUI_Comfyroll_CustomNodes (
@@ -68,8 +73,17 @@ IF NOT EXIST %EMBEDDED_COMFY_LOCATION%/ComfyUI-VideoHelperSuite (
     echo cloned ComfyUI-VideoHelperSuite
 )
 cd %EMBEDDED_COMFY_LOCATION%/ComfyUI-VideoHelperSuite
-python -m pip install -r requirements.txt -U
+python -m pip install -r requirements.txt -U --extra-index-url %TORCH_CUDA_INDEX_URL%
 
+cd %EMBEDDED_COMFY_LOCATION%/custom_nodes
+IF NOT EXIST ComfyUI-audio (
+    git clone https://github.com/eigenpunk/ComfyUI-audio.git
+    echo cloned ComfyUI-audio
+)
+cd ComfyUI-audio
+pip install av
+python -m pip install -r requirements.txt -U --extra-index-url %TORCH_CUDA_INDEX_URL%
+pip install -U git+https://git@github.com/facebookresearch/audiocraft#egg=audiocraft --index-url https://download.pytorch.org/whl/cu121 --no-deps
 
 cd %EMBEDDED_COMFY_LOCATION%/models/checkpoints
 mkdir xl
