@@ -34,6 +34,13 @@ IF NOT EXIST ComfyScript (
 cd ComfyScript
 python -m pip install -e ".[default]"
 
+IF NOT EXIST %EMBEDDED_COMFY_LOCATION%/ComfyUI_Ib_CustomNodes (
+    git clone https://github.com/Chaoses-Ib/ComfyUI_Ib_CustomNodes.git
+    echo cloned ComfyUI_Ib_CustomNodes
+)
+cd %EMBEDDED_COMFY_LOCATION%/ComfyUI_Ib_CustomNodes
+python -m pip install -r requirements.txt -U
+
 cd %EMBEDDED_COMFY_LOCATION%\custom_nodes
 IF NOT EXIST was-node-suite-comfyui (
     git clone https://github.com/WASasquatch/was-node-suite-comfyui.git
@@ -47,6 +54,19 @@ if NOT EXIST ComfyUI_Comfyroll_CustomNodes (
     git clone https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes.git
     ECHO cloned ComfyUI_Comfyroll_CustomNodes
 )
+
+IF NOT EXIST %EMBEDDED_COMFY_LOCATION%/ComfyUI-AnimateDiff-Evolved (
+    git clone https://github.com/Kosinkadink/ComfyUI-AnimateDiff-Evolved.git
+    echo cloned ComfyUI-AnimateDiff-Evolved
+)
+
+IF NOT EXIST %EMBEDDED_COMFY_LOCATION%/ComfyUI-VideoHelperSuite (
+    git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git
+    echo cloned ComfyUI-VideoHelperSuite
+)
+cd %EMBEDDED_COMFY_LOCATION%/ComfyUI-VideoHelperSuite
+python -m pip install -r requirements.txt -U
+
 
 cd %EMBEDDED_COMFY_LOCATION%/models/checkpoints
 mkdir xl

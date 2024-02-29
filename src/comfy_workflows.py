@@ -94,6 +94,7 @@ async def do_workflow(params: ImageWorkflow):
         case WorkflowType.image_mashup:
             return await _do_image_mashup(params, params.model_type, loras)
         case WorkflowType.video:
-            return await _do_video(params, loras)
+            raise NotImplementedError("Video workflow is not implemented yet.")
+            # return await _do_video(params, loras)
         case _:
             raise ValueError(f"Invalid workflow type: {params.workflow_type}")
