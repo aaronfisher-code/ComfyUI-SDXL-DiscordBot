@@ -1,18 +1,17 @@
+import asyncio
 import configparser
-import time
 
 from comfy_script.runtime import load
 
-while True:
-    try:
-        config = configparser.ConfigParser()
-        config.read("config.properties")
-        load(f"http://localhost:{config['EMBEDDED']['SERVER_PORT']}")
-        break
-    except:
-        time.sleep(3)
-
-def server_is_started() -> bool:
+async def server_is_started() -> bool:
+    while True:
+        try:
+            config = configparser.ConfigParser()
+            config.read("config.properties")
+            load(f"http://localhost:{config['EMBEDDED']['SERVER_PORT']}")
+            break
+        except:
+            asyncio.sleep(3)
     # do api call to check if server is started
     from comfy_script.runtime import client
     try:

@@ -17,7 +17,7 @@ tree = discord.app_commands.CommandTree(client)
 @client.event
 async def on_ready():
     from src.comfyscript_utils import server_is_started
-    while not server_is_started():
+    while not await server_is_started():
         print("waiting for comfy server to start")
         await asyncio.sleep(1)
 
