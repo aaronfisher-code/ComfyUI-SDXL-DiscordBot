@@ -4,6 +4,7 @@ import configparser
 from comfy_script.runtime import load
 
 async def server_is_started() -> bool:
+    # TODO: this sucks, redo it
     while True:
         try:
             config = configparser.ConfigParser()
