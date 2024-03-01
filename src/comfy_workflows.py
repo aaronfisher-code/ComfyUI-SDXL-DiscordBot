@@ -1,3 +1,5 @@
+import os
+
 from src.defaults import UPSCALE_DEFAULTS
 from src.image_gen.ImageWorkflow import *
 from src.image_gen.sd_workflows import *
@@ -65,16 +67,17 @@ async def _do_image_mashup(params: ImageWorkflow, model_type: ModelType, loras: 
     return image_batch
 
 async def _do_video(params: ImageWorkflow, model_type: ModelType, loras: list[Lora]):
-    raise NotImplementedError("Video generation is under construction...")
-    # workflow = SD15Workflow(params.model, params.clip_skip, loras)
-    # workflow.setup_for_animate_diff()
-    # workflow.create_latents(params.dimensions, 32)
-    # workflow.condition_prompts(params.prompt, params.negative_prompt or "")
-    # workflow.sample(params.seed, params.num_steps, params.cfg_scale, params.sampler, "normal")
-    # images = workflow.decode()
-    # video = workflow.animate_diff_combine(images)
-    # results = video.wait()
-    # return [await results._output()]
+    workflow = SD15Workflow(params.model, params.clip_skip, loras)
+    workflow.setup_for_animate_diff()
+    workflow.create_latents(params.dimensions, 32)
+    workflow.condition_prompts(params.prompt, params.negative_prompt or "")
+    workflow.sample(params.seed, params.num_steps, params.cfg_scale, params.sampler, "normal")
+    images = workflow.decode()
+    video = workflow.animate_diff_combine(images)
+    results = video.wait()._output
+    import PIL
+    final_video = PIL.Image.open(os.path.join("embedded_comfy/output", results['gifs'][0]['filename']))
+    return [final_video]
 
 
 workflow_type_to_method = {
