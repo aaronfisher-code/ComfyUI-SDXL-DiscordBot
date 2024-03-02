@@ -44,5 +44,4 @@ def start_bot():
             speech_gen = SpeechGenCommand(tree)
             speech_gen.add_commands()
 
-    # run the bot
     client.run(TOKEN, log_handler=None)

@@ -34,7 +34,6 @@ class RerollableButton:
 
         params.seed = random.randint(0, 999999999999999)
 
-        # Generate a new image with the same prompt
         images = await do_workflow(params)
 
         if self.is_video:
@@ -44,7 +43,6 @@ class RerollableButton:
             collage = create_collage(images)
             fname = "collage.png"
 
-        # Construct the final message with user mention
         final_message = (
             f'{interaction.user.mention} asked me to re-imagine "{params.prompt}", here is what I imagined for them. '
             f"Seed: {params.seed}"
@@ -61,7 +59,6 @@ class DeletableButton:
 
     @discord.ui.button(label="Delete", style=discord.ButtonStyle.red, emoji="🗑️", row=1)
     async def delete_image_post(self, interaction, button):
-        # make sure the user is the one who posted the image
         if interaction.user.id != self.author.id:
             return
 
