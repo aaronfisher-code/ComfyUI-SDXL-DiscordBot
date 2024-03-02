@@ -32,11 +32,6 @@ async def on_ready():
     for command in commands:
         command.add_commands()
 
-    logger.info("ComfyUI is ready. Initialized commands.")
-    cmds = await tree.sync()
-    logger.info("synced %d commands: %s.", len(cmds), ", ".join(c.name for c in cmds))
-
-def start_bot():
     if c := read_config():
         if c["BOT"]["MUSIC_ENABLED"].lower() == "true":
             from src.audio_gen.commands.audio_bot import MusicGenCommand
@@ -50,4 +45,9 @@ def start_bot():
             speech_gen = SpeechGenCommand(tree)
             speech_gen.add_commands()
 
+    logger.info("ComfyUI is ready. Initialized commands.")
+    cmds = await tree.sync()
+    logger.info("synced %d commands: %s.", len(cmds), ", ".join(c.name for c in cmds))
+
+def start_bot():
     client.run(TOKEN, log_handler=None)

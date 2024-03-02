@@ -17,8 +17,8 @@ from src.consts import *
 
 logger = logging.getLogger("bot")
 
-tortoise_voices = get_tortoise_voices()
-TORTOISE_VOICE_CHOICES = [Choice(name=v, value=v) for v in sorted(tortoise_voices[0])][-25:]
+# tortoise_voices = get_tortoise_voices()
+# TORTOISE_VOICE_CHOICES = [Choice(name=v, value=v) for v in sorted(tortoise_voices[0])][-25:]
 
 class SoundCommand():
     async def _do_request(
@@ -34,8 +34,8 @@ class SoundCommand():
         if params.seed is None:
             params.seed = random.randint(0, 999999999999999)
 
-        data, _ = await generate_audio(params)
-        _, videos, sound_fnames = data
+        data,  _ = await generate_audio(params)
+        videos, _, sound_fnames = data
 
         final_message = f"{completion_message}\n Seed: {params.seed}"
         buttons = AudioButtons(params, sound_fnames, command=command_name)
@@ -83,7 +83,7 @@ class SpeechGenCommand(SoundCommand):
 
     def add_commands(self):
         @self.tree.command(name="speech", description="Generate speech from text using TorToiSe.")
-        @app_commands.choices(voice=TORTOISE_VOICE_CHOICES)
+        # @app_commands.choices(voice=TORTOISE_VOICE_CHOICES)
         async def speech_command(
                 interaction: discord.Interaction,
                 prompt: str,

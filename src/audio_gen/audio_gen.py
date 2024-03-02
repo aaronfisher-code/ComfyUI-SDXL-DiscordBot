@@ -1,9 +1,17 @@
 import configparser
-import json
-from dataclasses import dataclass
+import os
+import random
 from typing import Optional
+from dataclasses import dataclass
 
-from src.comfy_api import ComfyGenerator
+import PIL
+
+from comfy_script.runtime import *
+from src.util import get_server_address
+
+load(get_server_address())
+
+from comfy_script.runtime.nodes import *
 
 config = configparser.ConfigParser()
 config.read("config.properties")
@@ -50,73 +58,100 @@ TORTOISE_DEFAULTS = AudioWorkflow(
     temperature=float(config["TORTOISE_DEFAULTS"]["TEMPERATURE"]),
 )
 
-
-def setup_workflow(workflow, params: AudioWorkflow):
-    prompt_nodes = config.get(params.workflow_name, "PROMPT_NODES").split(",")
-    rand_seed_nodes = config.get(params.workflow_name, "RAND_SEED_NODES").split(",")
-    generator_nodes = config.get(params.workflow_name, "GENERATOR_NODE").split(",")
-
-    voice_nodes = None
-    if config.has_option(params.workflow_name, "VOICE_NODES"):
-        voice_nodes = config.get(params.workflow_name, "VOICE_NODES").split(",")
-
-    file_input_nodes = None
-    if config.has_option(params.workflow_name, "FILE_INPUT_NODES"):
-        file_input_nodes = config.get(params.workflow_name, "FILE_INPUT_NODES").split(",")
-
-    # Modify the prompt dictionary
-    if params.prompt is not None and prompt_nodes[0] != "":
-        for node in prompt_nodes:
-            if "text" in workflow[node]["inputs"]:
-                workflow[node]["inputs"]["text"] = params.prompt
-            elif "prompt" in workflow[node]["inputs"]:
-                workflow[node]["inputs"]["prompt"] = params.prompt
-
-    if params.snd_filename is not None and file_input_nodes is not None:
-        for node in file_input_nodes:
-            workflow[node]["inputs"]["path"] = params.snd_filename
-
-    if rand_seed_nodes[0] != "":
-        for node in rand_seed_nodes:
-            workflow[node]["inputs"]["seed"] = params.seed
-
-    if params.voice is not None and voice_nodes is not None:
-        for node in voice_nodes:
-            workflow[node]["inputs"]["voice"] = params.voice
-
-    for node in generator_nodes:
-        inputs = workflow[node]["inputs"]
-        if "duration" in inputs and params.duration is not None:
-            inputs["duration"] = params.duration
-        if "cfg" in inputs and params.cfg is not None:
-            inputs["cfg"] = params.cfg
-        if "top_k" in inputs and params.top_k is not None:
-            inputs["top_k"] = params.top_k
-        if "top_p" in inputs and params.top_p is not None:
-            inputs["top_p"] = params.top_p
-        if "temperature" in inputs and params.temperature is not None:
-            inputs["temperature"] = params.temperature
-        workflow[node]["inputs"] = inputs
-
-    return workflow
-
-
 async def generate_audio(params: AudioWorkflow):
-    print("queuing workflow:", params)
-    with open(config[params.workflow_name]["CONFIG"], "r") as file:
-        workflow = json.load(file)
+    with Workflow() as wf:
+        model, sr = MusicgenLoader()
+        raw_audio = MusicgenGenerate(model, params.prompt, 4, params.duration, params.cfg, params.top_k, params.top_p, params.temperature, params.seed or random.randint(0, 2**32 - 1))
+        spectrogram_image = SpectrogramImage(raw_audio, 1024, 256, 1024, 0.4)
+        spectrogram_image = ImageResize(spectrogram_image, ImageResize.mode.resize, True, ImageResize.resampling.lanczos, 2, 512, 128)
+        video = CombineImageWithAudio(spectrogram_image, raw_audio, sr, CombineImageWithAudio.file_format.webm, "final_output")
+        await wf.queue()._wait()
+    # await raw_audio._wait()
+    # await spectrogram_image._wait()
+    # await video._wait()
+    results = await video._wait()
+    output_directory = os.path.join(config["LOCAL"]["COMFY_ROOT_DIR"], "output")
+    clip_filenames = []
+    video_filenames = []
+    clip_data = []
+    video_data = []
+    for clip in results._output["clips"]:
+        filename = os.path.join(output_directory, clip["filename"])
+        clip_filenames.append(filename)
+    for video in results._output["videos"]:
+        filename = os.path.join(output_directory, video["filename"])
+        video_filenames.append(filename)
+        with open(filename, "rb") as file:
+            video_data.append(file.read())
+    return (video_data, video_filenames, clip_filenames), ""
 
-    generator = ComfyGenerator()
-    await generator.connect()
 
-    setup_workflow(workflow, params)
+# def setup_workflow(workflow, params: AudioWorkflow):
+#     prompt_nodes = config.get(params.workflow_name, "PROMPT_NODES").split(",")
+#     rand_seed_nodes = config.get(params.workflow_name, "RAND_SEED_NODES").split(",")
+#     generator_nodes = config.get(params.workflow_name, "GENERATOR_NODE").split(",")
+#
+#     voice_nodes = None
+#     if config.has_option(params.workflow_name, "VOICE_NODES"):
+#         voice_nodes = config.get(params.workflow_name, "VOICE_NODES").split(",")
+#
+#     file_input_nodes = None
+#     if config.has_option(params.workflow_name, "FILE_INPUT_NODES"):
+#         file_input_nodes = config.get(params.workflow_name, "FILE_INPUT_NODES").split(",")
+#
+#     # Modify the prompt dictionary
+#     if params.prompt is not None and prompt_nodes[0] != "":
+#         for node in prompt_nodes:
+#             if "text" in workflow[node]["inputs"]:
+#                 workflow[node]["inputs"]["text"] = params.prompt
+#             elif "prompt" in workflow[node]["inputs"]:
+#                 workflow[node]["inputs"]["prompt"] = params.prompt
+#
+#     if params.snd_filename is not None and file_input_nodes is not None:
+#         for node in file_input_nodes:
+#             workflow[node]["inputs"]["path"] = params.snd_filename
+#
+#     if rand_seed_nodes[0] != "":
+#         for node in rand_seed_nodes:
+#             workflow[node]["inputs"]["seed"] = params.seed
+#
+#     if params.voice is not None and voice_nodes is not None:
+#         for node in voice_nodes:
+#             workflow[node]["inputs"]["voice"] = params.voice
+#
+#     for node in generator_nodes:
+#         inputs = workflow[node]["inputs"]
+#         if "duration" in inputs and params.duration is not None:
+#             inputs["duration"] = params.duration
+#         if "cfg" in inputs and params.cfg is not None:
+#             inputs["cfg"] = params.cfg
+#         if "top_k" in inputs and params.top_k is not None:
+#             inputs["top_k"] = params.top_k
+#         if "top_p" in inputs and params.top_p is not None:
+#             inputs["top_p"] = params.top_p
+#         if "temperature" in inputs and params.temperature is not None:
+#             inputs["temperature"] = params.temperature
+#         workflow[node]["inputs"] = inputs
+#
+#     return workflow
 
-    images, enhanced_prompt = await generator.get_images(workflow)
-    await generator.close()
 
-    clips = images["clips"]
-    clips, clip_fnames = zip(*clips)
-    videos = images["videos"]
-    videos, video_fnames = zip(*videos)
-
-    return (clips, videos, clip_fnames), enhanced_prompt
+# async def generate_audio(params: AudioWorkflow):
+#     print("queuing workflow:", params)
+#     with open(config[params.workflow_name]["CONFIG"], "r") as file:
+#         workflow = json.load(file)
+#
+#     generator = ComfyGenerator()
+#     await generator.connect()
+#
+#     setup_workflow(workflow, params)
+#
+#     images, enhanced_prompt = await generator.get_images(workflow)
+#     await generator.close()
+#
+#     clips = images["clips"]
+#     clips, clip_fnames = zip(*clips)
+#     videos = images["videos"]
+#     videos, video_fnames = zip(*videos)
+#
+#     return (clips, videos, clip_fnames), enhanced_prompt
