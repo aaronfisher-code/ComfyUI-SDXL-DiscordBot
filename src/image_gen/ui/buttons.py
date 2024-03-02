@@ -67,6 +67,7 @@ class DeletableButton:
 class InfoableButton:
     @discord.ui.button(label="Info", style=discord.ButtonStyle.blurple, emoji="ℹ️", row=1)
     async def image_info(self, interaction, button):
+        await interaction.response.defer()
         params = self.params
         info_str = (
             f"prompt: {params.prompt}\n"

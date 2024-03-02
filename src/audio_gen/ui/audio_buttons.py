@@ -5,8 +5,8 @@ from io import BytesIO
 import discord
 from discord import ui
 
-from src.audio_gen.audio_gen import generate_audio, AudioWorkflow
-from src.consts import MUSIC_CONTINUE_WORKFLOW
+from src.audio_gen.audio_gen import generate_audio, AudioWorkflow, extend_audio, MUSICGEN_DEFAULTS
+from src.consts import MUSIC_CONTINUE_WORKFLOW, TORTOISE_WORKFLOW
 from src.image_gen.ui.buttons import ImageButton
 
 
@@ -32,7 +32,7 @@ class AudioButtons(discord.ui.View):
         params = deepcopy(self.params)
         params.seed = random.randint(0, 999999999999999)
 
-        (_, videos, sound_fnames), _ = await generate_audio(params)
+        (videos, _, sound_fnames) = await generate_audio(params)
 
         final_message = f"{interaction.user.mention} here is your re-imagined audio"
         buttons = AudioButtons(params, sound_fnames, command=self.command)
@@ -54,6 +54,13 @@ class AudioButtons(discord.ui.View):
         index = int(button.label[-1:]) - 1
 
         params: AudioWorkflow = deepcopy(self.params)
+
+        if params.workflow_name is TORTOISE_WORKFLOW:
+            params.cfg = MUSICGEN_DEFAULTS.cfg
+            params.top_k = MUSICGEN_DEFAULTS.top_k
+            params.top_p = MUSICGEN_DEFAULTS.top_p
+            params.temperature = MUSICGEN_DEFAULTS.temperature
+
         params.workflow_name = MUSIC_CONTINUE_WORKFLOW
         params.duration = None
         params.snd_filename = self.sound_fnames[index]
@@ -113,7 +120,7 @@ class AudioEditModal(ui.Modal, title="Edit/Extend Sound"):
         if params.seed is None:
             params.seed = random.randint(0, 999999999999999)
 
-        (_, videos, sound_fnames), _ = await generate_audio(params)
+        (videos, _, sound_fnames) = await extend_audio(params)
 
         verbed = "extended" if self.command == "extend" else "remixed"
         final_message = f"{interaction.user.mention} here is your {verbed} audio"

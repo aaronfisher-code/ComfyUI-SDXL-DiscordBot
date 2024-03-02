@@ -46,6 +46,7 @@ async def on_ready():
             speech_gen.add_commands()
 
     logger.info("ComfyUI is ready. Initialized commands.")
+    logger.info("Syncing commands...")
     cmds = await tree.sync()
     logger.info("synced %d commands: %s.", len(cmds), ", ".join(c.name for c in cmds))
 

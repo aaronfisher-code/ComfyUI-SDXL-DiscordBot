@@ -1,10 +1,10 @@
 import configparser
+import contextlib
 import os
 import random
 from typing import Optional
 from dataclasses import dataclass
-
-import PIL
+import wave
 
 from comfy_script.runtime import *
 from src.util import get_server_address
@@ -37,6 +37,7 @@ class AudioWorkflow:
 
     snd_filename: Optional[list[str]] = None
     vid_filename: Optional[list[str]] = None
+    secondary_prompt: Optional[str] = None
 
 
 MUSICGEN_DEFAULTS = AudioWorkflow(
@@ -58,22 +59,10 @@ TORTOISE_DEFAULTS = AudioWorkflow(
     temperature=float(config["TORTOISE_DEFAULTS"]["TEMPERATURE"]),
 )
 
-async def generate_audio(params: AudioWorkflow):
-    with Workflow() as wf:
-        model, sr = MusicgenLoader()
-        raw_audio = MusicgenGenerate(model, params.prompt, 4, params.duration, params.cfg, params.top_k, params.top_p, params.temperature, params.seed or random.randint(0, 2**32 - 1))
-        spectrogram_image = SpectrogramImage(raw_audio, 1024, 256, 1024, 0.4)
-        spectrogram_image = ImageResize(spectrogram_image, ImageResize.mode.resize, True, ImageResize.resampling.lanczos, 2, 512, 128)
-        video = CombineImageWithAudio(spectrogram_image, raw_audio, sr, CombineImageWithAudio.file_format.webm, "final_output")
-        await wf.queue()._wait()
-    # await raw_audio._wait()
-    # await spectrogram_image._wait()
-    # await video._wait()
-    results = await video._wait()
+async def get_data(results):
     output_directory = os.path.join(config["LOCAL"]["COMFY_ROOT_DIR"], "output")
     clip_filenames = []
     video_filenames = []
-    clip_data = []
     video_data = []
     for clip in results._output["clips"]:
         filename = os.path.join(output_directory, clip["filename"])
@@ -83,75 +72,60 @@ async def generate_audio(params: AudioWorkflow):
         video_filenames.append(filename)
         with open(filename, "rb") as file:
             video_data.append(file.read())
-    return (video_data, video_filenames, clip_filenames), ""
+    return (video_data, video_filenames, clip_filenames)
 
 
-# def setup_workflow(workflow, params: AudioWorkflow):
-#     prompt_nodes = config.get(params.workflow_name, "PROMPT_NODES").split(",")
-#     rand_seed_nodes = config.get(params.workflow_name, "RAND_SEED_NODES").split(",")
-#     generator_nodes = config.get(params.workflow_name, "GENERATOR_NODE").split(",")
-#
-#     voice_nodes = None
-#     if config.has_option(params.workflow_name, "VOICE_NODES"):
-#         voice_nodes = config.get(params.workflow_name, "VOICE_NODES").split(",")
-#
-#     file_input_nodes = None
-#     if config.has_option(params.workflow_name, "FILE_INPUT_NODES"):
-#         file_input_nodes = config.get(params.workflow_name, "FILE_INPUT_NODES").split(",")
-#
-#     # Modify the prompt dictionary
-#     if params.prompt is not None and prompt_nodes[0] != "":
-#         for node in prompt_nodes:
-#             if "text" in workflow[node]["inputs"]:
-#                 workflow[node]["inputs"]["text"] = params.prompt
-#             elif "prompt" in workflow[node]["inputs"]:
-#                 workflow[node]["inputs"]["prompt"] = params.prompt
-#
-#     if params.snd_filename is not None and file_input_nodes is not None:
-#         for node in file_input_nodes:
-#             workflow[node]["inputs"]["path"] = params.snd_filename
-#
-#     if rand_seed_nodes[0] != "":
-#         for node in rand_seed_nodes:
-#             workflow[node]["inputs"]["seed"] = params.seed
-#
-#     if params.voice is not None and voice_nodes is not None:
-#         for node in voice_nodes:
-#             workflow[node]["inputs"]["voice"] = params.voice
-#
-#     for node in generator_nodes:
-#         inputs = workflow[node]["inputs"]
-#         if "duration" in inputs and params.duration is not None:
-#             inputs["duration"] = params.duration
-#         if "cfg" in inputs and params.cfg is not None:
-#             inputs["cfg"] = params.cfg
-#         if "top_k" in inputs and params.top_k is not None:
-#             inputs["top_k"] = params.top_k
-#         if "top_p" in inputs and params.top_p is not None:
-#             inputs["top_p"] = params.top_p
-#         if "temperature" in inputs and params.temperature is not None:
-#             inputs["temperature"] = params.temperature
-#         workflow[node]["inputs"] = inputs
-#
-#     return workflow
+async def generate_audio(params: AudioWorkflow):
+    async with Workflow():
+        model, sr = MusicgenLoader()
+        raw_audio = MusicgenGenerate(model, params.prompt, 4, params.duration, params.cfg, params.top_k, params.top_p, params.temperature, params.seed or random.randint(0, 2**32 - 1))
+        spectrogram_image = SpectrogramImage(raw_audio, 1024, 256, 1024, 0.4)
+        spectrogram_image = ImageResize(spectrogram_image, ImageResize.mode.resize, True, ImageResize.resampling.lanczos, 2, 512, 128)
+        video = CombineImageWithAudio(spectrogram_image, raw_audio, sr, CombineImageWithAudio.file_format.webm, "final_output")
+    results = await video._wait()
+    return await get_data(results)
 
 
-# async def generate_audio(params: AudioWorkflow):
-#     print("queuing workflow:", params)
-#     with open(config[params.workflow_name]["CONFIG"], "r") as file:
-#         workflow = json.load(file)
-#
-#     generator = ComfyGenerator()
-#     await generator.connect()
-#
-#     setup_workflow(workflow, params)
-#
-#     images, enhanced_prompt = await generator.get_images(workflow)
-#     await generator.close()
-#
-#     clips = images["clips"]
-#     clips, clip_fnames = zip(*clips)
-#     videos = images["videos"]
-#     videos, video_fnames = zip(*videos)
-#
-#     return (clips, videos, clip_fnames), enhanced_prompt
+async def extend_audio(params: AudioWorkflow):
+    async with Workflow():
+        with contextlib.closing(wave.open(params.snd_filename, 'r')) as f:
+            frames = f.getnframes()
+            rate = f.getframerate()
+            initial_duration = frames / float(rate)
+        model, model_sr = MusicgenLoader()
+        audio, sr, duration = LoadAudio(params.snd_filename.replace(config["LOCAL"]["COMFY_ROOT_DIR"], "").replace("/output/",""))
+        audio = ConvertAudio(audio, sr, model_sr, 1)
+        audio = ClipAudio(audio, model_sr, initial_duration - 10.0, duration)
+        raw_audio = MusicgenGenerate(model, params.prompt, 4, max(initial_duration + 10, 20), params.cfg, params.top_k, params.top_p, params.temperature, params.seed or random.randint(0, 2**32 - 1), audio)
+        raw_audio = ClipAudio(raw_audio, model_sr, 0, initial_duration - 10.0)
+        audio = ConcatAudio(audio, raw_audio)
+        spectrogram_image = SpectrogramImage(audio, 1024, 256, 1024, 0.4)
+        spectrogram_image = ImageResize(spectrogram_image, ImageResize.mode.resize, True, ImageResize.resampling.lanczos, 2, 512, 128)
+        video = CombineImageWithAudio(spectrogram_image, audio, model_sr, CombineImageWithAudio.file_format.webm, "final_output")
+    results = await video
+    return await get_data(results)
+
+async def generate_tts(params: AudioWorkflow):
+    async with Workflow():
+        model, sr = TortoiseTTSLoader(True, False, False, False)
+        raw_audio = TortoiseTTSGenerate(model, params.voice, params.prompt, 4, 8, 8, 0.3, 2, 4, 0.8, 300, 0.7000000000000001, 10, True, 2, 1, params.seed or random.randint(0, 2**32 - 1))
+        raw_audio = ConvertAudio(raw_audio, sr, 44100, 1)
+        image = SpectrogramImage(raw_audio, 1024, 256, 1024, 0.5, True, True)
+        image = ImageResize(image, 'resize', 'true', 'bicubic', 2, 512, 128)
+        video = CombineImageWithAudio(image, raw_audio, 44100, 'webm', 'final_output')
+    results = await video._wait()
+    return await get_data(results)
+
+async def generate_music_with_tts(params: AudioWorkflow):
+    async with Workflow():
+        model, sr = MusicgenLoader()
+        tts_model, tts_sr = TortoiseTTSLoader(True, False, False, False)
+        audio = TortoiseTTSGenerate(tts_model, params.voice, params.prompt, 1, 8, 8, 0.3, 2, 4, 0.8, 300, 0.7000000000000001, 10, True, 2, 1, params.seed or random.randint(0, 2**32 - 1))
+        audio = ConvertAudio(audio, tts_sr, sr, 1)
+        audio = MusicgenGenerate(model, params.secondary_prompt, 4, 15, params.cfg, params.top_k, params.top_p, params.temperature, params.seed or random.randint(0, 2**32 - 1), audio)
+        spectrogram_image = SpectrogramImage(audio, 1024, 256, 1024, 0.5, True, True)
+        spectrogram_image = ImageResize(spectrogram_image, ImageResize.mode.resize, True, ImageResize.resampling.lanczos, 2, 512, 128)
+        SaveImage(spectrogram_image, "spectrogram")
+        video = CombineImageWithAudio(spectrogram_image, audio, sr, CombineImageWithAudio.file_format.webm, "final_output")
+    results = await video._wait()
+    return await get_data(results)

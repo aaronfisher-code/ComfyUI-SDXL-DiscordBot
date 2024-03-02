@@ -1,17 +1,10 @@
 import logging
-import random
 from io import BytesIO
 
 import discord
-from discord import app_commands
-from discord.app_commands import Choice, Range
+from discord.app_commands import Range
 
-from src.audio_gen.audio_gen import (
-    generate_audio,
-    AudioWorkflow,
-    MUSICGEN_DEFAULTS,
-    TORTOISE_DEFAULTS,
-)
+from src.audio_gen.audio_gen import *
 from src.audio_gen.ui.audio_buttons import AudioButtons
 from src.consts import *
 
@@ -34,7 +27,13 @@ class SoundCommand():
         if params.seed is None:
             params.seed = random.randint(0, 999999999999999)
 
-        data,  _ = await generate_audio(params)
+        if command_name == "music":
+            data = await generate_audio(params)
+        elif command_name == "sing":
+            data = await generate_music_with_tts(params)
+        else:
+            data = await generate_tts(params)
+
         videos, _, sound_fnames = data
 
         final_message = f"{completion_message}\n Seed: {params.seed}"
@@ -102,8 +101,37 @@ class SpeechGenCommand(SoundCommand):
             )
             await self._do_request(
                 interaction,
-                "speech",
-                params,
                 f'{interaction.user.mention} wants to speak, this shouldn\'t take too long...',
-                f'{interaction.user.mention} said "{prompt}".'
+                f'{interaction.user.mention} said "{prompt}".',
+                "speech",
+                params
+            )
+
+        @self.tree.command(name="sing", description="Sing!")
+        async def sing_command(
+                interaction: discord.Interaction,
+                music_prompt: str,
+                prompt: str,
+                voice: str = None,
+                top_k: Range[int, 0, 1000] = None,
+                top_p: Range[float, 0.0, 1.0] = None,
+                temperature: Range[float, 1e-3, 10.0] = None,
+                seed: int = None,
+        ):
+            params = AudioWorkflow(
+                TORTOISE_WORKFLOW,
+                prompt,
+                voice=voice or TORTOISE_DEFAULTS.voice,
+                top_p=top_p or MUSICGEN_DEFAULTS.top_p,
+                top_k=top_k or MUSICGEN_DEFAULTS.top_k,
+                temperature=temperature or MUSICGEN_DEFAULTS.temperature,
+                seed=seed,
+                secondary_prompt=music_prompt,
+            )
+            await self._do_request(
+                interaction,
+                f'🎙️{interaction.user.mention} wants to sing, this shouldn\'t take too long...🎙️',
+                f'🎙️{interaction.user.mention} sung "{prompt}".🎙️',
+                "sing",
+                params
             )
