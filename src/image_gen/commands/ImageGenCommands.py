@@ -18,12 +18,7 @@ class ImageGenCommands:
         self.tree = tree
 
     def add_commands(self):
-        @self.tree.command(name="refresh", description="Refresh the list of models and loras")
-        async def slash_command(interaction: discord.Interaction):
-            #await refresh_models()
-            await interaction.response.send_message("Refreshed models and loras", ephemeral=True)
-
-        @self.tree.command(name="imagine", description="Generate an image based on input text")
+        @self.tree.command(name="legacy", description="Generate an image based on input text")
         @app_commands.describe(**IMAGINE_ARG_DESCS)
         @app_commands.choices(**IMAGINE_ARG_CHOICES)
         async def slash_command(
@@ -35,7 +30,6 @@ class ImageGenCommands:
             lora_strength: float = 1.0,
             lora2: Choice[str] = None,
             lora_strength2: float = 1.0,
-            # enhance: bool = False,
             aspect_ratio: str = None,
             sampler: str = None,
             num_steps: Range[int, 1, MAX_STEPS] = None,
@@ -76,7 +70,7 @@ class ImageGenCommands:
                 inpainting_detection_threshold=inpainting_detection_threshold or SD15_GENERATION_DEFAULTS.inpainting_detection_threshold,
                 clip_skip=clip_skip or SD15_GENERATION_DEFAULTS.clip_skip,
             )
-            await self.__do_request(
+            await self._do_request(
                 interaction,
                 f'🖼️ {interaction.user.mention} asked me to imagine "{prompt}"! {random.choice(generation_messages)} 🖼️',
                 f'{interaction.user.mention} asked me to imagine "{prompt}"! {random.choice(completion_messages)}',
@@ -118,71 +112,11 @@ class ImageGenCommands:
                 slash_command="video",
                 clip_skip=clip_skip or VIDEO_GENERATION_DEFAULTS.clip_skip,
             )
-            await self.__do_request(
+            await self._do_request(
                 interaction,
                 f'🎥{interaction.user.mention} asked me to create the video "{prompt}"! {random.choice(generation_messages)} 🎥',
                 f'{interaction.user.mention} asked me to create the video "{prompt}"! {random.choice(completion_messages)} 🎥',
                 "video",
-                params,
-            )
-
-        @self.tree.command(name="sdxl", description="Generate an image using SDXL")
-        @app_commands.describe(**SDXL_ARG_DESCS)
-        @app_commands.choices(**SDXL_ARG_CHOICES)
-        async def slash_command(
-            interaction: discord.Interaction,
-            prompt: str,
-            negative_prompt: str = None,
-            model: str = None,
-            lora: Choice[str] = None,
-            lora_strength: float = 1.0,
-            lora2: Choice[str] = None,
-            lora_strength2: float = 1.0,
-            aspect_ratio: str = None,
-            sampler: str = None,
-            num_steps: Range[int, 1, MAX_STEPS] = None,
-            cfg_scale: Range[float, 1.0, MAX_CFG] = None,
-            seed: int = None,
-            input_file: Attachment = None,
-            denoise_strength: Range[float, 0.01, 1.0] = None,
-            inpainting_prompt: str = None,
-            inpainting_detection_threshold: Range[int, 0, 255] = None,
-            clip_skip: Range[int, -2, -1] = None,
-        ):
-            if input_file is not None:
-                fp = await process_attachment(input_file, interaction)
-                if fp is None:
-                    return
-
-            params = ImageWorkflow(
-                ModelType.SDXL,
-                WorkflowType.txt2img if input_file is None else WorkflowType.img2img,
-                prompt,
-                negative_prompt,
-                model or SDXL_GENERATION_DEFAULTS.model,
-                unpack_choices(lora, lora2),
-                [lora_strength, lora_strength2],
-                dimensions=sd_aspect_ratios[aspect_ratio] if aspect_ratio else sd_aspect_ratios[SDXL_GENERATION_DEFAULTS.dimensions],
-                batch_size=SDXL_GENERATION_DEFAULTS.batch_size,
-                sampler=sampler or SDXL_GENERATION_DEFAULTS.sampler,
-                num_steps=num_steps or SDXL_GENERATION_DEFAULTS.num_steps,
-                cfg_scale=cfg_scale or SDXL_GENERATION_DEFAULTS.cfg_scale,
-                seed=seed,
-                slash_command="sdxl",
-                filename=fp if input_file is not None else None,
-                denoise_strength=denoise_strength or SDXL_GENERATION_DEFAULTS.denoise_strength if input_file is not None else 1.0,
-                inpainting_prompt=inpainting_prompt,
-                inpainting_detection_threshold=inpainting_detection_threshold or SDXL_GENERATION_DEFAULTS.inpainting_detection_threshold,
-                clip_skip=clip_skip or SDXL_GENERATION_DEFAULTS.clip_skip,
-                use_accelerator_lora=SDXL_GENERATION_DEFAULTS.use_accelerator_lora,
-                accelerator_lora_name=SDXL_GENERATION_DEFAULTS.accelerator_lora_name,
-                scheduler=SDXL_GENERATION_DEFAULTS.scheduler,
-            )
-            await self.__do_request(
-                interaction,
-                f'🖌️{interaction.user.mention} asked me to imagine "{prompt}" using SDXL! {random.choice(generation_messages)} 🖌️',
-                f'🖌️ {interaction.user.mention} asked me to imagine "{prompt}" using SDXL! {random.choice(completion_messages)}. 🖌️',
-                "sdxl",
                 params,
             )
 
@@ -234,7 +168,7 @@ class ImageGenCommands:
                 clip_skip=clip_skip or CASCADE_GENERATION_DEFAULTS.clip_skip,
             )
 
-            await self.__do_request(
+            await self._do_request(
                 interaction,
                 f'🤖️ {interaction.user.mention} asked me to imagine "{prompt}" using Stable Cascade! {random.choice(generation_messages)} 🤖️',
                 f'🤖️ {interaction.user.mention} asked me to imagine "{prompt}" using Stable Cascade! {random.choice(completion_messages)} 🤖️',
@@ -242,7 +176,8 @@ class ImageGenCommands:
                 params,
             )
 
-    async def __do_request(
+
+    async def _do_request(
         self,
         interaction: discord.Interaction,
         intro_message: str,
@@ -263,7 +198,6 @@ class ImageGenCommands:
                 )
                 return
 
-            # Send an initial message
             await interaction.response.send_message(intro_message)
 
             if params.seed is None:
@@ -282,3 +216,71 @@ class ImageGenCommands:
         except Exception as e:
             logger.exception("Error generating image: %s for command %s with params %s", e, command_name, params)
             await interaction.channel.send(f"{interaction.user.mention} `Error generating image: {e} for command {command_name}`")
+
+
+class SDXLCommand(ImageGenCommands):
+    def __init__(self, tree: discord.app_commands.CommandTree, command_name: str):
+        super().__init__(tree)
+        self.command_name = command_name
+
+    def add_commands(self):
+        @self.tree.command(name=self.command_name, description="Generate an image using SDXL")
+        @app_commands.describe(**SDXL_ARG_DESCS)
+        @app_commands.choices(**SDXL_ARG_CHOICES)
+        async def slash_command(
+                interaction: discord.Interaction,
+                prompt: str,
+                negative_prompt: str = None,
+                model: str = None,
+                lora: Choice[str] = None,
+                lora_strength: float = 1.0,
+                lora2: Choice[str] = None,
+                lora_strength2: float = 1.0,
+                aspect_ratio: str = None,
+                sampler: str = None,
+                num_steps: Range[int, 1, MAX_STEPS] = None,
+                cfg_scale: Range[float, 1.0, MAX_CFG] = None,
+                seed: int = None,
+                input_file: Attachment = None,
+                denoise_strength: Range[float, 0.01, 1.0] = None,
+                inpainting_prompt: str = None,
+                inpainting_detection_threshold: Range[int, 0, 255] = None,
+                clip_skip: Range[int, -2, -1] = None,
+        ):
+            if input_file is not None:
+                fp = await process_attachment(input_file, interaction)
+                if fp is None:
+                    return
+
+            params = ImageWorkflow(
+                ModelType.SDXL,
+                WorkflowType.txt2img if input_file is None else WorkflowType.img2img,
+                prompt,
+                negative_prompt,
+                model or SDXL_GENERATION_DEFAULTS.model,
+                unpack_choices(lora, lora2),
+                [lora_strength, lora_strength2],
+                dimensions=sd_aspect_ratios[aspect_ratio] if aspect_ratio else sd_aspect_ratios[SDXL_GENERATION_DEFAULTS.dimensions],
+                batch_size=SDXL_GENERATION_DEFAULTS.batch_size,
+                sampler=sampler or SDXL_GENERATION_DEFAULTS.sampler,
+                num_steps=num_steps or SDXL_GENERATION_DEFAULTS.num_steps,
+                cfg_scale=cfg_scale or SDXL_GENERATION_DEFAULTS.cfg_scale,
+                seed=seed,
+                slash_command="sdxl",
+                filename=fp if input_file is not None else None,
+                denoise_strength=denoise_strength or SDXL_GENERATION_DEFAULTS.denoise_strength if input_file is not None else 1.0,
+                inpainting_prompt=inpainting_prompt,
+                inpainting_detection_threshold=inpainting_detection_threshold or SDXL_GENERATION_DEFAULTS.inpainting_detection_threshold,
+                clip_skip=clip_skip or SDXL_GENERATION_DEFAULTS.clip_skip,
+                use_accelerator_lora=SDXL_GENERATION_DEFAULTS.use_accelerator_lora,
+                accelerator_lora_name=SDXL_GENERATION_DEFAULTS.accelerator_lora_name,
+                scheduler=SDXL_GENERATION_DEFAULTS.scheduler,
+            )
+
+            await self._do_request(
+                interaction,
+                f'🖌️{interaction.user.mention} asked me to imagine "{prompt}" using SDXL! {random.choice(generation_messages)} 🖌️',
+                f'🖌️ {interaction.user.mention} asked me to imagine "{prompt}" using SDXL! {random.choice(completion_messages)}. 🖌️',
+                "sdxl",
+                params,
+            )

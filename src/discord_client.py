@@ -23,9 +23,15 @@ async def on_ready():
 
     await asyncio.sleep(1)
     print("server start")
-    from src.image_gen.commands.ImageGenCommands import ImageGenCommands
-    commands = ImageGenCommands(tree)
-    commands.add_commands()
+    from src.image_gen.commands.ImageGenCommands import ImageGenCommands, SDXLCommand
+    commands = []
+    commands.append(ImageGenCommands(tree))
+    commands.append(SDXLCommand(tree, "sdxl"))
+    commands.append(SDXLCommand(tree, "imagine"))
+
+    for command in commands:
+        command.add_commands()
+
     logger.info("ComfyUI is ready. Initialized commands.")
     cmds = await tree.sync()
     logger.info("synced %d commands: %s.", len(cmds), ", ".join(c.name for c in cmds))
