@@ -1,5 +1,8 @@
 #!/bin/bash
 
+TORCH_CUDA_INDEX_URL=https://download.pytorch.org/whl/cu121  # for cuda 12.1
+CUDA_VER=12.1
+
 if [ ! -d venv ]; then
     python3 -m venv --copies venv
     echo "created new virtualenv"
@@ -69,6 +72,16 @@ if [ ! -d ComfyUI-VideoHelperSuite ]; then
   git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git
   echo "cloned ComfyUI-VideoHelperSuite"
 fi
+cd ComfyUI-VideoHelperSuite
+pip install -r requirements.txt -U --extra-index-url %TORCH_CUDA_INDEX_URL%
+
+if [ ! -d ComfyUI-audio ]; then
+  git clone https://github.com/eigenpunk/ComfyUI-audio.git
+  echo "cloned ComfyUI-audio"
+fi
+cd ComfyUI-audio
+pip install -r requirements.txt -U --extra-index-url %TORCH_CUDA_INDEX_URL%
+
 cd "$EMBEDDED_COMFY_LOCATION/ComfyUI-VideoHelperSuite"
 pip install -r requirements.txt -U
 

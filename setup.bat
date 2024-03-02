@@ -75,16 +75,6 @@ IF NOT EXIST %EMBEDDED_COMFY_LOCATION%/ComfyUI-VideoHelperSuite (
 cd %EMBEDDED_COMFY_LOCATION%/ComfyUI-VideoHelperSuite
 python -m pip install -r requirements.txt -U --extra-index-url %TORCH_CUDA_INDEX_URL%
 
-cd %EMBEDDED_COMFY_LOCATION%/custom_nodes
-IF NOT EXIST ComfyUI-audio (
-    git clone https://github.com/eigenpunk/ComfyUI-audio.git
-    echo cloned ComfyUI-audio
-)
-cd ComfyUI-audio
-pip install av
-python -m pip install -r requirements.txt -U --extra-index-url %TORCH_CUDA_INDEX_URL%
-pip install -U git+https://git@github.com/facebookresearch/audiocraft#egg=audiocraft --index-url https://download.pytorch.org/whl/cu121 --no-deps
-
 cd %EMBEDDED_COMFY_LOCATION%/models/checkpoints
 mkdir xl
 mkdir 15
