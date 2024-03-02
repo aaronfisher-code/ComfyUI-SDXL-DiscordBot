@@ -13,7 +13,6 @@ from src.audio_gen.audio_gen import (
     TORTOISE_DEFAULTS,
 )
 from src.audio_gen.ui.audio_buttons import AudioButtons
-from src.comfy_api import get_tortoise_voices
 from src.consts import *
 
 logger = logging.getLogger("bot")

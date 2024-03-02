@@ -27,9 +27,6 @@ async def on_ready():
     commands = ImageGenCommands(tree)
     commands.add_commands()
     logger.info("ComfyUI is ready. Initialized commands.")
-    # from src.comfy_api import refresh_models, clear_history
-    # await refresh_models()
-    # clear_history()
     cmds = await tree.sync()
     logger.info("synced %d commands: %s.", len(cmds), ", ".join(c.name for c in cmds))
 
