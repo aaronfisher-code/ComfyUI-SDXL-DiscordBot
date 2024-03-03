@@ -111,7 +111,7 @@ class SpeechGenCommand(SoundCommand):
         async def sing_command(
                 interaction: discord.Interaction,
                 music_prompt: str,
-                prompt: str,
+                lyrics: str,
                 voice: str = None,
                 top_k: Range[int, 0, 1000] = None,
                 top_p: Range[float, 0.0, 1.0] = None,
@@ -120,7 +120,7 @@ class SpeechGenCommand(SoundCommand):
         ):
             params = AudioWorkflow(
                 TORTOISE_WORKFLOW,
-                prompt,
+                lyrics,
                 voice=voice or TORTOISE_DEFAULTS.voice,
                 top_p=top_p or MUSICGEN_DEFAULTS.top_p,
                 top_k=top_k or MUSICGEN_DEFAULTS.top_k,
@@ -131,7 +131,7 @@ class SpeechGenCommand(SoundCommand):
             await self._do_request(
                 interaction,
                 f'🎙️{interaction.user.mention} wants to sing, this shouldn\'t take too long...🎙️',
-                f'🎙️{interaction.user.mention} sung "{prompt}".🎙️',
+                f'🎙️{interaction.user.mention} sung "{lyrics}".🎙️',
                 "sing",
                 params
             )
