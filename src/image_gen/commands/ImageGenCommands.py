@@ -246,6 +246,7 @@ class SDXLCommand(ImageGenCommands):
                 inpainting_prompt: str = None,
                 inpainting_detection_threshold: Range[int, 0, 255] = None,
                 clip_skip: Range[int, -2, -1] = None,
+                use_accelerator_lora: Optional[bool] = None,
         ):
             if input_file is not None:
                 fp = await process_attachment(input_file, interaction)
@@ -272,8 +273,8 @@ class SDXLCommand(ImageGenCommands):
                 inpainting_prompt=inpainting_prompt,
                 inpainting_detection_threshold=inpainting_detection_threshold or SDXL_GENERATION_DEFAULTS.inpainting_detection_threshold,
                 clip_skip=clip_skip or SDXL_GENERATION_DEFAULTS.clip_skip,
-                use_accelerator_lora=SDXL_GENERATION_DEFAULTS.use_accelerator_lora,
-                accelerator_lora_name=SDXL_GENERATION_DEFAULTS.accelerator_lora_name,
+                use_accelerator_lora=use_accelerator_lora or SDXL_GENERATION_DEFAULTS.use_accelerator_lora,
+                accelerator_lora_name=SDXL_GENERATION_DEFAULTS.accelerator_lora_name if use_accelerator_lora or SDXL_GENERATION_DEFAULTS.use_accelerator_lora else None,
                 scheduler=SDXL_GENERATION_DEFAULTS.scheduler,
             )
 

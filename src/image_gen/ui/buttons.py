@@ -67,7 +67,6 @@ class DeletableButton:
 class InfoableButton:
     @discord.ui.button(label="Info", style=discord.ButtonStyle.blurple, emoji="ℹ️", row=1)
     async def image_info(self, interaction, button):
-        await interaction.response.defer()
         params = self.params
         info_str = (
             f"prompt: {params.prompt}\n"
@@ -271,7 +270,8 @@ class EditModal(ui.Modal, title="Edit Image"):
                                    placeholder="Enter a prompt",
                                    min_length=1,
                                    max_length=2048,
-                                   default=self.params.prompt
+                                   default=self.params.prompt,
+                                   style=discord.TextStyle.paragraph
                                    )
         self.negative_prompt = ui.TextInput(label="Negative Prompt",
                                             placeholder="Enter a negative prompt",
