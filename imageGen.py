@@ -83,7 +83,7 @@ class ImageGenerator:
             if 'images' in node_output:
                 for image in node_output['images']:
                     image_data = get_image(image['filename'], image['subfolder'], image['type'])
-                    if 'final_output' in image['filename']:
+                    if 'base_output' in image['filename']:
                         pil_image = Image.open(BytesIO(image_data))
                         output_images.append(pil_image)
 
